@@ -30,6 +30,7 @@ const Navbar = () => {
         <Link to="/properties" style={linkStyle('/properties')}>Properties</Link>
         <Link to="/tenants" style={linkStyle('/tenants')}>Tenants</Link>
         <Link to="/leases" style={linkStyle('/leases')}>Leases</Link>
+        <Link to="/payments" style={linkStyle('/payments')}>Payments</Link>
       </div>
     </nav>
   );
