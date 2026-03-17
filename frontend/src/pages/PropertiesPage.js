@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import PropertyList from '../components/PropertyList';
 import PropertyForm from '../components/PropertyForm';
-import api from '../services/api';
 
 const PropertiesPage = () => {
   const [properties, setProperties] = useState([]);
   const [showForm, setShowForm] = useState(false);
+  const [search, setSearch] = useState('');
 
   useEffect(() => {
     setProperties([
@@ -25,6 +25,10 @@ const PropertiesPage = () => {
     setProperties(properties.filter(p => p.propertyId !== propertyId));
   };
 
+  const filtered = properties.filter(p =>
+    p.address.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
     <div style={{ padding: '20px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -34,7 +38,13 @@ const PropertiesPage = () => {
         </button>
       </div>
       {showForm && <PropertyForm onSubmit={handleAdd} />}
-      <PropertyList properties={properties} onDelete={handleDelete} />
+      <input
+        placeholder="Search by address..."
+        value={search}
+        onChange={e => setSearch(e.target.value)}
+        style={{ marginBottom: '16px' }}
+      />
+      <PropertyList properties={filtered} onDelete={handleDelete} />
     </div>
   );
 };

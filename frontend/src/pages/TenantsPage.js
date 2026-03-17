@@ -5,6 +5,7 @@ const TenantsPage = () => {
   const [tenants, setTenants] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({ name: '', email: '', phone: '' });
+  const [search, setSearch] = useState('');
 
   useEffect(() => {
     setTenants([
@@ -24,6 +25,10 @@ const TenantsPage = () => {
     setTenants(tenants.filter(t => t.tenantId !== tenantId));
   };
 
+  const filtered = tenants.filter(t =>
+    t.name.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
     <div style={{ padding: '20px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -40,7 +45,13 @@ const TenantsPage = () => {
           <button type="submit">Add Tenant</button>
         </form>
       )}
-      <TenantList tenants={tenants} onDelete={handleDelete} />
+      <input
+        placeholder="Search by name..."
+        value={search}
+        onChange={e => setSearch(e.target.value)}
+        style={{ marginBottom: '16px' }}
+      />
+      <TenantList tenants={filtered} onDelete={handleDelete} />
     </div>
   );
 };
