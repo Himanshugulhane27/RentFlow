@@ -1,18 +1,11 @@
 import React, { useState } from 'react';
+import { useApp } from '../context/AppContext';
 
 const PaymentsPage = () => {
-  const [payments, setPayments] = useState([
-    { paymentId: '1', tenantName: 'John Doe', amount: 1200, dueDate: '2024-02-01', status: 'paid' },
-    { paymentId: '2', tenantName: 'Jane Smith', amount: 1500, dueDate: '2024-02-01', status: 'pending' },
-    { paymentId: '3', tenantName: 'John Doe', amount: 1200, dueDate: '2024-03-01', status: 'pending' }
-  ]);
+  const { payments, markPaymentPaid } = useApp();
+  const [filter, setFilter] = useState('all');
 
-  const markPaid = (paymentId) => {
-    setPayments(payments.map(p =>
-      p.paymentId === paymentId ? { ...p, status: 'paid' } : p
-    ));
-  };
-
+  const filtered = payments.filter(p => filter === 'all' ? true : p.status === filter);
   const totalCollected = payments.filter(p => p.status === 'paid').reduce((sum, p) => sum + p.amount, 0);
   const totalPending = payments.filter(p => p.status === 'pending').reduce((sum, p) => sum + p.amount, 0);
 
@@ -31,16 +24,23 @@ const PaymentsPage = () => {
         </div>
       </div>
 
-      {payments.map(payment => (
+      <div style={{ display: 'flex', gap: '10px', marginBottom: '16px' }}>
+        {['all', 'paid', 'pending'].map(f => (
+          <button
+            key={f}
+            onClick={() => setFilter(f)}
+            style={{ backgroundColor: filter === f ? '#1a237e' : '#e0e0e0', color: filter === f ? 'white' : '#333', padding: '6px 16px', border: 'none', borderRadius: '20px', cursor: 'pointer' }}
+          >
+            {f.charAt(0).toUpperCase() + f.slice(1)}
+          </button>
+        ))}
+      </div>
+
+      {filtered.map(payment => (
         <div key={payment.paymentId} style={{
-          border: '1px solid #ddd',
-          padding: '15px',
-          borderRadius: '8px',
-          marginBottom: '10px',
-          backgroundColor: 'white',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center'
+          border: '1px solid #ddd', padding: '15px', borderRadius: '8px',
+          marginBottom: '10px', backgroundColor: 'white',
+          display: 'flex', justifyContent: 'space-between', alignItems: 'center'
         }}>
           <div>
             <h3 style={{ margin: '0 0 5px' }}>{payment.tenantName}</h3>
@@ -48,9 +48,7 @@ const PaymentsPage = () => {
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <span style={{
-              padding: '4px 12px',
-              borderRadius: '20px',
-              fontSize: '13px',
+              padding: '4px 12px', borderRadius: '20px', fontSize: '13px',
               backgroundColor: payment.status === 'paid' ? '#e8f5e9' : '#fff3e0',
               color: payment.status === 'paid' ? '#2e7d32' : '#e65100'
             }}>
@@ -58,7 +56,7 @@ const PaymentsPage = () => {
             </span>
             {payment.status === 'pending' && (
               <button
-                onClick={() => markPaid(payment.paymentId)}
+                onClick={() => markPaymentPaid(payment.paymentId)}
                 style={{ backgroundColor: '#2e7d32', color: 'white', border: 'none', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer' }}
               >
                 Mark Paid

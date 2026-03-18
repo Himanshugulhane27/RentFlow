@@ -1,28 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { useApp } from '../context/AppContext';
 import TenantList from '../components/TenantList';
 
 const TenantsPage = () => {
-  const [tenants, setTenants] = useState([]);
+  const { tenants, addTenant, deleteTenant } = useApp();
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({ name: '', email: '', phone: '' });
   const [search, setSearch] = useState('');
 
-  useEffect(() => {
-    setTenants([
-      { tenantId: '1', name: 'John Doe', email: 'john@email.com', phone: '555-0100' },
-      { tenantId: '2', name: 'Jane Smith', email: 'jane@email.com', phone: '555-0200' }
-    ]);
-  }, []);
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    setTenants([...tenants, { ...formData, tenantId: Date.now().toString() }]);
+    addTenant(formData);
     setFormData({ name: '', email: '', phone: '' });
     setShowForm(false);
-  };
-
-  const handleDelete = (tenantId) => {
-    setTenants(tenants.filter(t => t.tenantId !== tenantId));
   };
 
   const filtered = tenants.filter(t =>
@@ -51,7 +41,7 @@ const TenantsPage = () => {
         onChange={e => setSearch(e.target.value)}
         style={{ marginBottom: '16px' }}
       />
-      <TenantList tenants={filtered} onDelete={handleDelete} />
+      <TenantList tenants={filtered} onDelete={deleteTenant} />
     </div>
   );
 };
