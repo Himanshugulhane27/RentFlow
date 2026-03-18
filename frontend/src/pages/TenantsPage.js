@@ -3,12 +3,14 @@ import { useApp } from '../context/AppContext';
 import TenantList from '../components/TenantList';
 import Toast from '../components/Toast';
 import useToast from '../hooks/useToast';
+import ConfirmDialog from '../components/ConfirmDialog';
 
 const TenantsPage = () => {
   const { tenants, addTenant, deleteTenant } = useApp();
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({ name: '', email: '', phone: '' });
   const [search, setSearch] = useState('');
+  const [confirmId, setConfirmId] = useState(null);
   const { toast, showToast, hideToast } = useToast();
 
   const handleSubmit = (e) => {
@@ -19,8 +21,11 @@ const TenantsPage = () => {
     showToast('Tenant added successfully');
   };
 
-  const handleDelete = (id) => {
-    deleteTenant(id);
+  const handleDelete = (id) => setConfirmId(id);
+
+  const confirmDelete = () => {
+    deleteTenant(confirmId);
+    setConfirmId(null);
     showToast('Tenant removed', 'error');
   };
 
@@ -30,7 +35,7 @@ const TenantsPage = () => {
 
   return (
     <div style={{ padding: '20px' }}>
-      {toast && <Toast message={toast.message} type={toast.type} onClose={hideToast} />}
+      {confirmId && <ConfirmDialog message="Delete this tenant?" onConfirm={confirmDelete} onCancel={() => setConfirmId(null)} />}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <h2>Tenants</h2>
         <button onClick={() => setShowForm(!showForm)}>

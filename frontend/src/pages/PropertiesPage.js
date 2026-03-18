@@ -4,6 +4,7 @@ import PropertyForm from '../components/PropertyForm';
 import PropertyList from '../components/PropertyList';
 import Toast from '../components/Toast';
 import useToast from '../hooks/useToast';
+import ConfirmDialog from '../components/ConfirmDialog';
 
 const PropertiesPage = () => {
   const { properties, addProperty, deleteProperty, toggleAvailability, editProperty } = useApp();
@@ -11,6 +12,7 @@ const PropertiesPage = () => {
   const [search, setSearch] = useState('');
   const [sortBy, setSortBy] = useState('none');
   const [filterAvail, setFilterAvail] = useState('all');
+  const [confirmId, setConfirmId] = useState(null);
   const { toast, showToast, hideToast } = useToast();
 
   const handleAdd = (data) => {
@@ -19,8 +21,11 @@ const PropertiesPage = () => {
     showToast('Property added successfully');
   };
 
-  const handleDelete = (id) => {
-    deleteProperty(id);
+  const handleDelete = (id) => setConfirmId(id);
+
+  const confirmDelete = () => {
+    deleteProperty(confirmId);
+    setConfirmId(null);
     showToast('Property removed', 'error');
   };
 
@@ -41,7 +46,7 @@ const PropertiesPage = () => {
 
   return (
     <div style={{ padding: '20px' }}>
-      {toast && <Toast message={toast.message} type={toast.type} onClose={hideToast} />}
+      {confirmId && <ConfirmDialog message="Delete this property?" onConfirm={confirmDelete} onCancel={() => setConfirmId(null)} />}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <h2>Properties</h2>
         <button onClick={() => setShowForm(!showForm)}>
