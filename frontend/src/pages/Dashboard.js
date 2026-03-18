@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useApp } from '../context/AppContext';
 
 const StatCard = ({ title, value, color, path }) => {
   const navigate = useNavigate();
@@ -7,15 +8,9 @@ const StatCard = ({ title, value, color, path }) => {
     <div
       onClick={() => navigate(path)}
       style={{
-        backgroundColor: color,
-        color: 'white',
-        padding: '30px',
-        borderRadius: '10px',
-        textAlign: 'center',
-        cursor: 'pointer',
-        flex: '1',
-        margin: '10px',
-        boxShadow: '0 4px 8px rgba(0,0,0,0.2)'
+        backgroundColor: color, color: 'white', padding: '30px',
+        borderRadius: '10px', textAlign: 'center', cursor: 'pointer',
+        flex: '1', margin: '10px', boxShadow: '0 4px 8px rgba(0,0,0,0.2)'
       }}
     >
       <h2 style={{ margin: 0, fontSize: '48px' }}>{value}</h2>
@@ -25,17 +20,18 @@ const StatCard = ({ title, value, color, path }) => {
 };
 
 const Dashboard = () => {
-  const stats = [
-    { title: 'Total Properties', value: 3, color: '#1565c0', path: '/properties' },
-    { title: 'Active Tenants', value: 2, color: '#2e7d32', path: '/tenants' },
-    { title: 'Active Leases', value: 2, color: '#6a1b9a', path: '/leases' },
-    { title: 'Monthly Revenue', value: '$2,700', color: '#e65100', path: '/leases' }
-  ];
+  const { properties, tenants, leases, payments } = useApp();
 
-  const recentActivity = [
-    { id: 1, message: 'New tenant John Doe added', time: '2 hours ago' },
-    { id: 2, message: 'Lease signed for 123 Main St', time: '1 day ago' },
-    { id: 3, message: 'Property 789 Pine Rd listed', time: '2 days ago' }
+  const availableCount = properties.filter(p => p.available).length;
+  const activeLeases = leases.filter(l => l.status === 'active').length;
+  const monthlyRevenue = leases.filter(l => l.status === 'active').reduce((sum, l) => sum + Number(l.monthlyRent), 0);
+  const pendingPayments = payments.filter(p => p.status === 'pending').length;
+
+  const stats = [
+    { title: 'Total Properties', value: properties.length, color: '#1565c0', path: '/properties' },
+    { title: 'Active Tenants', value: tenants.length, color: '#2e7d32', path: '/tenants' },
+    { title: 'Active Leases', value: activeLeases, color: '#6a1b9a', path: '/leases' },
+    { title: 'Monthly Revenue', value: `$${monthlyRevenue.toLocaleString()}`, color: '#e65100', path: '/payments' }
   ];
 
   return (
@@ -43,19 +39,18 @@ const Dashboard = () => {
       <h2>Dashboard</h2>
 
       <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-        {stats.map((stat, i) => (
-          <StatCard key={i} {...stat} />
-        ))}
+        {stats.map((stat, i) => <StatCard key={i} {...stat} />)}
       </div>
 
-      <div style={{ marginTop: '30px' }}>
-        <h3>Recent Activity</h3>
-        {recentActivity.map(activity => (
-          <div key={activity.id} style={{ padding: '12px', borderLeft: '4px solid #1a237e', marginBottom: '10px', backgroundColor: '#f5f5f5' }}>
-            <p style={{ margin: 0 }}>{activity.message}</p>
-            <small style={{ color: '#888' }}>{activity.time}</small>
-          </div>
-        ))}
+      <div style={{ display: 'flex', gap: '20px', marginTop: '30px', flexWrap: 'wrap' }}>
+        <div style={{ flex: 1, minWidth: '200px', backgroundColor: '#fff3e0', padding: '20px', borderRadius: '8px' }}>
+          <h4 style={{ margin: '0 0 8px', color: '#e65100' }}>⚠️ Pending Payments</h4>
+          <p style={{ margin: 0, fontSize: '28px', fontWeight: 'bold' }}>{pendingPayments}</p>
+        </div>
+        <div style={{ flex: 1, minWidth: '200px', backgroundColor: '#e8f5e9', padding: '20px', borderRadius: '8px' }}>
+          <h4 style={{ margin: '0 0 8px', color: '#2e7d32' }}>✅ Available Properties</h4>
+          <p style={{ margin: 0, fontSize: '28px', fontWeight: 'bold' }}>{availableCount}</p>
+        </div>
       </div>
     </div>
   );
