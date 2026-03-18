@@ -3,15 +3,22 @@ const propertyService = require('../services/propertyService');
 
 exports.handler = async (event) => {
   try {
-    const { httpMethod, body } = event;
+    const { httpMethod, pathParameters, body } = event;
+    const propertyId = pathParameters?.id;
 
     switch (httpMethod) {
       case 'GET':
-        const properties = await propertyService.getAllProperties();
-        return success(properties);
+        if (propertyId) {
+          return success(await propertyService.getProperty(propertyId));
+        }
+        return success(await propertyService.getAllProperties());
       case 'POST':
-        const newProperty = await propertyService.createProperty(JSON.parse(body));
-        return success(newProperty);
+        return success(await propertyService.createProperty(JSON.parse(body)));
+      case 'PUT':
+        return success(await propertyService.updateProperty(propertyId, JSON.parse(body)));
+      case 'DELETE':
+        await propertyService.deleteProperty(propertyId);
+        return success({ message: 'Property deleted' });
       default:
         return error('Method not allowed');
     }
