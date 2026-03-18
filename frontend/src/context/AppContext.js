@@ -28,6 +28,7 @@ export const AppProvider = ({ children }) => {
   const addProperty = (property) => setProperties(prev => [...prev, { ...property, propertyId: Date.now().toString(), available: true }]);
   const deleteProperty = (id) => setProperties(prev => prev.filter(p => p.propertyId !== id));
   const toggleAvailability = (id) => setProperties(prev => prev.map(p => p.propertyId === id ? { ...p, available: !p.available } : p));
+  const editProperty = (id, data) => setProperties(prev => prev.map(p => p.propertyId === id ? { ...p, ...data } : p));
 
   const addTenant = (tenant) => setTenants(prev => [...prev, { ...tenant, tenantId: Date.now().toString() }]);
   const deleteTenant = (id) => setTenants(prev => prev.filter(t => t.tenantId !== id));
@@ -38,7 +39,7 @@ export const AppProvider = ({ children }) => {
 
   return (
     <AppContext.Provider value={{
-      properties, addProperty, deleteProperty, toggleAvailability,
+      properties, addProperty, deleteProperty, toggleAvailability, editProperty,
       tenants, addTenant, deleteTenant,
       leases, addLease,
       payments, markPaymentPaid

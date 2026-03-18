@@ -6,7 +6,7 @@ import Toast from '../components/Toast';
 import useToast from '../hooks/useToast';
 
 const PropertiesPage = () => {
-  const { properties, addProperty, deleteProperty, toggleAvailability } = useApp();
+  const { properties, addProperty, deleteProperty, toggleAvailability, editProperty } = useApp();
   const [showForm, setShowForm] = useState(false);
   const [search, setSearch] = useState('');
   const [sortBy, setSortBy] = useState('none');
@@ -69,7 +69,7 @@ const PropertiesPage = () => {
         </select>
       </div>
 
-      <PropertyList properties={filtered} onDelete={handleDelete} onToggle={handleToggle} />
+      <PropertyList properties={filtered} onDelete={handleDelete} onToggle={handleToggle} onEdit={(id, data) => { editProperty(id, data); showToast('Property updated'); }} />
     </div>
   );
 };
