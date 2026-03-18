@@ -9,6 +9,8 @@ const PropertiesPage = () => {
   const { properties, addProperty, deleteProperty, toggleAvailability } = useApp();
   const [showForm, setShowForm] = useState(false);
   const [search, setSearch] = useState('');
+  const [sortBy, setSortBy] = useState('none');
+  const [filterAvail, setFilterAvail] = useState('all');
   const { toast, showToast, hideToast } = useToast();
 
   const handleAdd = (data) => {
@@ -27,9 +29,15 @@ const PropertiesPage = () => {
     showToast('Availability updated', 'info');
   };
 
-  const filtered = properties.filter(p =>
+  let filtered = properties.filter(p =>
     p.address.toLowerCase().includes(search.toLowerCase())
   );
+
+  if (filterAvail === 'available') filtered = filtered.filter(p => p.available);
+  if (filterAvail === 'occupied') filtered = filtered.filter(p => !p.available);
+
+  if (sortBy === 'low') filtered = [...filtered].sort((a, b) => a.rent - b.rent);
+  if (sortBy === 'high') filtered = [...filtered].sort((a, b) => b.rent - a.rent);
 
   return (
     <div style={{ padding: '20px' }}>
@@ -41,12 +49,26 @@ const PropertiesPage = () => {
         </button>
       </div>
       {showForm && <PropertyForm onSubmit={handleAdd} />}
-      <input
-        placeholder="Search by address..."
-        value={search}
-        onChange={e => setSearch(e.target.value)}
-        style={{ marginBottom: '16px' }}
-      />
+
+      <div style={{ display: 'flex', gap: '10px', marginBottom: '16px', flexWrap: 'wrap' }}>
+        <input
+          placeholder="Search by address..."
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          style={{ flex: 1, minWidth: '180px', marginBottom: 0 }}
+        />
+        <select value={sortBy} onChange={e => setSortBy(e.target.value)} style={{ width: 'auto' }}>
+          <option value="none">Sort by Rent</option>
+          <option value="low">Rent: Low to High</option>
+          <option value="high">Rent: High to Low</option>
+        </select>
+        <select value={filterAvail} onChange={e => setFilterAvail(e.target.value)} style={{ width: 'auto' }}>
+          <option value="all">All</option>
+          <option value="available">Available</option>
+          <option value="occupied">Occupied</option>
+        </select>
+      </div>
+
       <PropertyList properties={filtered} onDelete={handleDelete} onToggle={handleToggle} />
     </div>
   );
