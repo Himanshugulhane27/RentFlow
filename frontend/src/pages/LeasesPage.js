@@ -1,26 +1,46 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
+import Toast from '../components/Toast';
+import useToast from '../hooks/useToast';
 
 const LeasesPage = () => {
   const { leases, addLease, properties, tenants } = useApp();
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({ propertyId: '', tenantId: '', startDate: '', endDate: '', monthlyRent: '' });
+  const [localLeases, setLocalLeases] = useState(leases);
+  const { toast, showToast, hideToast } = useToast();
+
+  const getDaysLeft = (endDate) => {
+    const diff = new Date(endDate) - new Date();
+    return Math.ceil(diff / (1000 * 60 * 60 * 24));
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const property = properties.find(p => p.propertyId === formData.propertyId);
     const tenant = tenants.find(t => t.tenantId === formData.tenantId);
-    addLease({
+    const newLease = {
       ...formData,
+      leaseId: Date.now().toString(),
       propertyAddress: property?.address || '',
-      tenantName: tenant?.name || ''
-    });
+      tenantName: tenant?.name || '',
+      status: 'active'
+    };
+    addLease(newLease);
+    setLocalLeases(prev => [...prev, newLease]);
     setFormData({ propertyId: '', tenantId: '', startDate: '', endDate: '', monthlyRent: '' });
     setShowForm(false);
+    showToast('Lease created');
+  };
+
+  const terminateLease = (leaseId) => {
+    setLocalLeases(prev => prev.map(l => l.leaseId === leaseId ? { ...l, status: 'terminated' } : l));
+    showToast('Lease terminated', 'error');
   };
 
   return (
     <div style={{ padding: '20px' }}>
+      {toast && <Toast message={toast.message} type={toast.type} onClose={hideToast} />}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <h2>Leases</h2>
         <button onClick={() => setShowForm(!showForm)}>
@@ -45,29 +65,48 @@ const LeasesPage = () => {
         </form>
       )}
 
-      {leases.length === 0 && <p style={{ color: '#888', textAlign: 'center', padding: '40px' }}>No leases found.</p>}
+      {localLeases.length === 0 && <p style={{ color: '#888', textAlign: 'center', padding: '40px' }}>No leases found.</p>}
 
-      {leases.map(lease => (
-        <div key={lease.leaseId} style={{
-          border: '1px solid #ddd', padding: '15px', borderRadius: '8px',
-          marginBottom: '12px', backgroundColor: lease.status === 'active' ? '#f1f8e9' : '#ffebee',
-          boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
-        }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <h3 style={{ margin: '0 0 8px' }}>{lease.propertyAddress}</h3>
-            <span style={{
-              padding: '4px 12px', borderRadius: '20px', fontSize: '13px',
-              backgroundColor: lease.status === 'active' ? '#e8f5e9' : '#ffebee',
-              color: lease.status === 'active' ? '#2e7d32' : '#c62828'
-            }}>
-              {lease.status}
-            </span>
+      {localLeases.map(lease => {
+        const daysLeft = getDaysLeft(lease.endDate);
+        const expiringSoon = daysLeft <= 30 && daysLeft > 0 && lease.status === 'active';
+        const expired = daysLeft <= 0 && lease.status === 'active';
+
+        return (
+          <div key={lease.leaseId} style={{
+            border: `1px solid ${expiringSoon || expired ? '#ff9800' : '#ddd'}`,
+            padding: '15px', borderRadius: '8px', marginBottom: '12px',
+            backgroundColor: lease.status === 'terminated' ? '#ffebee' : expiringSoon || expired ? '#fff8e1' : '#f1f8e9',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <h3 style={{ margin: '0 0 8px' }}>{lease.propertyAddress}</h3>
+              <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                {expiringSoon && <span style={{ fontSize: '12px', color: '#e65100', fontWeight: 'bold' }}>⚠️ Expires in {daysLeft}d</span>}
+                {expired && <span style={{ fontSize: '12px', color: '#c62828', fontWeight: 'bold' }}>🔴 Expired</span>}
+                <span style={{
+                  padding: '4px 12px', borderRadius: '20px', fontSize: '13px',
+                  backgroundColor: lease.status === 'active' ? '#e8f5e9' : '#ffebee',
+                  color: lease.status === 'active' ? '#2e7d32' : '#c62828'
+                }}>
+                  {lease.status}
+                </span>
+                {lease.status === 'active' && (
+                  <button
+                    onClick={() => terminateLease(lease.leaseId)}
+                    style={{ backgroundColor: '#e53935', color: 'white', border: 'none', padding: '5px 10px', borderRadius: '4px', cursor: 'pointer', fontSize: '13px' }}
+                  >
+                    Terminate
+                  </button>
+                )}
+              </div>
+            </div>
+            <p style={{ margin: '4px 0', color: '#555' }}>Tenant: {lease.tenantName}</p>
+            <p style={{ margin: '4px 0', color: '#555' }}>Period: {lease.startDate} → {lease.endDate}</p>
+            <p style={{ margin: '4px 0', color: '#555' }}>Monthly Rent: ${lease.monthlyRent}</p>
           </div>
-          <p style={{ margin: '4px 0', color: '#555' }}>Tenant: {lease.tenantName}</p>
-          <p style={{ margin: '4px 0', color: '#555' }}>Period: {lease.startDate} → {lease.endDate}</p>
-          <p style={{ margin: '4px 0', color: '#555' }}>Monthly Rent: ${lease.monthlyRent}</p>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 };
