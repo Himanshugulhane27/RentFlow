@@ -1,18 +1,27 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import TenantList from '../components/TenantList';
+import Toast from '../components/Toast';
+import useToast from '../hooks/useToast';
 
 const TenantsPage = () => {
   const { tenants, addTenant, deleteTenant } = useApp();
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({ name: '', email: '', phone: '' });
   const [search, setSearch] = useState('');
+  const { toast, showToast, hideToast } = useToast();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     addTenant(formData);
     setFormData({ name: '', email: '', phone: '' });
     setShowForm(false);
+    showToast('Tenant added successfully');
+  };
+
+  const handleDelete = (id) => {
+    deleteTenant(id);
+    showToast('Tenant removed', 'error');
   };
 
   const filtered = tenants.filter(t =>
@@ -21,6 +30,7 @@ const TenantsPage = () => {
 
   return (
     <div style={{ padding: '20px' }}>
+      {toast && <Toast message={toast.message} type={toast.type} onClose={hideToast} />}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <h2>Tenants</h2>
         <button onClick={() => setShowForm(!showForm)}>
@@ -41,7 +51,7 @@ const TenantsPage = () => {
         onChange={e => setSearch(e.target.value)}
         style={{ marginBottom: '16px' }}
       />
-      <TenantList tenants={filtered} onDelete={deleteTenant} />
+      <TenantList tenants={filtered} onDelete={handleDelete} />
     </div>
   );
 };
