@@ -28,6 +28,11 @@ const PaymentsPage = () => {
     showToast('Payment marked as paid');
   };
 
+  const getDaysOverdue = (dueDate) => {
+    const diff = new Date() - new Date(dueDate);
+    return Math.floor(diff / (1000 * 60 * 60 * 24));
+  };
+
   return (
     <div style={{ padding: '20px' }}>
       {toast && <Toast message={toast.message} type={toast.type} onClose={hideToast} />}
@@ -74,21 +79,25 @@ const PaymentsPage = () => {
 
       {filtered.length === 0 && <p style={{ color: '#888', textAlign: 'center', padding: '30px' }}>No payments found.</p>}
 
-      {filtered.map(payment => (
+      {filtered.map(payment => {
+        const overdue = payment.status === 'pending' && getDaysOverdue(payment.dueDate) > 0;
+        const daysOverdue = getDaysOverdue(payment.dueDate);
+        return (
         <div key={payment.paymentId} style={{
-          border: '1px solid #ddd', padding: '15px', borderRadius: '8px',
-          marginBottom: '10px', backgroundColor: 'white',
+          border: `1px solid ${overdue ? '#e53935' : '#ddd'}`, padding: '15px', borderRadius: '8px',
+          marginBottom: '10px', backgroundColor: overdue ? '#fff5f5' : 'white',
           display: 'flex', justifyContent: 'space-between', alignItems: 'center'
         }}>
           <div>
             <h3 style={{ margin: '0 0 5px' }}>{payment.tenantName}</h3>
             <p style={{ margin: 0, color: '#555' }}>Due: {payment.dueDate} &nbsp;|&nbsp; Amount: ${payment.amount}</p>
+            {overdue && <p style={{ margin: '4px 0 0', fontSize: '13px', color: '#e53935', fontWeight: 'bold' }}>🔴 {daysOverdue} day{daysOverdue > 1 ? 's' : ''} overdue</p>}
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <span style={{
               padding: '4px 12px', borderRadius: '20px', fontSize: '13px',
-              backgroundColor: payment.status === 'paid' ? '#e8f5e9' : '#fff3e0',
-              color: payment.status === 'paid' ? '#2e7d32' : '#e65100'
+              backgroundColor: payment.status === 'paid' ? '#e8f5e9' : overdue ? '#ffebee' : '#fff3e0',
+              color: payment.status === 'paid' ? '#2e7d32' : overdue ? '#e53935' : '#e65100'
             }}>
               {payment.status}
             </span>
@@ -99,7 +108,8 @@ const PaymentsPage = () => {
             )}
           </div>
         </div>
-      ))}
+        );
+      })}
     </div>
   );
 };
