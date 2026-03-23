@@ -5,14 +5,11 @@ import { useApp } from '../context/AppContext';
 const StatCard = ({ title, value, color, path }) => {
   const navigate = useNavigate();
   return (
-    <div
-      onClick={() => navigate(path)}
-      style={{
-        backgroundColor: color, color: 'white', padding: '30px',
-        borderRadius: '10px', textAlign: 'center', cursor: 'pointer',
-        flex: '1', margin: '10px', boxShadow: '0 4px 8px rgba(0,0,0,0.2)'
-      }}
-    >
+    <div onClick={() => navigate(path)} style={{
+      backgroundColor: color, color: 'white', padding: '30px',
+      borderRadius: '10px', textAlign: 'center', cursor: 'pointer',
+      flex: '1', margin: '10px', boxShadow: '0 4px 8px rgba(0,0,0,0.2)'
+    }}>
       <h2 style={{ margin: 0, fontSize: '48px' }}>{value}</h2>
       <p style={{ margin: '10px 0 0', fontSize: '18px' }}>{title}</p>
     </div>
@@ -23,14 +20,19 @@ const Dashboard = () => {
   const { properties, tenants, leases, payments } = useApp();
 
   const availableCount = properties.filter(p => p.available).length;
-  const activeLeases = leases.filter(l => l.status === 'active').length;
-  const monthlyRevenue = leases.filter(l => l.status === 'active').reduce((sum, l) => sum + Number(l.monthlyRent), 0);
+  const occupiedCount = properties.filter(p => !p.available).length;
+  const occupancyRate = properties.length > 0 ? Math.round((occupiedCount / properties.length) * 100) : 0;
+  const activeLeases = leases.filter(l => l.status === 'active');
+  const monthlyRevenue = activeLeases.reduce((sum, l) => sum + Number(l.monthlyRent), 0);
   const pendingPayments = payments.filter(p => p.status === 'pending').length;
+  const overduePayments = payments.filter(p => {
+    return p.status === 'pending' && new Date() > new Date(p.dueDate);
+  }).length;
 
   const stats = [
     { title: 'Total Properties', value: properties.length, color: '#1565c0', path: '/properties' },
     { title: 'Active Tenants', value: tenants.length, color: '#2e7d32', path: '/tenants' },
-    { title: 'Active Leases', value: activeLeases, color: '#6a1b9a', path: '/leases' },
+    { title: 'Active Leases', value: activeLeases.length, color: '#6a1b9a', path: '/leases' },
     { title: 'Monthly Revenue', value: `$${monthlyRevenue.toLocaleString()}`, color: '#e65100', path: '/payments' }
   ];
 
@@ -47,10 +49,39 @@ const Dashboard = () => {
           <h4 style={{ margin: '0 0 8px', color: '#e65100' }}>⚠️ Pending Payments</h4>
           <p style={{ margin: 0, fontSize: '28px', fontWeight: 'bold' }}>{pendingPayments}</p>
         </div>
+        <div style={{ flex: 1, minWidth: '200px', backgroundColor: '#ffebee', padding: '20px', borderRadius: '8px' }}>
+          <h4 style={{ margin: '0 0 8px', color: '#c62828' }}>🔴 Overdue Payments</h4>
+          <p style={{ margin: 0, fontSize: '28px', fontWeight: 'bold' }}>{overduePayments}</p>
+        </div>
         <div style={{ flex: 1, minWidth: '200px', backgroundColor: '#e8f5e9', padding: '20px', borderRadius: '8px' }}>
           <h4 style={{ margin: '0 0 8px', color: '#2e7d32' }}>✅ Available Properties</h4>
           <p style={{ margin: 0, fontSize: '28px', fontWeight: 'bold' }}>{availableCount}</p>
         </div>
+      </div>
+
+      <div style={{ marginTop: '30px', backgroundColor: 'white', borderRadius: '8px', padding: '20px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
+        <h3 style={{ marginBottom: '16px' }}>Occupancy Rate</h3>
+        <div style={{ backgroundColor: '#e0e0e0', borderRadius: '20px', height: '20px', overflow: 'hidden' }}>
+          <div style={{ width: `${occupancyRate}%`, backgroundColor: '#1565c0', height: '100%', borderRadius: '20px', transition: 'width 0.5s' }} />
+        </div>
+        <p style={{ marginTop: '8px', color: '#555' }}>{occupiedCount} of {properties.length} properties occupied ({occupancyRate}%)</p>
+      </div>
+
+      <div style={{ marginTop: '20px', backgroundColor: 'white', borderRadius: '8px', padding: '20px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
+        <h3 style={{ marginBottom: '16px' }}>Revenue by Property</h3>
+        {activeLeases.length === 0 && <p style={{ color: '#888' }}>No active leases.</p>}
+        {activeLeases.map(lease => (
+          <div key={lease.leaseId} style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 0', borderBottom: '1px solid #f0f0f0' }}>
+            <span style={{ color: '#333' }}>{lease.propertyAddress}</span>
+            <span style={{ fontWeight: 'bold', color: '#2e7d32' }}>${Number(lease.monthlyRent).toLocaleString()}/mo</span>
+          </div>
+        ))}
+        {activeLeases.length > 0 && (
+          <div style={{ display: 'flex', justifyContent: 'space-between', padding: '12px 0 0' }}>
+            <span style={{ fontWeight: 'bold' }}>Total</span>
+            <span style={{ fontWeight: 'bold', color: '#1565c0' }}>${monthlyRevenue.toLocaleString()}/mo</span>
+          </div>
+        )}
       </div>
     </div>
   );
