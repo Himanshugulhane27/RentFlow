@@ -9,13 +9,14 @@ class PaymentService {
   async createPayment(data) {
     const payment = new Payment({ ...data, paymentId: uuidv4() });
     payment.validate();
-
-    await dynamodb.put({
-      TableName: PAYMENTS_TABLE,
-      Item: payment
-    }).promise();
-
+    await dynamodb.put({ TableName: PAYMENTS_TABLE, Item: payment }).promise();
     return payment;
+  }
+
+  async getPayment(paymentId) {
+    const result = await dynamodb.get({ TableName: PAYMENTS_TABLE, Key: { paymentId } }).promise();
+    if (!result.Item) throw new Error('Payment not found');
+    return result.Item;
   }
 
   async getAllPayments() {
@@ -37,6 +38,10 @@ class PaymentService {
     };
     const result = await dynamodb.update(params).promise();
     return result.Attributes;
+  }
+
+  async deletePayment(paymentId) {
+    await dynamodb.delete({ TableName: PAYMENTS_TABLE, Key: { paymentId } }).promise();
   }
 }
 

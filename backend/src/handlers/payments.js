@@ -3,19 +3,20 @@ const paymentService = require('../services/paymentService');
 
 exports.handler = async (event) => {
   try {
-    const { httpMethod, body, pathParameters } = event;
-    const paymentId = pathParameters?.proxy;
+    const { httpMethod, pathParameters, body } = event;
+    const paymentId = pathParameters?.id;
 
     switch (httpMethod) {
       case 'GET':
-        const payments = await paymentService.getAllPayments();
-        return success(payments);
+        if (paymentId) return success(await paymentService.getPayment(paymentId));
+        return success(await paymentService.getAllPayments());
       case 'POST':
-        const newPayment = await paymentService.createPayment(JSON.parse(body));
-        return success(newPayment);
+        return success(await paymentService.createPayment(JSON.parse(body)));
       case 'PUT':
-        const updated = await paymentService.markPaymentPaid(paymentId);
-        return success(updated);
+        return success(await paymentService.markPaymentPaid(paymentId));
+      case 'DELETE':
+        await paymentService.deletePayment(paymentId);
+        return success({ message: 'Payment deleted' });
       default:
         return error('Method not allowed');
     }
