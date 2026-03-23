@@ -35,6 +35,7 @@ export const AppProvider = ({ children }) => {
 
   const addLease = (lease) => setLeases(prev => [...prev, { ...lease, leaseId: Date.now().toString(), status: 'active' }]);
 
+  const addPayment = (payment) => setPayments(prev => [...prev, { ...payment, paymentId: Date.now().toString(), status: 'pending' }]);
   const markPaymentPaid = (id) => setPayments(prev => prev.map(p => p.paymentId === id ? { ...p, status: 'paid' } : p));
 
   return (
@@ -42,7 +43,7 @@ export const AppProvider = ({ children }) => {
       properties, addProperty, deleteProperty, toggleAvailability, editProperty,
       tenants, addTenant, deleteTenant,
       leases, addLease,
-      payments, markPaymentPaid
+      payments, addPayment, markPaymentPaid
     }}>
       {children}
     </AppContext.Provider>
