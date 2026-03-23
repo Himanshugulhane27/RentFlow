@@ -70,3 +70,9 @@ select {
   font-size: 14px;
   background: white;
 }
+
+@media (max-width: 640px) {
+  .nav-links { display: none !important; }
+  .hamburger { display: block !important; }
+  .mobile-menu { display: block; }
+}
