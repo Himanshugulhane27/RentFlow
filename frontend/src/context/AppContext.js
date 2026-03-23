@@ -32,6 +32,7 @@ export const AppProvider = ({ children }) => {
 
   const addTenant = (tenant) => setTenants(prev => [...prev, { ...tenant, tenantId: Date.now().toString() }]);
   const deleteTenant = (id) => setTenants(prev => prev.filter(t => t.tenantId !== id));
+  const editTenant = (id, data) => setTenants(prev => prev.map(t => t.tenantId === id ? { ...t, ...data } : t));
 
   const addLease = (lease) => setLeases(prev => [...prev, { ...lease, leaseId: Date.now().toString(), status: 'active' }]);
 
@@ -41,7 +42,7 @@ export const AppProvider = ({ children }) => {
   return (
     <AppContext.Provider value={{
       properties, addProperty, deleteProperty, toggleAvailability, editProperty,
-      tenants, addTenant, deleteTenant,
+      tenants, addTenant, deleteTenant, editTenant,
       leases, addLease,
       payments, addPayment, markPaymentPaid
     }}>

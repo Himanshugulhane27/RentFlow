@@ -6,7 +6,7 @@ import useToast from '../hooks/useToast';
 import ConfirmDialog from '../components/ConfirmDialog';
 
 const TenantsPage = () => {
-  const { tenants, addTenant, deleteTenant } = useApp();
+  const { tenants, addTenant, deleteTenant, editTenant } = useApp();
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({ name: '', email: '', phone: '' });
   const [search, setSearch] = useState('');
@@ -56,7 +56,7 @@ const TenantsPage = () => {
         onChange={e => setSearch(e.target.value)}
         style={{ marginBottom: '16px' }}
       />
-      <TenantList tenants={filtered} onDelete={handleDelete} />
+      <TenantList tenants={filtered} onDelete={handleDelete} onEdit={(id, data) => { editTenant(id, data); showToast('Tenant updated'); }} />
     </div>
   );
 };
