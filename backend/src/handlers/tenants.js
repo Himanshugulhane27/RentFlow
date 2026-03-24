@@ -1,5 +1,6 @@
 const { success, error } = require('../utils/response');
 const tenantService = require('../services/tenantService');
+const { validateRequired, validateEmail } = require('../utils/validation');
 
 exports.handler = async (event) => {
   try {
@@ -8,14 +9,20 @@ exports.handler = async (event) => {
 
     switch (httpMethod) {
       case 'GET':
-        if (tenantId) {
-          return success(await tenantService.getTenant(tenantId));
-        }
+        if (tenantId) return success(await tenantService.getTenant(tenantId));
         return success(await tenantService.getAllTenants());
-      case 'POST':
-        return success(await tenantService.createTenant(JSON.parse(body)));
-      case 'PUT':
-        return success(await tenantService.updateTenant(tenantId, JSON.parse(body)));
+      case 'POST': {
+        const data = JSON.parse(body);
+        validateRequired(['name', 'email'], data);
+        if (!validateEmail(data.email)) throw new Error('Invalid email address');
+        return success(await tenantService.createTenant(data));
+      }
+      case 'PUT': {
+        const data = JSON.parse(body);
+        validateRequired(['name', 'email'], data);
+        if (!validateEmail(data.email)) throw new Error('Invalid email address');
+        return success(await tenantService.updateTenant(tenantId, data));
+      }
       case 'DELETE':
         await tenantService.deleteTenant(tenantId);
         return success({ message: 'Tenant deleted' });

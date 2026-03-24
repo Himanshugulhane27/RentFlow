@@ -1,5 +1,6 @@
 const { success, error } = require('../utils/response');
 const leaseService = require('../services/leaseService');
+const { validateRequired } = require('../utils/validation');
 
 exports.handler = async (event) => {
   try {
@@ -10,10 +11,16 @@ exports.handler = async (event) => {
       case 'GET':
         if (leaseId) return success(await leaseService.getLease(leaseId));
         return success(await leaseService.getAllLeases());
-      case 'POST':
-        return success(await leaseService.createLease(JSON.parse(body)));
-      case 'PUT':
-        return success(await leaseService.updateLease(leaseId, JSON.parse(body)));
+      case 'POST': {
+        const data = JSON.parse(body);
+        validateRequired(['propertyId', 'tenantId', 'startDate'], data);
+        return success(await leaseService.createLease(data));
+      }
+      case 'PUT': {
+        const data = JSON.parse(body);
+        validateRequired(['status'], data);
+        return success(await leaseService.updateLease(leaseId, data));
+      }
       case 'DELETE':
         await leaseService.deleteLease(leaseId);
         return success({ message: 'Lease deleted' });

@@ -1,5 +1,6 @@
 const { success, error } = require('../utils/response');
 const propertyService = require('../services/propertyService');
+const { validateRequired } = require('../utils/validation');
 
 exports.handler = async (event) => {
   try {
@@ -8,14 +9,18 @@ exports.handler = async (event) => {
 
     switch (httpMethod) {
       case 'GET':
-        if (propertyId) {
-          return success(await propertyService.getProperty(propertyId));
-        }
+        if (propertyId) return success(await propertyService.getProperty(propertyId));
         return success(await propertyService.getAllProperties());
-      case 'POST':
-        return success(await propertyService.createProperty(JSON.parse(body)));
-      case 'PUT':
-        return success(await propertyService.updateProperty(propertyId, JSON.parse(body)));
+      case 'POST': {
+        const data = JSON.parse(body);
+        validateRequired(['address', 'rent'], data);
+        return success(await propertyService.createProperty(data));
+      }
+      case 'PUT': {
+        const data = JSON.parse(body);
+        validateRequired(['address', 'rent'], data);
+        return success(await propertyService.updateProperty(propertyId, data));
+      }
       case 'DELETE':
         await propertyService.deleteProperty(propertyId);
         return success({ message: 'Property deleted' });

@@ -1,5 +1,6 @@
 const { success, error } = require('../utils/response');
 const paymentService = require('../services/paymentService');
+const { validateRequired } = require('../utils/validation');
 
 exports.handler = async (event) => {
   try {
@@ -10,8 +11,12 @@ exports.handler = async (event) => {
       case 'GET':
         if (paymentId) return success(await paymentService.getPayment(paymentId));
         return success(await paymentService.getAllPayments());
-      case 'POST':
-        return success(await paymentService.createPayment(JSON.parse(body)));
+      case 'POST': {
+        const data = JSON.parse(body);
+        validateRequired(['leaseId', 'tenantId', 'amount'], data);
+        if (Number(data.amount) <= 0) throw new Error('Amount must be greater than zero');
+        return success(await paymentService.createPayment(data));
+      }
       case 'PUT':
         return success(await paymentService.markPaymentPaid(paymentId));
       case 'DELETE':
