@@ -4,10 +4,9 @@ import Toast from '../components/Toast';
 import useToast from '../hooks/useToast';
 
 const LeasesPage = () => {
-  const { leases, addLease, properties, tenants } = useApp();
+  const { leases, addLease, terminateLease, properties, tenants } = useApp();
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({ propertyId: '', tenantId: '', startDate: '', endDate: '', monthlyRent: '' });
-  const [localLeases, setLocalLeases] = useState(leases);
   const { toast, showToast, hideToast } = useToast();
 
   const getDaysLeft = (endDate) => {
@@ -19,22 +18,18 @@ const LeasesPage = () => {
     e.preventDefault();
     const property = properties.find(p => p.propertyId === formData.propertyId);
     const tenant = tenants.find(t => t.tenantId === formData.tenantId);
-    const newLease = {
+    addLease({
       ...formData,
-      leaseId: Date.now().toString(),
       propertyAddress: property?.address || '',
-      tenantName: tenant?.name || '',
-      status: 'active'
-    };
-    addLease(newLease);
-    setLocalLeases(prev => [...prev, newLease]);
+      tenantName: tenant?.name || ''
+    });
     setFormData({ propertyId: '', tenantId: '', startDate: '', endDate: '', monthlyRent: '' });
     setShowForm(false);
     showToast('Lease created');
   };
 
-  const terminateLease = (leaseId) => {
-    setLocalLeases(prev => prev.map(l => l.leaseId === leaseId ? { ...l, status: 'terminated' } : l));
+  const handleTerminate = (leaseId) => {
+    terminateLease(leaseId);
     showToast('Lease terminated', 'error');
   };
 
@@ -43,9 +38,7 @@ const LeasesPage = () => {
       {toast && <Toast message={toast.message} type={toast.type} onClose={hideToast} />}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <h2>Leases</h2>
-        <button onClick={() => setShowForm(!showForm)}>
-          {showForm ? 'Cancel' : '+ Add Lease'}
-        </button>
+        <button onClick={() => setShowForm(!showForm)}>{showForm ? 'Cancel' : '+ Add Lease'}</button>
       </div>
 
       {showForm && (
@@ -65,9 +58,9 @@ const LeasesPage = () => {
         </form>
       )}
 
-      {localLeases.length === 0 && <p style={{ color: '#888', textAlign: 'center', padding: '40px' }}>No leases found.</p>}
+      {leases.length === 0 && <p style={{ color: '#888', textAlign: 'center', padding: '40px' }}>No leases found.</p>}
 
-      {localLeases.map(lease => {
+      {leases.map(lease => {
         const daysLeft = getDaysLeft(lease.endDate);
         const expiringSoon = daysLeft <= 30 && daysLeft > 0 && lease.status === 'active';
         const expired = daysLeft <= 0 && lease.status === 'active';
@@ -92,10 +85,7 @@ const LeasesPage = () => {
                   {lease.status}
                 </span>
                 {lease.status === 'active' && (
-                  <button
-                    onClick={() => terminateLease(lease.leaseId)}
-                    style={{ backgroundColor: '#e53935', color: 'white', border: 'none', padding: '5px 10px', borderRadius: '4px', cursor: 'pointer', fontSize: '13px' }}
-                  >
+                  <button onClick={() => handleTerminate(lease.leaseId)} style={{ backgroundColor: '#e53935', padding: '5px 10px', fontSize: '13px' }}>
                     Terminate
                   </button>
                 )}
