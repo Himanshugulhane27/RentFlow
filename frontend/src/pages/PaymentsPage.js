@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import Toast from '../components/Toast';
 import useToast from '../hooks/useToast';
+import ConfirmDialog from '../components/ConfirmDialog';
 
 const PaymentsPage = () => {
-  const { payments, addPayment, markPaymentPaid, tenants } = useApp();
+  const { payments, addPayment, markPaymentPaid, deletePayment, tenants } = useApp();
   const [filter, setFilter] = useState('all');
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({ tenantId: '', amount: '', dueDate: '' });
+  const [confirmId, setConfirmId] = useState(null);
   const { toast, showToast, hideToast } = useToast();
 
   const totalCollected = payments.filter(p => p.status === 'paid').reduce((sum, p) => sum + p.amount, 0);
@@ -28,6 +30,14 @@ const PaymentsPage = () => {
     showToast('Payment marked as paid');
   };
 
+  const handleDelete = (id) => setConfirmId(id);
+
+  const confirmDelete = () => {
+    deletePayment(confirmId);
+    setConfirmId(null);
+    showToast('Payment deleted', 'error');
+  };
+
   const getDaysOverdue = (dueDate) => {
     const diff = new Date() - new Date(dueDate);
     return Math.floor(diff / (1000 * 60 * 60 * 24));
@@ -36,6 +46,7 @@ const PaymentsPage = () => {
   return (
     <div style={{ padding: '20px' }}>
       {toast && <Toast message={toast.message} type={toast.type} onClose={hideToast} />}
+      {confirmId && <ConfirmDialog message="Delete this payment record?" onConfirm={confirmDelete} onCancel={() => setConfirmId(null)} />}
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <h2>Payments</h2>
@@ -106,6 +117,9 @@ const PaymentsPage = () => {
                 Mark Paid
               </button>
             )}
+            <button onClick={() => handleDelete(payment.paymentId)} style={{ backgroundColor: '#757575', padding: '6px 12px' }}>
+              Delete
+            </button>
           </div>
         </div>
         );

@@ -39,13 +39,14 @@ export const AppProvider = ({ children }) => {
 
   const addPayment = (payment) => setPayments(prev => [...prev, { ...payment, paymentId: Date.now().toString(), status: 'pending' }]);
   const markPaymentPaid = (id) => setPayments(prev => prev.map(p => p.paymentId === id ? { ...p, status: 'paid' } : p));
+  const deletePayment = (id) => setPayments(prev => prev.filter(p => p.paymentId !== id));
 
   return (
     <AppContext.Provider value={{
       properties, addProperty, deleteProperty, toggleAvailability, editProperty,
       tenants, addTenant, deleteTenant, editTenant,
       leases, addLease, terminateLease,
-      payments, addPayment, markPaymentPaid
+      payments, addPayment, markPaymentPaid, deletePayment
     }}>
       {children}
     </AppContext.Provider>
