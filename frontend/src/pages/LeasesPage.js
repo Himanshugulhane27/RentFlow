@@ -7,22 +7,17 @@ const LeasesPage = () => {
   const { leases, addLease, terminateLease, properties, tenants } = useApp();
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({ propertyId: '', tenantId: '', startDate: '', endDate: '', monthlyRent: '' });
+  const [search, setSearch] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
   const { toast, showToast, hideToast } = useToast();
 
-  const getDaysLeft = (endDate) => {
-    const diff = new Date(endDate) - new Date();
-    return Math.ceil(diff / (1000 * 60 * 60 * 24));
-  };
+  const getDaysLeft = (endDate) => Math.ceil((new Date(endDate) - new Date()) / (1000 * 60 * 60 * 24));
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const property = properties.find(p => p.propertyId === formData.propertyId);
     const tenant = tenants.find(t => t.tenantId === formData.tenantId);
-    addLease({
-      ...formData,
-      propertyAddress: property?.address || '',
-      tenantName: tenant?.name || ''
-    });
+    addLease({ ...formData, propertyAddress: property?.address || '', tenantName: tenant?.name || '' });
     setFormData({ propertyId: '', tenantId: '', startDate: '', endDate: '', monthlyRent: '' });
     setShowForm(false);
     showToast('Lease created');
@@ -33,9 +28,17 @@ const LeasesPage = () => {
     showToast('Lease terminated', 'error');
   };
 
+  const visible = leases.filter(l => {
+    const matchSearch = l.tenantName.toLowerCase().includes(search.toLowerCase()) ||
+      l.propertyAddress.toLowerCase().includes(search.toLowerCase());
+    const matchStatus = statusFilter === 'all' || l.status === statusFilter;
+    return matchSearch && matchStatus;
+  });
+
   return (
     <div style={{ padding: '20px' }}>
       {toast && <Toast message={toast.message} type={toast.type} onClose={hideToast} />}
+
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <h2>Leases</h2>
         <button onClick={() => setShowForm(!showForm)}>{showForm ? 'Cancel' : '+ Add Lease'}</button>
@@ -58,9 +61,23 @@ const LeasesPage = () => {
         </form>
       )}
 
-      {leases.length === 0 && <p style={{ color: '#888', textAlign: 'center', padding: '40px' }}>No leases found.</p>}
+      <div style={{ display: 'flex', gap: '10px', marginBottom: '16px', flexWrap: 'wrap' }}>
+        <input
+          placeholder="Search by tenant or property..."
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          style={{ flex: 1, minWidth: '180px', marginBottom: 0 }}
+        />
+        <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} style={{ width: 'auto' }}>
+          <option value="all">All Statuses</option>
+          <option value="active">Active</option>
+          <option value="terminated">Terminated</option>
+        </select>
+      </div>
 
-      {leases.map(lease => {
+      {visible.length === 0 && <p style={{ color: '#888', textAlign: 'center', padding: '40px' }}>No leases found.</p>}
+
+      {visible.map(lease => {
         const daysLeft = getDaysLeft(lease.endDate);
         const expiringSoon = daysLeft <= 30 && daysLeft > 0 && lease.status === 'active';
         const expired = daysLeft <= 0 && lease.status === 'active';
