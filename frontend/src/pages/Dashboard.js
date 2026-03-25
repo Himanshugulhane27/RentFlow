@@ -17,7 +17,7 @@ const StatCard = ({ title, value, color, path }) => {
 };
 
 const Dashboard = () => {
-  const { properties, tenants, leases, payments } = useApp();
+  const { properties, tenants, leases, payments, activity } = useApp();
 
   const availableCount = properties.filter(p => p.available).length;
   const occupiedCount = properties.filter(p => !p.available).length;
@@ -25,9 +25,7 @@ const Dashboard = () => {
   const activeLeases = leases.filter(l => l.status === 'active');
   const monthlyRevenue = activeLeases.reduce((sum, l) => sum + Number(l.monthlyRent), 0);
   const pendingPayments = payments.filter(p => p.status === 'pending').length;
-  const overduePayments = payments.filter(p => {
-    return p.status === 'pending' && new Date() > new Date(p.dueDate);
-  }).length;
+  const overduePayments = payments.filter(p => p.status === 'pending' && new Date() > new Date(p.dueDate)).length;
 
   const stats = [
     { title: 'Total Properties', value: properties.length, color: '#1565c0', path: '/properties' },
@@ -83,6 +81,18 @@ const Dashboard = () => {
           </div>
         )}
       </div>
+
+      {activity.length > 0 && (
+        <div style={{ marginTop: '20px', backgroundColor: 'white', borderRadius: '8px', padding: '20px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
+          <h3 style={{ marginBottom: '16px' }}>Recent Activity</h3>
+          {activity.map(a => (
+            <div key={a.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: '1px solid #f0f0f0' }}>
+              <span style={{ color: '#333', fontSize: '14px' }}>{a.message}</span>
+              <span style={{ color: '#aaa', fontSize: '12px', whiteSpace: 'nowrap', marginLeft: '12px' }}>{a.time}</span>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
