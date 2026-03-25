@@ -7,24 +7,24 @@ class AppError extends Error {
 }
 
 const handleError = (error) => {
-  console.error('Error:', error);
-  
+  const headers = {
+    'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': '*'
+  };
+
   if (error.isOperational) {
     return {
       statusCode: error.statusCode,
-      body: JSON.stringify({
-        success: false,
-        error: error.message
-      })
+      headers,
+      body: JSON.stringify({ success: false, error: error.message })
     };
   }
 
+  console.error('Unexpected error:', error);
   return {
     statusCode: 500,
-    body: JSON.stringify({
-      success: false,
-      error: 'Internal server error'
-    })
+    headers,
+    body: JSON.stringify({ success: false, error: 'Internal server error' })
   };
 };
 

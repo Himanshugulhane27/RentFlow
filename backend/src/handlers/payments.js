@@ -1,4 +1,5 @@
-const { success, error } = require('../utils/response');
+const { success } = require('../utils/response');
+const { handleError, AppError } = require('../utils/errorHandler');
 const paymentService = require('../services/paymentService');
 const { validateRequired } = require('../utils/validation');
 
@@ -14,7 +15,7 @@ exports.handler = async (event) => {
       case 'POST': {
         const data = JSON.parse(body);
         validateRequired(['leaseId', 'tenantId', 'amount'], data);
-        if (Number(data.amount) <= 0) throw new Error('Amount must be greater than zero');
+        if (Number(data.amount) <= 0) throw new AppError('Amount must be greater than zero', 400);
         return success(await paymentService.createPayment(data));
       }
       case 'PUT':
@@ -23,9 +24,9 @@ exports.handler = async (event) => {
         await paymentService.deletePayment(paymentId);
         return success({ message: 'Payment deleted' });
       default:
-        return error('Method not allowed');
+        throw new AppError('Method not allowed', 405);
     }
   } catch (err) {
-    return error(err.message);
+    return handleError(err);
   }
 };

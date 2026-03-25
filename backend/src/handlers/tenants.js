@@ -1,4 +1,5 @@
-const { success, error } = require('../utils/response');
+const { success } = require('../utils/response');
+const { handleError, AppError } = require('../utils/errorHandler');
 const tenantService = require('../services/tenantService');
 const { validateRequired, validateEmail } = require('../utils/validation');
 
@@ -14,22 +15,22 @@ exports.handler = async (event) => {
       case 'POST': {
         const data = JSON.parse(body);
         validateRequired(['name', 'email'], data);
-        if (!validateEmail(data.email)) throw new Error('Invalid email address');
+        if (!validateEmail(data.email)) throw new AppError('Invalid email address', 400);
         return success(await tenantService.createTenant(data));
       }
       case 'PUT': {
         const data = JSON.parse(body);
         validateRequired(['name', 'email'], data);
-        if (!validateEmail(data.email)) throw new Error('Invalid email address');
+        if (!validateEmail(data.email)) throw new AppError('Invalid email address', 400);
         return success(await tenantService.updateTenant(tenantId, data));
       }
       case 'DELETE':
         await tenantService.deleteTenant(tenantId);
         return success({ message: 'Tenant deleted' });
       default:
-        return error('Method not allowed');
+        throw new AppError('Method not allowed', 405);
     }
   } catch (err) {
-    return error(err.message);
+    return handleError(err);
   }
 };

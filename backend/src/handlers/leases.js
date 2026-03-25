@@ -1,4 +1,5 @@
-const { success, error } = require('../utils/response');
+const { success } = require('../utils/response');
+const { handleError, AppError } = require('../utils/errorHandler');
 const leaseService = require('../services/leaseService');
 const { validateRequired } = require('../utils/validation');
 
@@ -25,9 +26,9 @@ exports.handler = async (event) => {
         await leaseService.deleteLease(leaseId);
         return success({ message: 'Lease deleted' });
       default:
-        return error('Method not allowed');
+        throw new AppError('Method not allowed', 405);
     }
   } catch (err) {
-    return error(err.message);
+    return handleError(err);
   }
 };
