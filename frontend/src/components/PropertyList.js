@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 
 const PropertyList = ({ properties = [], onDelete, onToggle, onEdit }) => {
   const { leases, tenants } = useApp();
+  const navigate = useNavigate();
   const [editingId, setEditingId] = useState(null);
   const [editData, setEditData] = useState({});
 
@@ -50,7 +52,7 @@ const PropertyList = ({ properties = [], onDelete, onToggle, onEdit }) => {
             ) : (
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
-                  <h3 style={{ margin: '0 0 6px' }}>{property.address}</h3>
+                  <h3 style={{ margin: '0 0 6px', cursor: 'pointer', color: '#1a237e' }} onClick={() => navigate(`/properties/${property.propertyId}`)}>{property.address}</h3>
                   <p style={{ margin: '0 0 4px', color: '#555' }}>
                     💰 ${property.rent}/month &nbsp;|&nbsp;
                     🛏 {property.bedrooms} bed &nbsp;|&nbsp;
