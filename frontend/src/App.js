@@ -8,6 +8,7 @@ import LeasesPage from './pages/LeasesPage';
 import PaymentsPage from './pages/PaymentsPage';
 import NotFound from './pages/NotFound';
 import PropertyDetailPage from './pages/PropertyDetailPage';
+import TenantDetailPage from './pages/TenantDetailPage';
 import './App.css';
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
         <Route path="/leases" element={<LeasesPage />} />
         <Route path="/payments" element={<PaymentsPage />} />
         <Route path="/properties/:id" element={<PropertyDetailPage />} />
+        <Route path="/tenants/:id" element={<TenantDetailPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>

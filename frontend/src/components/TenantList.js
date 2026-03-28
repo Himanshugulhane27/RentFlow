@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import TenantModal from './TenantModal';
 
 const TenantList = ({ tenants = [], onDelete, onEdit }) => {
+  const navigate = useNavigate();
   const [selected, setSelected] = useState(null);
   const [editingId, setEditingId] = useState(null);
   const [editData, setEditData] = useState({});
@@ -48,7 +50,10 @@ const TenantList = ({ tenants = [], onDelete, onEdit }) => {
                   {tenant.name.charAt(0)}
                 </div>
                 <div>
-                  <h3 style={{ margin: '0 0 4px' }}>{tenant.name}</h3>
+                  <h3
+                    style={{ margin: '0 0 4px', cursor: 'pointer', color: '#1a237e' }}
+                    onClick={() => navigate(`/tenants/${tenant.tenantId}`)}
+                  >{tenant.name}</h3>
                   <p style={{ margin: 0, color: '#555' }}>📧 {tenant.email} &nbsp;|&nbsp; 📞 {tenant.phone}</p>
                 </div>
               </div>
