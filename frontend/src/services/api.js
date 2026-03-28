@@ -1,32 +1,41 @@
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000';
+const BASE = process.env.REACT_APP_API_URL || 'http://localhost:3000';
+
+const request = async (path, method = 'GET', body = null) => {
+  const options = { method, headers: { 'Content-Type': 'application/json' } };
+  if (body) options.body = JSON.stringify(body);
+  const res = await fetch(`${BASE}${path}`, options);
+  if (!res.ok) throw new Error(`Request failed: ${res.status}`);
+  return res.json();
+};
 
 const api = {
-  async getProperties() {
-    const response = await fetch(`${API_BASE_URL}/properties`);
-    return response.json();
+  properties: {
+    getAll: () => request('/properties'),
+    getById: (id) => request(`/properties/${id}`),
+    create: (data) => request('/properties', 'POST', data),
+    update: (id, data) => request(`/properties/${id}`, 'PUT', data),
+    remove: (id) => request(`/properties/${id}`, 'DELETE')
   },
-
-  async createProperty(property) {
-    const response = await fetch(`${API_BASE_URL}/properties`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(property)
-    });
-    return response.json();
+  tenants: {
+    getAll: () => request('/tenants'),
+    getById: (id) => request(`/tenants/${id}`),
+    create: (data) => request('/tenants', 'POST', data),
+    update: (id, data) => request(`/tenants/${id}`, 'PUT', data),
+    remove: (id) => request(`/tenants/${id}`, 'DELETE')
   },
-
-  async getTenants() {
-    const response = await fetch(`${API_BASE_URL}/tenants`);
-    return response.json();
+  leases: {
+    getAll: () => request('/leases'),
+    getById: (id) => request(`/leases/${id}`),
+    create: (data) => request('/leases', 'POST', data),
+    update: (id, data) => request(`/leases/${id}`, 'PUT', data),
+    remove: (id) => request(`/leases/${id}`, 'DELETE')
   },
-
-  async createTenant(tenant) {
-    const response = await fetch(`${API_BASE_URL}/tenants`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(tenant)
-    });
-    return response.json();
+  payments: {
+    getAll: () => request('/payments'),
+    getById: (id) => request(`/payments/${id}`),
+    create: (data) => request('/payments', 'POST', data),
+    markPaid: (id) => request(`/payments/${id}`, 'PUT'),
+    remove: (id) => request(`/payments/${id}`, 'DELETE')
   }
 };
 
