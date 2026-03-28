@@ -14,6 +14,7 @@ const PaymentsPage = () => {
 
   const totalCollected = payments.filter(p => p.status === 'paid').reduce((sum, p) => sum + p.amount, 0);
   const totalPending = payments.filter(p => p.status === 'pending').reduce((sum, p) => sum + p.amount, 0);
+  const totalOverdue = payments.filter(p => p.status === 'pending' && new Date() > new Date(p.dueDate)).reduce((sum, p) => sum + p.amount, 0);
   const filtered = payments.filter(p => filter === 'all' ? true : p.status === filter);
 
   const handleSubmit = (e) => {
@@ -73,6 +74,10 @@ const PaymentsPage = () => {
         <div style={{ backgroundColor: '#fff3e0', padding: '15px 25px', borderRadius: '8px', flex: 1 }}>
           <p style={{ margin: 0, color: '#555' }}>Pending</p>
           <h3 style={{ margin: '5px 0 0', color: '#e65100' }}>${totalPending.toLocaleString()}</h3>
+        </div>
+        <div style={{ backgroundColor: '#ffebee', padding: '15px 25px', borderRadius: '8px', flex: 1 }}>
+          <p style={{ margin: 0, color: '#555' }}>Overdue</p>
+          <h3 style={{ margin: '5px 0 0', color: '#c62828' }}>${totalOverdue.toLocaleString()}</h3>
         </div>
       </div>
 
