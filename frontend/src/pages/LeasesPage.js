@@ -7,6 +7,7 @@ const LeasesPage = () => {
   const { leases, addLease, terminateLease, properties, tenants } = useApp();
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({ propertyId: '', tenantId: '', startDate: '', endDate: '', monthlyRent: '' });
+  const [formError, setFormError] = useState('');
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const { toast, showToast, hideToast } = useToast();
@@ -15,6 +16,9 @@ const LeasesPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (Number(formData.monthlyRent) <= 0) { setFormError('Monthly rent must be greater than 0'); return; }
+    if (formData.endDate <= formData.startDate) { setFormError('End date must be after start date'); return; }
+    setFormError('');
     const property = properties.find(p => p.propertyId === formData.propertyId);
     const tenant = tenants.find(t => t.tenantId === formData.tenantId);
     addLease({ ...formData, propertyAddress: property?.address || '', tenantName: tenant?.name || '' });
@@ -58,6 +62,7 @@ const LeasesPage = () => {
           <input type="date" value={formData.endDate} onChange={e => setFormData({ ...formData, endDate: e.target.value })} required />
           <input type="number" placeholder="Monthly Rent" value={formData.monthlyRent} onChange={e => setFormData({ ...formData, monthlyRent: e.target.value })} required />
           <button type="submit">Create Lease</button>
+          {formError && <p style={{ color: '#e53935', fontSize: '13px', marginTop: '8px' }}>{formError}</p>}
         </form>
       )}
 
