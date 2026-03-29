@@ -13,10 +13,12 @@ const Navbar = () => {
     { path: '/payments', label: 'Payments' }
   ];
 
+  const isActive = (path) => path === '/' ? location.pathname === '/' : location.pathname.startsWith(path);
+
   const linkStyle = (path) => ({
-    color: location.pathname === path ? '#ffeb3b' : 'white',
+    color: isActive(path) ? '#ffeb3b' : 'white',
     textDecoration: 'none',
-    fontWeight: location.pathname === path ? 'bold' : 'normal',
+    fontWeight: isActive(path) ? 'bold' : 'normal',
     fontSize: '15px',
     padding: '6px 10px',
     borderRadius: '4px',
