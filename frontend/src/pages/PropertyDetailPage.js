@@ -17,10 +17,10 @@ const PropertyDetailPage = () => {
 
   const activeLease = leases.find(l => l.propertyId === id && l.status === 'active');
   const currentTenant = activeLease ? tenants.find(t => t.tenantId === activeLease.tenantId) : null;
-  const propertyPayments = activeLease
-    ? payments.filter(p => p.tenantName === activeLease.tenantName)
-    : [];
+  const propertyPayments = activeLease ? payments.filter(p => p.tenantName === activeLease.tenantName) : [];
   const allLeases = leases.filter(l => l.propertyId === id);
+  const totalCollected = propertyPayments.filter(p => p.status === 'paid').reduce((sum, p) => sum + p.amount, 0);
+  const totalPending = propertyPayments.filter(p => p.status === 'pending').reduce((sum, p) => sum + p.amount, 0);
 
   return (
     <div style={{ padding: '20px', maxWidth: '700px' }}>
@@ -44,6 +44,19 @@ const PropertyDetailPage = () => {
           </span>
         </div>
       </div>
+
+      {propertyPayments.length > 0 && (
+        <div style={{ display: 'flex', gap: '16px', marginBottom: '20px', flexWrap: 'wrap' }}>
+          <div style={{ flex: 1, minWidth: '140px', backgroundColor: '#e8f5e9', padding: '16px', borderRadius: '8px', textAlign: 'center' }}>
+            <p style={{ margin: 0, fontSize: '12px', color: '#555' }}>Collected</p>
+            <h3 style={{ margin: '6px 0 0', color: '#2e7d32' }}>${totalCollected.toLocaleString()}</h3>
+          </div>
+          <div style={{ flex: 1, minWidth: '140px', backgroundColor: '#fff3e0', padding: '16px', borderRadius: '8px', textAlign: 'center' }}>
+            <p style={{ margin: 0, fontSize: '12px', color: '#555' }}>Pending</p>
+            <h3 style={{ margin: '6px 0 0', color: '#e65100' }}>${totalPending.toLocaleString()}</h3>
+          </div>
+        </div>
+      )}
 
       {currentTenant && (
         <div style={{ backgroundColor: '#e3f2fd', borderRadius: '10px', padding: '20px', marginBottom: '20px' }}>
