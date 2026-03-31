@@ -17,7 +17,7 @@ const StatCard = ({ title, value, color, path }) => {
 };
 
 const Dashboard = () => {
-  const { properties, tenants, leases, payments, activity } = useApp();
+  const { properties, tenants, leases, payments, activity, clearActivity } = useApp();
 
   const availableCount = properties.filter(p => p.available).length;
   const occupiedCount = properties.filter(p => !p.available).length;
@@ -85,6 +85,10 @@ const Dashboard = () => {
       {activity.length > 0 && (
         <div style={{ marginTop: '20px', backgroundColor: 'white', borderRadius: '8px', padding: '20px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
           <h3 style={{ marginBottom: '16px' }}>Recent Activity</h3>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+            <h3 style={{ margin: 0 }}>Recent Activity</h3>
+            <button onClick={clearActivity} style={{ backgroundColor: '#e0e0e0', color: '#555', padding: '4px 12px', fontSize: '13px' }}>Clear</button>
+          </div>
           {activity.map(a => (
             <div key={a.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: '1px solid #f0f0f0' }}>
               <span style={{ color: '#333', fontSize: '14px' }}>{a.message}</span>

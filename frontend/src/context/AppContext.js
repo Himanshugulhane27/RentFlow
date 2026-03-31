@@ -99,6 +99,7 @@ export const AppProvider = ({ children }) => {
     });
   };
   const deletePayment = (id) => setPayments(prev => prev.filter(p => p.paymentId !== id));
+  const clearActivity = () => setActivity([]);
 
   return (
     <AppContext.Provider value={{
@@ -106,7 +107,7 @@ export const AppProvider = ({ children }) => {
       tenants, addTenant, deleteTenant, editTenant,
       leases, addLease, terminateLease,
       payments, addPayment, markPaymentPaid, deletePayment,
-      activity
+      activity, clearActivity
     }}>
       {children}
     </AppContext.Provider>
