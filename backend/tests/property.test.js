@@ -1,21 +1,30 @@
 const Property = require('../src/models/Property');
 
 describe('Property Model', () => {
-  test('should create property with valid data', () => {
-    const data = {
-      propertyId: '123',
-      address: '123 Main St',
-      rent: 1200,
-      bedrooms: 2,
-      bathrooms: 1
-    };
-    const property = new Property(data);
-    expect(property.address).toBe('123 Main St');
-    expect(property.rent).toBe(1200);
+  test('creates property with all fields', () => {
+    const p = new Property({ propertyId: '1', address: '123 Main St', rent: 1200, bedrooms: 2, bathrooms: 1, available: true });
+    expect(p.address).toBe('123 Main St');
+    expect(p.rent).toBe(1200);
+    expect(p.available).toBe(true);
   });
 
-  test('should throw error for missing required fields', () => {
-    const property = new Property({ propertyId: '123' });
-    expect(() => property.validate()).toThrow('Address and rent are required');
+  test('defaults available to true when not provided', () => {
+    const p = new Property({ propertyId: '1', address: '123 Main St', rent: 1200 });
+    expect(p.available).toBe(true);
+  });
+
+  test('validate passes with address and rent', () => {
+    const p = new Property({ propertyId: '1', address: '123 Main St', rent: 1200 });
+    expect(p.validate()).toBe(true);
+  });
+
+  test('validate throws when address is missing', () => {
+    const p = new Property({ propertyId: '1', rent: 1200 });
+    expect(() => p.validate()).toThrow('Address and rent are required');
+  });
+
+  test('validate throws when rent is missing', () => {
+    const p = new Property({ propertyId: '1', address: '123 Main St' });
+    expect(() => p.validate()).toThrow('Address and rent are required');
   });
 });
