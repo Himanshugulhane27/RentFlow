@@ -9,6 +9,7 @@ const PaymentsPage = () => {
   const [filter, setFilter] = useState('all');
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({ tenantId: '', amount: '', dueDate: '' });
+  const [formError, setFormError] = useState('');
   const [confirmId, setConfirmId] = useState(null);
   const { toast, showToast, hideToast } = useToast();
 
@@ -19,6 +20,9 @@ const PaymentsPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (Number(formData.amount) <= 0) { setFormError('Amount must be greater than 0'); return; }
+    if (!formData.dueDate) { setFormError('Due date is required'); return; }
+    setFormError('');
     const tenant = tenants.find(t => t.tenantId === formData.tenantId);
     addPayment({ ...formData, amount: Number(formData.amount), tenantName: tenant?.name || '' });
     setFormData({ tenantId: '', amount: '', dueDate: '' });
@@ -63,6 +67,7 @@ const PaymentsPage = () => {
           <input type="number" placeholder="Amount ($)" value={formData.amount} onChange={e => setFormData({ ...formData, amount: e.target.value })} required />
           <input type="date" value={formData.dueDate} onChange={e => setFormData({ ...formData, dueDate: e.target.value })} required />
           <button type="submit">Add Payment</button>
+          {formError && <p style={{ color: '#e53935', fontSize: '13px', marginTop: '8px' }}>{formError}</p>}
         </form>
       )}
 
