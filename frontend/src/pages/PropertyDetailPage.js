@@ -61,7 +61,12 @@ const PropertyDetailPage = () => {
       {currentTenant && (
         <div style={{ backgroundColor: '#e3f2fd', borderRadius: '10px', padding: '20px', marginBottom: '20px' }}>
           <h3 style={{ margin: '0 0 12px', color: '#1565c0' }}>Current Tenant</h3>
-          <p style={{ margin: '0 0 4px' }}><strong>{currentTenant.name}</strong></p>
+          <p style={{ margin: '0 0 4px' }}>
+            <strong
+              style={{ cursor: 'pointer', color: '#1a237e' }}
+              onClick={() => navigate(`/tenants/${currentTenant.tenantId}`)}
+            >{currentTenant.name}</strong>
+          </p>
           <p style={{ margin: '0 0 4px', color: '#555' }}>📧 {currentTenant.email}</p>
           <p style={{ margin: 0, color: '#555' }}>📞 {currentTenant.phone}</p>
         </div>
