@@ -49,7 +49,7 @@ const PropertiesPage = () => {
       {toast && <Toast message={toast.message} type={toast.type} onClose={hideToast} />}
       {confirmId && <ConfirmDialog message="Delete this property?" onConfirm={confirmDelete} onCancel={() => setConfirmId(null)} />}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h2>Properties</h2>
+        <h2>Properties ({filtered.length})</h2>
         <button onClick={() => setShowForm(!showForm)}>
           {showForm ? 'Cancel' : '+ Add Property'}
         </button>

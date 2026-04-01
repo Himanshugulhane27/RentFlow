@@ -44,7 +44,7 @@ const LeasesPage = () => {
       {toast && <Toast message={toast.message} type={toast.type} onClose={hideToast} />}
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h2>Leases</h2>
+        <h2>Leases ({visible.length})</h2>
         <button onClick={() => setShowForm(!showForm)}>{showForm ? 'Cancel' : '+ Add Lease'}</button>
       </div>
 

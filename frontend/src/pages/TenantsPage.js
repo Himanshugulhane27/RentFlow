@@ -47,7 +47,7 @@ const TenantsPage = () => {
       {confirmId && <ConfirmDialog message="Delete this tenant?" onConfirm={confirmDelete} onCancel={() => setConfirmId(null)} />}
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h2>Tenants</h2>
+        <h2>Tenants ({filtered.length})</h2>
         <button onClick={() => { setShowForm(!showForm); setEmailError(''); }}>
           {showForm ? 'Cancel' : '+ Add Tenant'}
         </button>
