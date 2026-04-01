@@ -7,6 +7,7 @@ class Payment {
     this.dueDate = data.dueDate;
     this.paidDate = data.paidDate || null;
     this.status = data.status || 'pending';
+    this.createdAt = data.createdAt || new Date().toISOString();
   }
 
   validate() {

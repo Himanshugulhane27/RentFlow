@@ -5,6 +5,7 @@ class Tenant {
     this.email = data.email;
     this.phone = data.phone;
     this.currentProperty = data.currentProperty || null;
+    this.createdAt = data.createdAt || new Date().toISOString();
   }
 
   validate() {

@@ -7,6 +7,7 @@ class Lease {
     this.endDate = data.endDate;
     this.monthlyRent = data.monthlyRent;
     this.status = data.status || 'active';
+    this.createdAt = data.createdAt || new Date().toISOString();
   }
 
   validate() {

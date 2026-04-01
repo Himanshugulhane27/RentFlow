@@ -5,7 +5,8 @@ class Property {
     this.rent = data.rent;
     this.bedrooms = data.bedrooms;
     this.bathrooms = data.bathrooms;
-    this.available = data.available || true;
+    this.available = data.available !== undefined ? data.available : true;
+    this.createdAt = data.createdAt || new Date().toISOString();
   }
 
   validate() {
