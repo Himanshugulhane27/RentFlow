@@ -7,6 +7,7 @@ import ConfirmDialog from '../components/ConfirmDialog';
 const PaymentsPage = () => {
   const { payments, addPayment, markPaymentPaid, deletePayment, tenants } = useApp();
   const [filter, setFilter] = useState('all');
+  const [sortOrder, setSortOrder] = useState('asc');
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({ tenantId: '', amount: '', dueDate: '' });
   const [formError, setFormError] = useState('');
@@ -16,7 +17,12 @@ const PaymentsPage = () => {
   const totalCollected = payments.filter(p => p.status === 'paid').reduce((sum, p) => sum + p.amount, 0);
   const totalPending = payments.filter(p => p.status === 'pending').reduce((sum, p) => sum + p.amount, 0);
   const totalOverdue = payments.filter(p => p.status === 'pending' && new Date() > new Date(p.dueDate)).reduce((sum, p) => sum + p.amount, 0);
-  const filtered = payments.filter(p => filter === 'all' ? true : p.status === filter);
+  const filtered = payments
+    .filter(p => filter === 'all' ? true : p.status === filter)
+    .sort((a, b) => sortOrder === 'asc'
+      ? new Date(a.dueDate) - new Date(b.dueDate)
+      : new Date(b.dueDate) - new Date(a.dueDate)
+    );
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -86,7 +92,7 @@ const PaymentsPage = () => {
         </div>
       </div>
 
-      <div style={{ display: 'flex', gap: '10px', marginBottom: '16px' }}>
+      <div style={{ display: 'flex', gap: '10px', marginBottom: '16px', alignItems: 'center', flexWrap: 'wrap' }}>
         {['all', 'paid', 'pending'].map(f => (
           <button key={f} onClick={() => setFilter(f)} style={{
             backgroundColor: filter === f ? '#1a237e' : '#e0e0e0',
@@ -96,6 +102,10 @@ const PaymentsPage = () => {
             {f.charAt(0).toUpperCase() + f.slice(1)}
           </button>
         ))}
+        <select value={sortOrder} onChange={e => setSortOrder(e.target.value)} style={{ width: 'auto', marginLeft: 'auto' }}>
+          <option value="asc">Due Date: Oldest First</option>
+          <option value="desc">Due Date: Newest First</option>
+        </select>
       </div>
 
       {filtered.length === 0 && <p style={{ color: '#888', textAlign: 'center', padding: '30px' }}>No payments found.</p>}
