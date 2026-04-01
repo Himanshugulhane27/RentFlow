@@ -66,7 +66,10 @@ const TenantDetailPage = () => {
           {tenantLeases.map(l => (
             <div key={l.leaseId} style={{ padding: '12px 0', borderBottom: '1px solid #f0f0f0' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontWeight: '500' }}>{l.propertyAddress}</span>
+                <span
+                  style={{ fontWeight: '500', cursor: 'pointer', color: '#1a237e' }}
+                  onClick={() => navigate(`/properties/${l.propertyId}`)}
+                >{l.propertyAddress}</span>
                 <span style={{
                   padding: '3px 10px', borderRadius: '20px', fontSize: '12px',
                   backgroundColor: l.status === 'active' ? '#e8f5e9' : '#ffebee',
