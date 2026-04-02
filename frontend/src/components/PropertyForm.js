@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 const PropertyForm = ({ onSubmit }) => {
-  const [formData, setFormData] = useState({ address: '', rent: '', bedrooms: '', bathrooms: '' });
+  const [formData, setFormData] = useState({ address: '', rent: '', bedrooms: '', bathrooms: '', description: '' });
   const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
@@ -23,7 +23,7 @@ const PropertyForm = ({ onSubmit }) => {
     const errs = validate();
     if (Object.keys(errs).length > 0) { setErrors(errs); return; }
     onSubmit({ ...formData, rent: Number(formData.rent), bedrooms: Number(formData.bedrooms), bathrooms: Number(formData.bathrooms) });
-    setFormData({ address: '', rent: '', bedrooms: '', bathrooms: '' });
+    setFormData({ address: '', rent: '', bedrooms: '', bathrooms: '', description: '' });
     setErrors({});
   };
 
@@ -42,6 +42,7 @@ const PropertyForm = ({ onSubmit }) => {
       {fieldError('bedrooms')}
       <input name="bathrooms" type="number" placeholder="Bathrooms" value={formData.bathrooms} onChange={handleChange} />
       {fieldError('bathrooms')}
+      <textarea name="description" placeholder="Description (optional)" value={formData.description} onChange={handleChange} rows={2} style={{ width: '100%', boxSizing: 'border-box', marginBottom: '8px', padding: '8px', borderRadius: '4px', border: '1px solid #ccc', resize: 'vertical' }} />
       <button type="submit">Add Property</button>
     </form>
   );

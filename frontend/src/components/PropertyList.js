@@ -16,7 +16,7 @@ const PropertyList = ({ properties = [], onDelete, onToggle, onEdit }) => {
 
   const startEdit = (property) => {
     setEditingId(property.propertyId);
-    setEditData({ address: property.address, rent: property.rent, bedrooms: property.bedrooms, bathrooms: property.bathrooms });
+    setEditData({ address: property.address, rent: property.rent, bedrooms: property.bedrooms, bathrooms: property.bathrooms, description: property.description || '' });
   };
 
   const saveEdit = (propertyId) => {
@@ -44,6 +44,7 @@ const PropertyList = ({ properties = [], onDelete, onToggle, onEdit }) => {
                   <input type="number" value={editData.bedrooms} onChange={e => setEditData({ ...editData, bedrooms: e.target.value })} placeholder="Beds" />
                   <input type="number" value={editData.bathrooms} onChange={e => setEditData({ ...editData, bathrooms: e.target.value })} placeholder="Baths" />
                 </div>
+                <textarea value={editData.description} onChange={e => setEditData({ ...editData, description: e.target.value })} placeholder="Description (optional)" rows={2} style={{ width: '100%', boxSizing: 'border-box', marginTop: '6px', padding: '8px', borderRadius: '4px', border: '1px solid #ccc', resize: 'vertical' }} />
                 <div style={{ display: 'flex', gap: '8px', marginTop: '10px' }}>
                   <button onClick={() => saveEdit(property.propertyId)}>Save</button>
                   <button onClick={() => setEditingId(null)} style={{ backgroundColor: '#757575' }}>Cancel</button>
@@ -62,6 +63,9 @@ const PropertyList = ({ properties = [], onDelete, onToggle, onEdit }) => {
                     <p style={{ margin: 0, fontSize: '13px', color: '#1565c0' }}>
                       👤 Rented by {currentTenant.name}
                     </p>
+                  )}
+                  {property.description && (
+                    <p style={{ margin: '4px 0 0', fontSize: '13px', color: '#777' }}>{property.description}</p>
                   )}
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
