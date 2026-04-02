@@ -82,6 +82,13 @@ export const AppProvider = ({ children }) => {
     setLeases(prev => [...prev, { ...l, leaseId: Date.now().toString(), status: 'active' }]);
     log(`Lease created for "${l.propertyAddress}"`);
   };
+  const renewLease = (id, newEndDate) => {
+    setLeases(prev => {
+      const found = prev.find(l => l.leaseId === id);
+      if (found) log(`Lease for "${found.propertyAddress}" renewed until ${newEndDate}`);
+      return prev.map(l => l.leaseId === id ? { ...l, status: 'active', endDate: newEndDate } : l);
+    });
+  };
   const terminateLease = (id) => {
     setLeases(prev => {
       const found = prev.find(l => l.leaseId === id);
@@ -105,7 +112,7 @@ export const AppProvider = ({ children }) => {
     <AppContext.Provider value={{
       properties, addProperty, deleteProperty, toggleAvailability, editProperty,
       tenants, addTenant, deleteTenant, editTenant,
-      leases, addLease, terminateLease,
+      leases, addLease, renewLease, terminateLease,
       payments, addPayment, markPaymentPaid, deletePayment,
       activity, clearActivity
     }}>

@@ -4,12 +4,14 @@ import Toast from '../components/Toast';
 import useToast from '../hooks/useToast';
 
 const LeasesPage = () => {
-  const { leases, addLease, terminateLease, properties, tenants } = useApp();
+  const { leases, addLease, renewLease, terminateLease, properties, tenants } = useApp();
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({ propertyId: '', tenantId: '', startDate: '', endDate: '', monthlyRent: '' });
   const [formError, setFormError] = useState('');
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [renewingId, setRenewingId] = useState(null);
+  const [renewDate, setRenewDate] = useState('');
   const { toast, showToast, hideToast } = useToast();
 
   const getDaysLeft = (endDate) => Math.ceil((new Date(endDate) - new Date()) / (1000 * 60 * 60 * 24));
@@ -30,6 +32,14 @@ const LeasesPage = () => {
   const handleTerminate = (leaseId) => {
     terminateLease(leaseId);
     showToast('Lease terminated', 'error');
+  };
+
+  const handleRenew = (leaseId) => {
+    if (!renewDate) return;
+    renewLease(leaseId, renewDate);
+    setRenewingId(null);
+    setRenewDate('');
+    showToast('Lease renewed');
   };
 
   const visible = leases.filter(l => {
@@ -110,6 +120,17 @@ const LeasesPage = () => {
                   <button onClick={() => handleTerminate(lease.leaseId)} style={{ backgroundColor: '#e53935', padding: '5px 10px', fontSize: '13px' }}>
                     Terminate
                   </button>
+                )}
+                {(lease.status === 'terminated' || (lease.status === 'active' && (expiringSoon || expired))) && (
+                  renewingId === lease.leaseId ? (
+                    <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                      <input type="date" value={renewDate} onChange={e => setRenewDate(e.target.value)} style={{ margin: 0, padding: '4px 8px', fontSize: '13px' }} />
+                      <button onClick={() => handleRenew(lease.leaseId)} style={{ backgroundColor: '#2e7d32', padding: '5px 10px', fontSize: '13px' }}>Confirm</button>
+                      <button onClick={() => { setRenewingId(null); setRenewDate(''); }} style={{ backgroundColor: '#757575', padding: '5px 10px', fontSize: '13px' }}>Cancel</button>
+                    </div>
+                  ) : (
+                    <button onClick={() => setRenewingId(lease.leaseId)} style={{ backgroundColor: '#1565c0', padding: '5px 10px', fontSize: '13px' }}>Renew</button>
+                  )
                 )}
               </div>
             </div>
