@@ -16,25 +16,26 @@ const TenantsPage = () => {
 
   const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!isValidEmail(formData.email)) {
-      setEmailError('Please enter a valid email address');
-      return;
-    }
+    if (!isValidEmail(formData.email)) { setEmailError('Please enter a valid email address'); return; }
     setEmailError('');
-    addTenant(formData);
-    setFormData({ name: '', email: '', phone: '' });
-    setShowForm(false);
-    showToast('Tenant added successfully');
+    try {
+      await addTenant(formData);
+      setFormData({ name: '', email: '', phone: '' });
+      setShowForm(false);
+      showToast('Tenant added successfully');
+    } catch { showToast('Failed to add tenant', 'error'); }
   };
 
   const handleDelete = (id) => setConfirmId(id);
 
-  const confirmDelete = () => {
-    deleteTenant(confirmId);
-    setConfirmId(null);
-    showToast('Tenant removed', 'error');
+  const confirmDelete = async () => {
+    try {
+      await deleteTenant(confirmId);
+      setConfirmId(null);
+      showToast('Tenant removed', 'error');
+    } catch { showToast('Failed to delete tenant', 'error'); }
   };
 
   const filtered = tenants.filter(t =>
@@ -87,7 +88,7 @@ const TenantsPage = () => {
       <TenantList
         tenants={filtered}
         onDelete={handleDelete}
-        onEdit={(id, data) => { editTenant(id, data); showToast('Tenant updated'); }}
+        onEdit={async (id, data) => { try { await editTenant(id, data); showToast('Tenant updated'); } catch { showToast('Failed to update tenant', 'error'); } }}
       />
     </div>
   );

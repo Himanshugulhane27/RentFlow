@@ -15,23 +15,29 @@ const PropertiesPage = () => {
   const [confirmId, setConfirmId] = useState(null);
   const { toast, showToast, hideToast } = useToast();
 
-  const handleAdd = (data) => {
-    addProperty(data);
-    setShowForm(false);
-    showToast('Property added successfully');
+  const handleAdd = async (data) => {
+    try {
+      await addProperty(data);
+      setShowForm(false);
+      showToast('Property added successfully');
+    } catch { showToast('Failed to add property', 'error'); }
   };
 
   const handleDelete = (id) => setConfirmId(id);
 
-  const confirmDelete = () => {
-    deleteProperty(confirmId);
-    setConfirmId(null);
-    showToast('Property removed', 'error');
+  const confirmDelete = async () => {
+    try {
+      await deleteProperty(confirmId);
+      setConfirmId(null);
+      showToast('Property removed', 'error');
+    } catch { showToast('Failed to delete property', 'error'); }
   };
 
-  const handleToggle = (id) => {
-    toggleAvailability(id);
-    showToast('Availability updated', 'info');
+  const handleToggle = async (id) => {
+    try {
+      await toggleAvailability(id);
+      showToast('Availability updated', 'info');
+    } catch { showToast('Failed to update availability', 'error'); }
   };
 
   let filtered = properties.filter(p =>
@@ -75,7 +81,7 @@ const PropertiesPage = () => {
         </select>
       </div>
 
-      <PropertyList properties={filtered} onDelete={handleDelete} onToggle={handleToggle} onEdit={(id, data) => { editProperty(id, data); showToast('Property updated'); }} />
+      <PropertyList properties={filtered} onDelete={handleDelete} onToggle={handleToggle} onEdit={async (id, data) => { try { await editProperty(id, data); showToast('Property updated'); } catch { showToast('Failed to update property', 'error'); } }} />
     </div>
   );
 };

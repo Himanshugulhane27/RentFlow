@@ -24,29 +24,35 @@ const PaymentsPage = () => {
       : new Date(b.dueDate) - new Date(a.dueDate)
     );
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (Number(formData.amount) <= 0) { setFormError('Amount must be greater than 0'); return; }
     if (!formData.dueDate) { setFormError('Due date is required'); return; }
     setFormError('');
     const tenant = tenants.find(t => t.tenantId === formData.tenantId);
-    addPayment({ ...formData, amount: Number(formData.amount), tenantName: tenant?.name || '' });
-    setFormData({ tenantId: '', amount: '', dueDate: '', note: '' });
-    setShowForm(false);
-    showToast('Payment record added');
+    try {
+      await addPayment({ ...formData, amount: Number(formData.amount), tenantName: tenant?.name || '' });
+      setFormData({ tenantId: '', amount: '', dueDate: '', note: '' });
+      setShowForm(false);
+      showToast('Payment record added');
+    } catch { showToast('Failed to add payment', 'error'); }
   };
 
-  const handleMarkPaid = (id) => {
-    markPaymentPaid(id);
-    showToast('Payment marked as paid');
+  const handleMarkPaid = async (id) => {
+    try {
+      await markPaymentPaid(id);
+      showToast('Payment marked as paid');
+    } catch { showToast('Failed to mark payment', 'error'); }
   };
 
   const handleDelete = (id) => setConfirmId(id);
 
-  const confirmDelete = () => {
-    deletePayment(confirmId);
-    setConfirmId(null);
-    showToast('Payment deleted', 'error');
+  const confirmDelete = async () => {
+    try {
+      await deletePayment(confirmId);
+      setConfirmId(null);
+      showToast('Payment deleted', 'error');
+    } catch { showToast('Failed to delete payment', 'error'); }
   };
 
   const getDaysOverdue = (dueDate) => {

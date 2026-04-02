@@ -16,30 +16,36 @@ const LeasesPage = () => {
 
   const getDaysLeft = (endDate) => Math.ceil((new Date(endDate) - new Date()) / (1000 * 60 * 60 * 24));
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (Number(formData.monthlyRent) <= 0) { setFormError('Monthly rent must be greater than 0'); return; }
     if (formData.endDate <= formData.startDate) { setFormError('End date must be after start date'); return; }
     setFormError('');
     const property = properties.find(p => p.propertyId === formData.propertyId);
     const tenant = tenants.find(t => t.tenantId === formData.tenantId);
-    addLease({ ...formData, propertyAddress: property?.address || '', tenantName: tenant?.name || '' });
-    setFormData({ propertyId: '', tenantId: '', startDate: '', endDate: '', monthlyRent: '' });
-    setShowForm(false);
-    showToast('Lease created');
+    try {
+      await addLease({ ...formData, propertyAddress: property?.address || '', tenantName: tenant?.name || '' });
+      setFormData({ propertyId: '', tenantId: '', startDate: '', endDate: '', monthlyRent: '' });
+      setShowForm(false);
+      showToast('Lease created');
+    } catch { showToast('Failed to create lease', 'error'); }
   };
 
-  const handleTerminate = (leaseId) => {
-    terminateLease(leaseId);
-    showToast('Lease terminated', 'error');
+  const handleTerminate = async (leaseId) => {
+    try {
+      await terminateLease(leaseId);
+      showToast('Lease terminated', 'error');
+    } catch { showToast('Failed to terminate lease', 'error'); }
   };
 
-  const handleRenew = (leaseId) => {
+  const handleRenew = async (leaseId) => {
     if (!renewDate) return;
-    renewLease(leaseId, renewDate);
-    setRenewingId(null);
-    setRenewDate('');
-    showToast('Lease renewed');
+    try {
+      await renewLease(leaseId, renewDate);
+      setRenewingId(null);
+      setRenewDate('');
+      showToast('Lease renewed');
+    } catch { showToast('Failed to renew lease', 'error'); }
   };
 
   const visible = leases.filter(l => {
