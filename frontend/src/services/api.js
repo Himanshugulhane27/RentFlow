@@ -1,9 +1,16 @@
-const BASE = process.env.REACT_APP_API_URL || 'http://localhost:3000';
+const BASE = process.env.REACT_APP_API_URL;
+
+if (!BASE) {
+  console.warn('REACT_APP_API_URL is not set. API calls will fail. Copy .env.example to .env and set the value.');
+}
+
+const ALLOWED_BASE = BASE || '';
 
 const request = async (path, method = 'GET', body = null) => {
+  if (!ALLOWED_BASE) throw new Error('API URL is not configured. Set REACT_APP_API_URL in your .env file.');
   const options = { method, headers: { 'Content-Type': 'application/json' } };
   if (body) options.body = JSON.stringify(body);
-  const res = await fetch(`${BASE}${path}`, options);
+  const res = await fetch(`${ALLOWED_BASE}${path}`, options);
   if (!res.ok) throw new Error(`Request failed: ${res.status}`);
   return res.json();
 };
