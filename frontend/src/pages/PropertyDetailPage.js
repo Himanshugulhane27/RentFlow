@@ -17,7 +17,7 @@ const PropertyDetailPage = () => {
 
   const activeLease = leases.find(l => l.propertyId === id && l.status === 'active');
   const currentTenant = activeLease ? tenants.find(t => t.tenantId === activeLease.tenantId) : null;
-  const propertyPayments = activeLease ? payments.filter(p => p.tenantName === activeLease.tenantName) : [];
+  const propertyPayments = activeLease ? payments.filter(p => p.tenantId === activeLease.tenantId) : [];
   const allLeases = leases.filter(l => l.propertyId === id);
   const totalCollected = propertyPayments.filter(p => p.status === 'paid').reduce((sum, p) => sum + p.amount, 0);
   const totalPending = propertyPayments.filter(p => p.status === 'pending').reduce((sum, p) => sum + p.amount, 0);
