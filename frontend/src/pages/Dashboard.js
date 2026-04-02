@@ -27,6 +27,12 @@ const Dashboard = () => {
   const pendingPayments = payments.filter(p => p.status === 'pending').length;
   const overduePayments = payments.filter(p => p.status === 'pending' && new Date() > new Date(p.dueDate)).length;
 
+  const expiringThisMonth = leases.filter(l => {
+    if (l.status !== 'active') return false;
+    const daysLeft = Math.ceil((new Date(l.endDate) - new Date()) / (1000 * 60 * 60 * 24));
+    return daysLeft > 0 && daysLeft <= 30;
+  });
+
   const stats = [
     { title: 'Total Properties', value: properties.length, color: '#1565c0', path: '/properties' },
     { title: 'Active Tenants', value: tenants.length, color: '#2e7d32', path: '/tenants' },
@@ -57,6 +63,21 @@ const Dashboard = () => {
         </div>
       </div>
 
+      {expiringThisMonth.length > 0 && (
+        <div style={{ marginTop: '20px', backgroundColor: '#fff8e1', border: '1px solid #ffb300', borderRadius: '8px', padding: '20px' }}>
+          <h4 style={{ margin: '0 0 12px', color: '#e65100' }}>⚠️ Leases Expiring This Month ({expiringThisMonth.length})</h4>
+          {expiringThisMonth.map(l => {
+            const daysLeft = Math.ceil((new Date(l.endDate) - new Date()) / (1000 * 60 * 60 * 24));
+            return (
+              <div key={l.leaseId} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid #ffe082', fontSize: '14px' }}>
+                <span>{l.propertyAddress} — {l.tenantName}</span>
+                <span style={{ color: '#e65100', fontWeight: 'bold' }}>{daysLeft}d left</span>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
       <div style={{ marginTop: '30px', backgroundColor: 'white', borderRadius: '8px', padding: '20px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
         <h3 style={{ marginBottom: '16px' }}>Occupancy Rate</h3>
         <div style={{ backgroundColor: '#e0e0e0', borderRadius: '20px', height: '20px', overflow: 'hidden' }}>
@@ -84,7 +105,6 @@ const Dashboard = () => {
 
       {activity.length > 0 && (
         <div style={{ marginTop: '20px', backgroundColor: 'white', borderRadius: '8px', padding: '20px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
-          <h3 style={{ marginBottom: '16px' }}>Recent Activity</h3>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
             <h3 style={{ margin: 0 }}>Recent Activity</h3>
             <button onClick={clearActivity} style={{ backgroundColor: '#e0e0e0', color: '#555', padding: '4px 12px', fontSize: '13px' }}>Clear</button>
