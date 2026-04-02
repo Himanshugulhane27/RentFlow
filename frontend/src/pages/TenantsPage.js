@@ -38,7 +38,8 @@ const TenantsPage = () => {
   };
 
   const filtered = tenants.filter(t =>
-    t.name.toLowerCase().includes(search.toLowerCase())
+    t.name.toLowerCase().includes(search.toLowerCase()) ||
+    t.email.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
@@ -77,7 +78,7 @@ const TenantsPage = () => {
       )}
 
       <input
-        placeholder="Search by name..."
+        placeholder="Search by name or email..."
         value={search}
         onChange={e => setSearch(e.target.value)}
         style={{ marginBottom: '16px' }}
