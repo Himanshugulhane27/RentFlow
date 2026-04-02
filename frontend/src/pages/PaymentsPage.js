@@ -9,7 +9,7 @@ const PaymentsPage = () => {
   const [filter, setFilter] = useState('all');
   const [sortOrder, setSortOrder] = useState('asc');
   const [showForm, setShowForm] = useState(false);
-  const [formData, setFormData] = useState({ tenantId: '', amount: '', dueDate: '' });
+  const [formData, setFormData] = useState({ tenantId: '', amount: '', dueDate: '', note: '' });
   const [formError, setFormError] = useState('');
   const [confirmId, setConfirmId] = useState(null);
   const { toast, showToast, hideToast } = useToast();
@@ -31,7 +31,7 @@ const PaymentsPage = () => {
     setFormError('');
     const tenant = tenants.find(t => t.tenantId === formData.tenantId);
     addPayment({ ...formData, amount: Number(formData.amount), tenantName: tenant?.name || '' });
-    setFormData({ tenantId: '', amount: '', dueDate: '' });
+    setFormData({ tenantId: '', amount: '', dueDate: '', note: '' });
     setShowForm(false);
     showToast('Payment record added');
   };
@@ -72,6 +72,7 @@ const PaymentsPage = () => {
           </select>
           <input type="number" placeholder="Amount ($)" value={formData.amount} onChange={e => setFormData({ ...formData, amount: e.target.value })} required />
           <input type="date" value={formData.dueDate} onChange={e => setFormData({ ...formData, dueDate: e.target.value })} required />
+          <input placeholder="Note (optional)" value={formData.note} onChange={e => setFormData({ ...formData, note: e.target.value })} />
           <button type="submit">Add Payment</button>
           {formError && <p style={{ color: '#e53935', fontSize: '13px', marginTop: '8px' }}>{formError}</p>}
         </form>
@@ -122,6 +123,7 @@ const PaymentsPage = () => {
           <div>
             <h3 style={{ margin: '0 0 5px' }}>{payment.tenantName}</h3>
             <p style={{ margin: 0, color: '#555' }}>Due: {payment.dueDate} &nbsp;|&nbsp; Amount: ${payment.amount}</p>
+            {payment.note && <p style={{ margin: '4px 0 0', fontSize: '13px', color: '#777' }}>📝 {payment.note}</p>}
             {overdue && <p style={{ margin: '4px 0 0', fontSize: '13px', color: '#e53935', fontWeight: 'bold' }}>🔴 {daysOverdue} day{daysOverdue > 1 ? 's' : ''} overdue</p>}
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
