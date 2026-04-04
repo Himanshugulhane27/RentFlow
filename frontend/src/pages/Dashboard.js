@@ -42,7 +42,15 @@ const Dashboard = () => {
 
   return (
     <div style={{ padding: '20px' }}>
-      <h2>Dashboard</h2>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+        <h2 style={{ margin: 0 }}>Dashboard</h2>
+        <div style={{ display: 'flex', gap: '8px' }}>
+          <button onClick={() => navigate('/properties')} style={{ backgroundColor: '#1565c0', padding: '8px 14px', fontSize: '13px' }}>+ Property</button>
+          <button onClick={() => navigate('/tenants')} style={{ backgroundColor: '#2e7d32', padding: '8px 14px', fontSize: '13px' }}>+ Tenant</button>
+          <button onClick={() => navigate('/leases')} style={{ backgroundColor: '#6a1b9a', padding: '8px 14px', fontSize: '13px' }}>+ Lease</button>
+          <button onClick={() => navigate('/payments')} style={{ backgroundColor: '#e65100', padding: '8px 14px', fontSize: '13px' }}>+ Payment</button>
+        </div>
+      </div>
 
       <div style={{ display: 'flex', flexWrap: 'wrap' }}>
         {stats.map((stat, i) => <StatCard key={i} {...stat} />)}
