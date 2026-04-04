@@ -1,5 +1,5 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Dashboard from './pages/Dashboard';
 import PropertiesPage from './pages/PropertiesPage';
@@ -29,6 +29,16 @@ class ErrorBoundary extends React.Component {
 
 const AppRoutes = () => {
   const { loading, error, refetch } = useApp();
+  const location = useLocation();
+
+  useEffect(() => {
+    const titles = {
+      '/': 'Dashboard', '/properties': 'Properties', '/tenants': 'Tenants',
+      '/leases': 'Leases', '/payments': 'Payments'
+    };
+    const match = Object.keys(titles).find(k => k === location.pathname || (k !== '/' && location.pathname.startsWith(k)));
+    document.title = match ? `${titles[match]} — Rental Manager` : 'Rental Manager';
+  }, [location]);
 
   if (loading) return (
     <div style={{ textAlign: 'center', padding: '60px', color: '#555' }}>
