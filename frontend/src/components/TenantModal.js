@@ -1,8 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useApp } from '../context/AppContext';
 
 const TenantModal = ({ tenant, onClose }) => {
   const { leases, payments } = useApp();
+
+  useEffect(() => {
+    const handler = (e) => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [onClose]);
 
   const tenantLeases = leases.filter(l => l.tenantId === tenant.tenantId);
   const tenantPayments = payments.filter(p => p.tenantId === tenant.tenantId);
