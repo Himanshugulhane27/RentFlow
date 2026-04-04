@@ -60,6 +60,11 @@ const PaymentsPage = () => {
     return Math.floor(diff / (1000 * 60 * 60 * 24));
   };
 
+  const isDueToday = (dueDate) => {
+    const today = new Date().toISOString().slice(0, 10);
+    return dueDate === today;
+  };
+
   return (
     <div style={{ padding: '20px' }}>
       {toast && <Toast message={toast.message} type={toast.type} onClose={hideToast} />}
@@ -120,16 +125,18 @@ const PaymentsPage = () => {
       {filtered.map(payment => {
         const overdue = payment.status === 'pending' && getDaysOverdue(payment.dueDate) > 0;
         const daysOverdue = getDaysOverdue(payment.dueDate);
+        const dueToday = payment.status === 'pending' && isDueToday(payment.dueDate);
         return (
         <div key={payment.paymentId} style={{
-          border: `1px solid ${overdue ? '#e53935' : '#ddd'}`, padding: '15px', borderRadius: '8px',
-          marginBottom: '10px', backgroundColor: overdue ? '#fff5f5' : 'white',
+          border: `1px solid ${overdue ? '#e53935' : dueToday ? '#f9a825' : '#ddd'}`, padding: '15px', borderRadius: '8px',
+          marginBottom: '10px', backgroundColor: overdue ? '#fff5f5' : dueToday ? '#fffde7' : 'white',
           display: 'flex', justifyContent: 'space-between', alignItems: 'center'
         }}>
           <div>
             <h3 style={{ margin: '0 0 5px' }}>{payment.tenantName}</h3>
             <p style={{ margin: 0, color: '#555' }}>Due: {payment.dueDate} &nbsp;|&nbsp; Amount: ${payment.amount}</p>
             {payment.note && <p style={{ margin: '4px 0 0', fontSize: '13px', color: '#777' }}>📝 {payment.note}</p>}
+            {dueToday && <p style={{ margin: '4px 0 0', fontSize: '13px', color: '#f9a825', fontWeight: 'bold' }}>📅 Due Today</p>}
             {overdue && <p style={{ margin: '4px 0 0', fontSize: '13px', color: '#e53935', fontWeight: 'bold' }}>🔴 {daysOverdue} day{daysOverdue > 1 ? 's' : ''} overdue</p>}
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
