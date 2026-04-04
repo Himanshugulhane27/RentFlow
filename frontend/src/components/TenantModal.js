@@ -5,7 +5,7 @@ const TenantModal = ({ tenant, onClose }) => {
   const { leases, payments } = useApp();
 
   const tenantLeases = leases.filter(l => l.tenantId === tenant.tenantId);
-  const tenantPayments = payments.filter(p => p.tenantName === tenant.name);
+  const tenantPayments = payments.filter(p => p.tenantId === tenant.tenantId);
   const totalPaid = tenantPayments.filter(p => p.status === 'paid').reduce((sum, p) => sum + p.amount, 0);
   const pendingCount = tenantPayments.filter(p => p.status === 'pending').length;
 
