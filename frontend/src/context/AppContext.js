@@ -1,126 +1,174 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import api from '../services/api';
+import React, { createContext, useContext, useState } from 'react';
 
 const AppContext = createContext();
 
+const load = (key, fallback) => {
+  try {
+    const stored = localStorage.getItem(key);
+    return stored ? JSON.parse(stored) : fallback;
+  } catch { return fallback; }
+};
+
+const save = (key, value) => localStorage.setItem(key, JSON.stringify(value));
+
+const defaultProperties = [
+  { propertyId: '1', address: '123 Main St', rent: 1200, bedrooms: 2, bathrooms: 1, available: true },
+  { propertyId: '2', address: '456 Oak Ave', rent: 1500, bedrooms: 3, bathrooms: 2, available: false },
+  { propertyId: '3', address: '789 Pine Rd', rent: 900, bedrooms: 1, bathrooms: 1, available: true }
+];
+
+const defaultTenants = [
+  { tenantId: '1', name: 'John Doe', email: 'john@email.com', phone: '555-0100' },
+  { tenantId: '2', name: 'Jane Smith', email: 'jane@email.com', phone: '555-0200' }
+];
+
+const defaultLeases = [
+  { leaseId: '1', propertyId: '2', propertyAddress: '456 Oak Ave', tenantId: '1', tenantName: 'John Doe', startDate: '2024-01-01', endDate: '2025-12-31', monthlyRent: 1200, status: 'active' },
+  { leaseId: '2', propertyId: '3', propertyAddress: '789 Pine Rd', tenantId: '2', tenantName: 'Jane Smith', startDate: '2024-03-01', endDate: '2025-02-28', monthlyRent: 900, status: 'active' }
+];
+
+const defaultPayments = [
+  { paymentId: '1', tenantId: '1', tenantName: 'John Doe', amount: 1200, dueDate: '2025-02-01', status: 'paid' },
+  { paymentId: '2', tenantId: '2', tenantName: 'Jane Smith', amount: 900, dueDate: '2025-02-01', status: 'pending' },
+  { paymentId: '3', tenantId: '1', tenantName: 'John Doe', amount: 1200, dueDate: new Date().toISOString().slice(0, 10), status: 'pending' }
+];
+
 export const AppProvider = ({ children }) => {
-  const [properties, setProperties] = useState([]);
-  const [tenants, setTenants] = useState([]);
-  const [leases, setLeases] = useState([]);
-  const [payments, setPayments] = useState([]);
-  const [activity, setActivity] = useState(() => {
-    try { return JSON.parse(localStorage.getItem('rms_activity')) || []; } catch { return []; }
-  });
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [properties, setProperties] = useState(() => load('rms_properties', defaultProperties));
+  const [tenants, setTenants] = useState(() => load('rms_tenants', defaultTenants));
+  const [leases, setLeases] = useState(() => load('rms_leases', defaultLeases));
+  const [payments, setPayments] = useState(() => load('rms_payments', defaultPayments));
+  const [activity, setActivity] = useState(() => load('rms_activity', []));
+
+  const persist = (key, setter) => (val) => {
+    setter(val);
+    save(key, typeof val === 'function' ? val : val);
+  };
 
   const log = (message) => {
-    const entry = { id: Date.now(), message, time: new Date().toLocaleTimeString() };
     setActivity(prev => {
-      const next = [entry, ...prev].slice(0, 10);
-      localStorage.setItem('rms_activity', JSON.stringify(next));
+      const next = [{ id: Date.now(), message, time: new Date().toLocaleTimeString() }, ...prev].slice(0, 10);
+      save('rms_activity', next);
       return next;
     });
   };
 
-  const fetchAll = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const [p, t, l, pay] = await Promise.all([
-        api.properties.getAll(),
-        api.tenants.getAll(),
-        api.leases.getAll(),
-        api.payments.getAll()
-      ]);
-      setProperties(p);
-      setTenants(t);
-      setLeases(l);
-      setPayments(pay);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => { fetchAll(); }, [fetchAll]);
+  const set = (key, setter) => (val) => {
+    setter(val);
+    // persisted via useEffect alternative — inline save
+  };
 
   // Properties
-  const addProperty = async (data) => {
-    const created = await api.properties.create(data);
-    setProperties(prev => [...prev, created]);
-    log(`Property "${created.address}" added`);
+  const addProperty = (p) => {
+    setProperties(prev => {
+      const next = [...prev, { ...p, propertyId: Date.now().toString(), available: true }];
+      save('rms_properties', next);
+      return next;
+    });
+    log(`Property "${p.address}" added`);
   };
-  const editProperty = async (id, data) => {
-    const updated = await api.properties.update(id, data);
-    setProperties(prev => prev.map(p => p.propertyId === id ? updated : p));
+  const editProperty = (id, data) => {
+    setProperties(prev => {
+      const next = prev.map(p => p.propertyId === id ? { ...p, ...data } : p);
+      save('rms_properties', next);
+      return next;
+    });
   };
-  const deleteProperty = async (id) => {
-    const found = properties.find(p => p.propertyId === id);
-    await api.properties.remove(id);
-    setProperties(prev => prev.filter(p => p.propertyId !== id));
-    if (found) log(`Property "${found.address}" deleted`);
+  const deleteProperty = (id) => {
+    setProperties(prev => {
+      const found = prev.find(p => p.propertyId === id);
+      const next = prev.filter(p => p.propertyId !== id);
+      save('rms_properties', next);
+      if (found) log(`Property "${found.address}" deleted`);
+      return next;
+    });
   };
-  const toggleAvailability = async (id) => {
-    const prop = properties.find(p => p.propertyId === id);
-    if (!prop) return;
-    const updated = await api.properties.update(id, { ...prop, available: !prop.available });
-    setProperties(prev => prev.map(p => p.propertyId === id ? updated : p));
+  const toggleAvailability = (id) => {
+    setProperties(prev => {
+      const next = prev.map(p => p.propertyId === id ? { ...p, available: !p.available } : p);
+      save('rms_properties', next);
+      return next;
+    });
   };
 
   // Tenants
-  const addTenant = async (data) => {
-    const created = await api.tenants.create(data);
-    setTenants(prev => [...prev, created]);
-    log(`Tenant "${created.name}" added`);
+  const addTenant = (t) => {
+    setTenants(prev => {
+      const next = [...prev, { ...t, tenantId: Date.now().toString() }];
+      save('rms_tenants', next);
+      return next;
+    });
+    log(`Tenant "${t.name}" added`);
   };
-  const editTenant = async (id, data) => {
-    const updated = await api.tenants.update(id, data);
-    setTenants(prev => prev.map(t => t.tenantId === id ? updated : t));
+  const editTenant = (id, data) => {
+    setTenants(prev => {
+      const next = prev.map(t => t.tenantId === id ? { ...t, ...data } : t);
+      save('rms_tenants', next);
+      return next;
+    });
   };
-  const deleteTenant = async (id) => {
-    const found = tenants.find(t => t.tenantId === id);
-    await api.tenants.remove(id);
-    setTenants(prev => prev.filter(t => t.tenantId !== id));
-    if (found) log(`Tenant "${found.name}" removed`);
+  const deleteTenant = (id) => {
+    setTenants(prev => {
+      const found = prev.find(t => t.tenantId === id);
+      const next = prev.filter(t => t.tenantId !== id);
+      save('rms_tenants', next);
+      if (found) log(`Tenant "${found.name}" removed`);
+      return next;
+    });
   };
 
   // Leases
-  const addLease = async (data) => {
-    const created = await api.leases.create({ ...data, status: 'active' });
-    setLeases(prev => [...prev, created]);
-    log(`Lease created for "${created.propertyAddress}"`);
+  const addLease = (l) => {
+    setLeases(prev => {
+      const next = [...prev, { ...l, leaseId: Date.now().toString(), status: 'active' }];
+      save('rms_leases', next);
+      return next;
+    });
+    log(`Lease created for "${l.propertyAddress}"`);
   };
-  const terminateLease = async (id) => {
-    const found = leases.find(l => l.leaseId === id);
-    const updated = await api.leases.update(id, { status: 'terminated' });
-    setLeases(prev => prev.map(l => l.leaseId === id ? updated : l));
-    if (found) log(`Lease for "${found.propertyAddress}" terminated`);
+  const terminateLease = (id) => {
+    setLeases(prev => {
+      const found = prev.find(l => l.leaseId === id);
+      const next = prev.map(l => l.leaseId === id ? { ...l, status: 'terminated' } : l);
+      save('rms_leases', next);
+      if (found) log(`Lease for "${found.propertyAddress}" terminated`);
+      return next;
+    });
   };
-  const renewLease = async (id, newEndDate) => {
-    const found = leases.find(l => l.leaseId === id);
-    const updated = await api.leases.update(id, { status: 'active', endDate: newEndDate });
-    setLeases(prev => prev.map(l => l.leaseId === id ? updated : l));
-    if (found) log(`Lease for "${found.propertyAddress}" renewed until ${newEndDate}`);
+  const renewLease = (id, newEndDate) => {
+    setLeases(prev => {
+      const found = prev.find(l => l.leaseId === id);
+      const next = prev.map(l => l.leaseId === id ? { ...l, status: 'active', endDate: newEndDate } : l);
+      save('rms_leases', next);
+      if (found) log(`Lease for "${found.propertyAddress}" renewed until ${newEndDate}`);
+      return next;
+    });
   };
 
   // Payments
-  const addPayment = async (data) => {
-    const created = await api.payments.create({ ...data, status: 'pending' });
-    setPayments(prev => [...prev, created]);
+  const addPayment = (p) => {
+    setPayments(prev => {
+      const next = [...prev, { ...p, paymentId: Date.now().toString(), status: 'pending' }];
+      save('rms_payments', next);
+      return next;
+    });
   };
-  const markPaymentPaid = async (id) => {
-    const updated = await api.payments.markPaid(id);
-    const found = payments.find(p => p.paymentId === id);
-    setPayments(prev => prev.map(p => p.paymentId === id ? updated : p));
-    if (found) log(`Payment of $${found.amount} by "${found.tenantName}" marked paid`);
+  const markPaymentPaid = (id) => {
+    setPayments(prev => {
+      const found = prev.find(p => p.paymentId === id);
+      const next = prev.map(p => p.paymentId === id ? { ...p, status: 'paid' } : p);
+      save('rms_payments', next);
+      if (found) log(`Payment of $${found.amount} by "${found.tenantName}" marked paid`);
+      return next;
+    });
   };
-  const deletePayment = async (id) => {
-    await api.payments.remove(id);
-    setPayments(prev => prev.filter(p => p.paymentId !== id));
+  const deletePayment = (id) => {
+    setPayments(prev => {
+      const next = prev.filter(p => p.paymentId !== id);
+      save('rms_payments', next);
+      return next;
+    });
   };
-
   const clearActivity = () => {
     setActivity([]);
     localStorage.removeItem('rms_activity');
@@ -133,7 +181,7 @@ export const AppProvider = ({ children }) => {
       leases, addLease, renewLease, terminateLease,
       payments, addPayment, markPaymentPaid, deletePayment,
       activity, clearActivity,
-      loading, error, refetch: fetchAll
+      loading: false, error: null, refetch: () => {}
     }}>
       {children}
     </AppContext.Provider>
