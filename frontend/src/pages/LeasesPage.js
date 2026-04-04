@@ -127,6 +127,23 @@ const LeasesPage = () => {
                     Terminate
                   </button>
                 )}
+                <button
+                  onClick={() => {
+                    const w = window.open('', '_blank');
+                    w.document.write(`<html><body style="font-family:sans-serif;padding:32px">
+                      <h2>${lease.propertyAddress}</h2>
+                      <p><strong>Tenant:</strong> ${lease.tenantName}</p>
+                      <p><strong>Period:</strong> ${lease.startDate} → ${lease.endDate}</p>
+                      <p><strong>Monthly Rent:</strong> $${lease.monthlyRent}</p>
+                      <p><strong>Status:</strong> ${lease.status}</p>
+                    </body></html>`);
+                    w.document.close();
+                    w.print();
+                  }}
+                  style={{ backgroundColor: '#546e7a', padding: '5px 10px', fontSize: '13px' }}
+                >
+                  🖨 Print
+                </button>
                 {(lease.status === 'terminated' || (lease.status === 'active' && (expiringSoon || expired))) && (
                   renewingId === lease.leaseId ? (
                     <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
