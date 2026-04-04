@@ -1,11 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 
 const Navbar = () => {
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [dark, setDark] = useState(() => localStorage.getItem('rms_dark') === 'true');
   const { leases, payments } = useApp();
+
+  useEffect(() => {
+    document.body.classList.toggle('dark', dark);
+    localStorage.setItem('rms_dark', dark);
+  }, [dark]);
 
   const expiringLeases = leases.filter(l => {
     const daysLeft = Math.ceil((new Date(l.endDate) - new Date()) / (1000 * 60 * 60 * 24));
@@ -45,8 +51,11 @@ const Navbar = () => {
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '56px' }}>
         <span style={{ color: 'white', fontSize: '18px', fontWeight: 'bold' }}>🏠 Rental Manager</span>
 
-        <div style={{ display: 'flex', gap: '4px' }} className="nav-links">
+        <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }} className="nav-links">
           {links.map(l => <Link key={l.path} to={l.path} style={linkStyle(l.path)}>{l.label}{badge(l.badge)}</Link>)}
+          <button onClick={() => setDark(d => !d)} style={{ backgroundColor: 'transparent', fontSize: '18px', padding: '4px 8px', marginLeft: '8px' }} title="Toggle dark mode">
+            {dark ? '☀️' : '🌙'}
+          </button>
         </div>
 
         <button

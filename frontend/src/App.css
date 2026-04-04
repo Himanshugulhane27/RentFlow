@@ -8,6 +8,34 @@ body {
   font-family: 'Segoe UI', Arial, sans-serif;
   background-color: #f0f2f5;
   color: #333;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+body.dark {
+  background-color: #121212;
+  color: #e0e0e0;
+}
+
+body.dark h2 { color: #90caf9; }
+body.dark h3 { color: #e0e0e0; }
+
+body.dark form,
+body.dark .card {
+  background: #1e1e1e;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+}
+
+body.dark input,
+body.dark select,
+body.dark textarea {
+  background: #2a2a2a;
+  color: #e0e0e0;
+  border-color: #444;
+}
+
+body.dark input:focus,
+body.dark select:focus {
+  border-color: #90caf9;
 }
 
 h2 {
