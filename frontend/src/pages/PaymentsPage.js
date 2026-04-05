@@ -13,7 +13,16 @@ const PaymentsPage = () => {
   const [formData, setFormData] = useState({ tenantId: '', amount: '', dueDate: '', note: '' });
   const [formError, setFormError] = useState('');
   const [confirmId, setConfirmId] = useState(null);
+  const [selected, setSelected] = useState([]);
   const { toast, showToast, hideToast } = useToast();
+
+  const toggleSelect = (id) => setSelected(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
+
+  const handleBulkPaid = async () => {
+    await Promise.all(selected.map(id => markPaymentPaid(id)));
+    setSelected([]);
+    showToast(`${selected.length} payment${selected.length > 1 ? 's' : ''} marked as paid`);
+  };
 
   const totalCollected = payments.filter(p => p.status === 'paid').reduce((sum, p) => sum + p.amount, 0);
   const totalPending = payments.filter(p => p.status === 'pending').reduce((sum, p) => sum + p.amount, 0);
@@ -84,6 +93,16 @@ const PaymentsPage = () => {
         style={{ marginBottom: '16px' }}
       />
 
+      {selected.length > 0 && (
+        <div style={{ backgroundColor: '#e3f2fd', padding: '10px 16px', borderRadius: '8px', marginBottom: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span style={{ fontSize: '14px', color: '#1565c0' }}>{selected.length} payment{selected.length > 1 ? 's' : ''} selected</span>
+          <div style={{ display: 'flex', gap: '8px' }}>
+            <button onClick={handleBulkPaid} style={{ backgroundColor: '#2e7d32', padding: '6px 14px', fontSize: '13px' }}>Mark All Paid</button>
+            <button onClick={() => setSelected([])} style={{ backgroundColor: '#757575', padding: '6px 14px', fontSize: '13px' }}>Clear</button>
+          </div>
+        </div>
+      )}
+
       {showForm && (
         <form onSubmit={handleSubmit}>
           <select value={formData.tenantId} onChange={e => setFormData({ ...formData, tenantId: e.target.value })} required>
@@ -141,12 +160,17 @@ const PaymentsPage = () => {
           marginBottom: '10px', backgroundColor: overdue ? '#fff5f5' : dueToday ? '#fffde7' : 'white',
           display: 'flex', justifyContent: 'space-between', alignItems: 'center'
         }}>
-          <div>
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
+            {payment.status === 'pending' && (
+              <input type="checkbox" checked={selected.includes(payment.paymentId)} onChange={() => toggleSelect(payment.paymentId)} style={{ marginTop: '4px', width: '16px', height: '16px', cursor: 'pointer' }} />
+            )}
+            <div>
             <h3 style={{ margin: '0 0 5px' }}>{payment.tenantName}</h3>
             <p style={{ margin: 0, color: '#555' }}>Due: {payment.dueDate} &nbsp;|&nbsp; Amount: ${payment.amount}</p>
             {payment.note && <p style={{ margin: '4px 0 0', fontSize: '13px', color: '#777' }}>📝 {payment.note}</p>}
             {dueToday && <p style={{ margin: '4px 0 0', fontSize: '13px', color: '#f9a825', fontWeight: 'bold' }}>📅 Due Today</p>}
             {overdue && <p style={{ margin: '4px 0 0', fontSize: '13px', color: '#e53935', fontWeight: 'bold' }}>🔴 {daysOverdue} day{daysOverdue > 1 ? 's' : ''} overdue</p>}
+            </div>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <span style={{
