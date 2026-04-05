@@ -54,7 +54,7 @@ const TenantList = ({ tenants = [], onDelete, onEdit }) => {
                     style={{ margin: '0 0 4px', cursor: 'pointer', color: '#1a237e' }}
                     onClick={() => navigate(`/tenants/${tenant.tenantId}`)}
                   >{tenant.name}</h3>
-                  <p style={{ margin: 0, color: '#555' }}>📧 {tenant.email} &nbsp;|&nbsp; 📞 {tenant.phone}</p>
+                  <p style={{ margin: 0, color: '#555' }}>📧 <a href={`mailto:${tenant.email}`} style={{ color: '#555', textDecoration: 'none' }} onClick={e => e.stopPropagation()}>{tenant.email}</a> &nbsp;|&nbsp; 📞 <a href={`tel:${tenant.phone}`} style={{ color: '#555', textDecoration: 'none' }} onClick={e => e.stopPropagation()}>{tenant.phone}</a></p>
                 </div>
               </div>
               <div style={{ display: 'flex', gap: '8px' }}>
