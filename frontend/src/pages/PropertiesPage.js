@@ -12,6 +12,7 @@ const PropertiesPage = () => {
   const [search, setSearch] = useState('');
   const [sortBy, setSortBy] = useState('none');
   const [filterAvail, setFilterAvail] = useState('all');
+  const [filterBeds, setFilterBeds] = useState('any');
   const [confirmId, setConfirmId] = useState(null);
   const { toast, showToast, hideToast } = useToast();
 
@@ -46,6 +47,7 @@ const PropertiesPage = () => {
 
   if (filterAvail === 'available') filtered = filtered.filter(p => p.available);
   if (filterAvail === 'occupied') filtered = filtered.filter(p => !p.available);
+  if (filterBeds !== 'any') filtered = filtered.filter(p => Number(p.bedrooms) === Number(filterBeds));
 
   if (sortBy === 'low') filtered = [...filtered].sort((a, b) => a.rent - b.rent);
   if (sortBy === 'high') filtered = [...filtered].sort((a, b) => b.rent - a.rent);
@@ -78,6 +80,10 @@ const PropertiesPage = () => {
           <option value="all">All</option>
           <option value="available">Available</option>
           <option value="occupied">Occupied</option>
+        </select>
+        <select value={filterBeds} onChange={e => setFilterBeds(e.target.value)} style={{ width: 'auto' }}>
+          <option value="any">Any Beds</option>
+          {[1,2,3,4,5].map(n => <option key={n} value={n}>{n} Bed{n > 1 ? 's' : ''}</option>)}
         </select>
       </div>
 
