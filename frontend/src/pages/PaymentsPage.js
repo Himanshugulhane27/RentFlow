@@ -8,6 +8,7 @@ const PaymentsPage = () => {
   const { payments, addPayment, markPaymentPaid, deletePayment, tenants } = useApp();
   const [filter, setFilter] = useState('all');
   const [sortOrder, setSortOrder] = useState('asc');
+  const [search, setSearch] = useState('');
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({ tenantId: '', amount: '', dueDate: '', note: '' });
   const [formError, setFormError] = useState('');
@@ -19,6 +20,7 @@ const PaymentsPage = () => {
   const totalOverdue = payments.filter(p => p.status === 'pending' && new Date() > new Date(p.dueDate)).reduce((sum, p) => sum + p.amount, 0);
   const filtered = payments
     .filter(p => filter === 'all' ? true : p.status === filter)
+    .filter(p => p.tenantName.toLowerCase().includes(search.toLowerCase()))
     .sort((a, b) => sortOrder === 'asc'
       ? new Date(a.dueDate) - new Date(b.dueDate)
       : new Date(b.dueDate) - new Date(a.dueDate)
@@ -74,6 +76,13 @@ const PaymentsPage = () => {
         <h2>Payments</h2>
         <button onClick={() => setShowForm(!showForm)}>{showForm ? 'Cancel' : '+ Add Payment'}</button>
       </div>
+
+      <input
+        placeholder="Search by tenant name..."
+        value={search}
+        onChange={e => setSearch(e.target.value)}
+        style={{ marginBottom: '16px' }}
+      />
 
       {showForm && (
         <form onSubmit={handleSubmit}>
