@@ -26,7 +26,7 @@ const PaymentsPage = () => {
 
   const totalCollected = payments.filter(p => p.status === 'paid').reduce((sum, p) => sum + Number(p.amount), 0);
   const totalPending = payments.filter(p => p.status === 'pending').reduce((sum, p) => sum + Number(p.amount), 0);
-  const totalOverdue = payments.filter(p => p.status === 'pending' && new Date() > new Date(p.dueDate)).reduce((sum, p) => sum + Number(p.amount), 0);
+  const totalOverdue = payments.filter(p => p.status === 'pending' && new Date().toISOString().slice(0,10) > p.dueDate).reduce((sum, p) => sum + Number(p.amount), 0);
   const filtered = payments
     .filter(p => filter === 'all' ? true : p.status === filter)
     .filter(p => p.tenantName.toLowerCase().includes(search.toLowerCase()))
@@ -67,8 +67,9 @@ const PaymentsPage = () => {
   };
 
   const getDaysOverdue = (dueDate) => {
-    const diff = new Date() - new Date(dueDate);
-    return Math.floor(diff / (1000 * 60 * 60 * 24));
+    const today = new Date().toISOString().slice(0, 10);
+    if (today <= dueDate) return 0;
+    return Math.floor((new Date(today) - new Date(dueDate)) / (1000 * 60 * 60 * 24));
   };
 
   const isDueToday = (dueDate) => {

@@ -26,7 +26,7 @@ const Dashboard = () => {
   const activeLeases = leases.filter(l => l.status === 'active');
   const monthlyRevenue = activeLeases.reduce((sum, l) => sum + Number(l.monthlyRent), 0);
   const pendingPayments = payments.filter(p => p.status === 'pending').length;
-  const overduePayments = payments.filter(p => p.status === 'pending' && new Date() > new Date(p.dueDate)).length;
+  const overduePayments = payments.filter(p => p.status === 'pending' && new Date().toISOString().slice(0,10) > p.dueDate).length;
 
   const expiringThisMonth = leases.filter(l => {
     if (l.status !== 'active') return false;

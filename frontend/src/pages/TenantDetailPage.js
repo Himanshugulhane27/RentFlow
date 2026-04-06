@@ -20,7 +20,7 @@ const TenantDetailPage = () => {
   const tenantPayments = payments.filter(p => p.tenantId === id);
   const totalPaid = tenantPayments.filter(p => p.status === 'paid').reduce((sum, p) => sum + Number(p.amount), 0);
   const totalPending = tenantPayments.filter(p => p.status === 'pending').reduce((sum, p) => sum + Number(p.amount), 0);
-  const isOverdue = (p) => p.status === 'pending' && new Date() > new Date(p.dueDate);
+  const isOverdue = (p) => p.status === 'pending' && new Date().toISOString().slice(0,10) > p.dueDate;
 
   return (
     <div style={{ padding: '20px', maxWidth: '700px' }}>

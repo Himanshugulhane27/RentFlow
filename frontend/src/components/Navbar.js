@@ -18,7 +18,7 @@ const Navbar = () => {
     return l.status === 'active' && daysLeft <= 30 && daysLeft > 0;
   }).length;
 
-  const overduePayments = payments.filter(p => p.status === 'pending' && new Date() > new Date(p.dueDate)).length;
+  const overduePayments = payments.filter(p => p.status === 'pending' && new Date().toISOString().slice(0,10) > p.dueDate).length;
 
   const badge = (count) => count > 0 ? (
     <span style={{ backgroundColor: '#e53935', color: 'white', borderRadius: '50%', fontSize: '11px', padding: '1px 6px', marginLeft: '4px', fontWeight: 'bold' }}>
