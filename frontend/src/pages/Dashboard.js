@@ -17,6 +17,7 @@ const StatCard = ({ title, value, color, path }) => {
 };
 
 const Dashboard = () => {
+  const navigate = useNavigate();
   const { properties, tenants, leases, payments, activity, clearActivity } = useApp();
 
   const availableCount = properties.filter(p => p.available).length;
