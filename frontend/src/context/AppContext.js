@@ -33,6 +33,8 @@ const defaultPayments = [
   { paymentId: '3', tenantId: '1', tenantName: 'John Doe', amount: 1200, dueDate: new Date().toISOString().slice(0, 10), status: 'pending' }
 ];
 
+const uid = () => crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2);
+
 export const AppProvider = ({ children }) => {
   const [properties, setProperties] = useState(() => load('rms_properties', defaultProperties));
   const [tenants, setTenants] = useState(() => load('rms_tenants', defaultTenants));
@@ -61,7 +63,7 @@ export const AppProvider = ({ children }) => {
   // Properties
   const addProperty = (p) => {
     setProperties(prev => {
-      const next = [...prev, { ...p, propertyId: Date.now().toString(), available: true }];
+      const next = [...prev, { ...p, propertyId: uid(), available: true }];
       save('rms_properties', next);
       return next;
     });
@@ -94,7 +96,7 @@ export const AppProvider = ({ children }) => {
   // Tenants
   const addTenant = (t) => {
     setTenants(prev => {
-      const next = [...prev, { ...t, tenantId: Date.now().toString() }];
+      const next = [...prev, { ...t, tenantId: uid() }];
       save('rms_tenants', next);
       return next;
     });
@@ -120,7 +122,7 @@ export const AppProvider = ({ children }) => {
   // Leases
   const addLease = (l) => {
     setLeases(prev => {
-      const next = [...prev, { ...l, leaseId: Date.now().toString(), status: 'active' }];
+      const next = [...prev, { ...l, leaseId: uid(), status: 'active' }];
       save('rms_leases', next);
       return next;
     });
@@ -148,7 +150,7 @@ export const AppProvider = ({ children }) => {
   // Payments
   const addPayment = (p) => {
     setPayments(prev => {
-      const next = [...prev, { ...p, paymentId: Date.now().toString(), status: 'pending' }];
+      const next = [...prev, { ...p, paymentId: uid(), status: 'pending' }];
       save('rms_payments', next);
       return next;
     });
