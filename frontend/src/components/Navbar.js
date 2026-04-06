@@ -26,11 +26,13 @@ const Navbar = () => {
     </span>
   ) : null;
 
+  const activeLeaseCount = leases.filter(l => l.status === 'active').length;
+
   const links = [
     { path: '/', label: 'Dashboard' },
     { path: '/properties', label: 'Properties' },
     { path: '/tenants', label: 'Tenants' },
-    { path: '/leases', label: 'Leases', badge: expiringLeases },
+    { path: '/leases', label: 'Leases', badge: expiringLeases || activeLeaseCount },
     { path: '/payments', label: 'Payments', badge: overduePayments }
   ];
 
