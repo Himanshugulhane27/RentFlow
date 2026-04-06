@@ -42,22 +42,12 @@ export const AppProvider = ({ children }) => {
   const [payments, setPayments] = useState(() => load('rms_payments', defaultPayments));
   const [activity, setActivity] = useState(() => load('rms_activity', []));
 
-  const persist = (key, setter) => (val) => {
-    setter(val);
-    save(key, typeof val === 'function' ? val : val);
-  };
-
   const log = (message) => {
     setActivity(prev => {
       const next = [{ id: Date.now(), message, time: new Date().toLocaleTimeString() }, ...prev].slice(0, 10);
       save('rms_activity', next);
       return next;
     });
-  };
-
-  const set = (key, setter) => (val) => {
-    setter(val);
-    // persisted via useEffect alternative — inline save
   };
 
   // Properties
