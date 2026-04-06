@@ -12,7 +12,7 @@ const TenantModal = ({ tenant, onClose }) => {
 
   const tenantLeases = leases.filter(l => l.tenantId === tenant.tenantId);
   const tenantPayments = payments.filter(p => p.tenantId === tenant.tenantId);
-  const totalPaid = tenantPayments.filter(p => p.status === 'paid').reduce((sum, p) => sum + p.amount, 0);
+  const totalPaid = tenantPayments.filter(p => p.status === 'paid').reduce((sum, p) => sum + Number(p.amount), 0);
   const pendingCount = tenantPayments.filter(p => p.status === 'pending').length;
 
   const isOverdue = (p) => p.status === 'pending' && new Date() > new Date(p.dueDate);

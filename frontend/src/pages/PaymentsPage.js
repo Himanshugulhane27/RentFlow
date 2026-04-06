@@ -24,9 +24,9 @@ const PaymentsPage = () => {
     showToast(`${selected.length} payment${selected.length > 1 ? 's' : ''} marked as paid`);
   };
 
-  const totalCollected = payments.filter(p => p.status === 'paid').reduce((sum, p) => sum + p.amount, 0);
-  const totalPending = payments.filter(p => p.status === 'pending').reduce((sum, p) => sum + p.amount, 0);
-  const totalOverdue = payments.filter(p => p.status === 'pending' && new Date() > new Date(p.dueDate)).reduce((sum, p) => sum + p.amount, 0);
+  const totalCollected = payments.filter(p => p.status === 'paid').reduce((sum, p) => sum + Number(p.amount), 0);
+  const totalPending = payments.filter(p => p.status === 'pending').reduce((sum, p) => sum + Number(p.amount), 0);
+  const totalOverdue = payments.filter(p => p.status === 'pending' && new Date() > new Date(p.dueDate)).reduce((sum, p) => sum + Number(p.amount), 0);
   const filtered = payments
     .filter(p => filter === 'all' ? true : p.status === filter)
     .filter(p => p.tenantName.toLowerCase().includes(search.toLowerCase()))
