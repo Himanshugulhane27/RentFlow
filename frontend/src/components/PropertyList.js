@@ -20,7 +20,12 @@ const PropertyList = ({ properties = [], onDelete, onToggle, onEdit }) => {
   };
 
   const saveEdit = (propertyId) => {
-    onEdit(propertyId, editData);
+    onEdit(propertyId, {
+      ...editData,
+      rent: Number(editData.rent),
+      bedrooms: Number(editData.bedrooms),
+      bathrooms: Number(editData.bathrooms)
+    });
     setEditingId(null);
   };
 
