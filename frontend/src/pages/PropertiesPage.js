@@ -85,6 +85,9 @@ const PropertiesPage = () => {
           <option value="any">Any Beds</option>
           {[1,2,3,4,5].map(n => <option key={n} value={n}>{n} Bed{n > 1 ? 's' : ''}</option>)}
         </select>
+        {(search || sortBy !== 'none' || filterAvail !== 'all' || filterBeds !== 'any') && (
+          <button onClick={() => { setSearch(''); setSortBy('none'); setFilterAvail('all'); setFilterBeds('any'); }} style={{ backgroundColor: '#757575', padding: '8px 14px', fontSize: '13px' }}>Reset</button>
+        )}
       </div>
 
       <PropertyList properties={filtered} onDelete={handleDelete} onToggle={handleToggle} onEdit={async (id, data) => { try { await editProperty(id, data); showToast('Property updated'); } catch { showToast('Failed to update property', 'error'); } }} />
