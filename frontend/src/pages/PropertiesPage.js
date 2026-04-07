@@ -41,9 +41,9 @@ const PropertiesPage = () => {
     } catch { showToast('Failed to update availability', 'error'); }
   };
 
-  let filtered = properties.filter(p =>
-    p.address.toLowerCase().includes(search.toLowerCase())
-  );
+  let filtered = properties
+    .filter(p => p.address.toLowerCase().includes(search.toLowerCase()))
+    .sort((a, b) => a.address.localeCompare(b.address));
 
   if (filterAvail === 'available') filtered = filtered.filter(p => p.available);
   if (filterAvail === 'occupied') filtered = filtered.filter(p => !p.available);
