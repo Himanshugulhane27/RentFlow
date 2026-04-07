@@ -30,7 +30,8 @@ const Dashboard = () => {
 
   const expiringThisMonth = leases.filter(l => {
     if (l.status !== 'active') return false;
-    const daysLeft = Math.ceil((new Date(l.endDate) - new Date()) / (1000 * 60 * 60 * 24));
+    const today = new Date().toISOString().slice(0, 10);
+    const daysLeft = Math.ceil((new Date(l.endDate) - new Date(today)) / (1000 * 60 * 60 * 24));
     return daysLeft > 0 && daysLeft <= 30;
   });
 
@@ -76,7 +77,8 @@ const Dashboard = () => {
         <div style={{ marginTop: '20px', backgroundColor: '#fff8e1', border: '1px solid #ffb300', borderRadius: '8px', padding: '20px' }}>
           <h4 style={{ margin: '0 0 12px', color: '#e65100' }}>⚠️ Leases Expiring This Month ({expiringThisMonth.length})</h4>
           {expiringThisMonth.map(l => {
-            const daysLeft = Math.ceil((new Date(l.endDate) - new Date()) / (1000 * 60 * 60 * 24));
+            const today = new Date().toISOString().slice(0, 10);
+            const daysLeft = Math.ceil((new Date(l.endDate) - new Date(today)) / (1000 * 60 * 60 * 24));
             return (
               <div key={l.leaseId} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid #ffe082', fontSize: '14px' }}>
                 <span>{l.propertyAddress} — {l.tenantName}</span>
