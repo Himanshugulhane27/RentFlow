@@ -38,10 +38,12 @@ const TenantsPage = () => {
     } catch { showToast('Failed to delete tenant', 'error'); }
   };
 
-  const filtered = tenants.filter(t =>
-    t.name.toLowerCase().includes(search.toLowerCase()) ||
-    t.email.toLowerCase().includes(search.toLowerCase())
-  );
+  const filtered = tenants
+    .filter(t =>
+      t.name.toLowerCase().includes(search.toLowerCase()) ||
+      t.email.toLowerCase().includes(search.toLowerCase())
+    )
+    .sort((a, b) => a.name.localeCompare(b.name));
 
   return (
     <div style={{ padding: '20px' }}>
