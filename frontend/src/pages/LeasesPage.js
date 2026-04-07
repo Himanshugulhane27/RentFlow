@@ -23,6 +23,8 @@ const LeasesPage = () => {
     e.preventDefault();
     if (Number(formData.monthlyRent) <= 0) { setFormError('Monthly rent must be greater than 0'); return; }
     if (formData.endDate <= formData.startDate) { setFormError('End date must be after start date'); return; }
+    const alreadyActive = leases.find(l => l.propertyId === formData.propertyId && l.status === 'active');
+    if (alreadyActive) { setFormError('This property already has an active lease'); return; }
     setFormError('');
     const property = properties.find(p => p.propertyId === formData.propertyId);
     const tenant = tenants.find(t => t.tenantId === formData.tenantId);
