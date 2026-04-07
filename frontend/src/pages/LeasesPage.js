@@ -14,7 +14,10 @@ const LeasesPage = () => {
   const [renewDate, setRenewDate] = useState('');
   const { toast, showToast, hideToast } = useToast();
 
-  const getDaysLeft = (endDate) => Math.ceil((new Date(endDate) - new Date()) / (1000 * 60 * 60 * 24));
+  const getDaysLeft = (endDate) => {
+    const today = new Date().toISOString().slice(0, 10);
+    return Math.ceil((new Date(endDate) - new Date(today)) / (1000 * 60 * 60 * 24));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -158,7 +161,7 @@ const LeasesPage = () => {
               </div>
             </div>
             <p style={{ margin: '4px 0', color: '#555' }}>Tenant: {lease.tenantName}</p>
-            <p style={{ margin: '4px 0', color: '#555' }}>Period: {lease.startDate} → {lease.endDate}</p>
+            <p style={{ margin: '4px 0', color: '#555' }}>Period: {lease.startDate} → {lease.endDate} &nbsp;|&nbsp; <span style={{ color: '#777' }}>{Math.max(0, Math.ceil((new Date(lease.endDate) - new Date(lease.startDate)) / (1000 * 60 * 60 * 24)))} days total</span></p>
             <p style={{ margin: '4px 0', color: '#555' }}>Monthly Rent: ${lease.monthlyRent}</p>
           </div>
         );
