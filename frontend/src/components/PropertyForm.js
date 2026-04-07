@@ -13,6 +13,7 @@ const PropertyForm = ({ onSubmit }) => {
     const errs = {};
     if (!formData.address.trim()) errs.address = 'Address is required';
     if (!formData.rent || Number(formData.rent) <= 0) errs.rent = 'Rent must be greater than 0';
+    if (Number(formData.rent) > 100000) errs.rent = 'Rent seems too high — please double check';
     if (formData.bedrooms && Number(formData.bedrooms) < 0) errs.bedrooms = 'Bedrooms cannot be negative';
     if (formData.bathrooms && Number(formData.bathrooms) < 0) errs.bathrooms = 'Bathrooms cannot be negative';
     return errs;
