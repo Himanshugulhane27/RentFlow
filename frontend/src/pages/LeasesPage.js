@@ -10,6 +10,7 @@ const LeasesPage = () => {
   const [formError, setFormError] = useState('');
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [sortRent, setSortRent] = useState('none');
   const [renewingId, setRenewingId] = useState(null);
   const [renewDate, setRenewDate] = useState('');
   const { toast, showToast, hideToast } = useToast();
@@ -58,6 +59,10 @@ const LeasesPage = () => {
       l.propertyAddress.toLowerCase().includes(search.toLowerCase());
     const matchStatus = statusFilter === 'all' || l.status === statusFilter;
     return matchSearch && matchStatus;
+  }).sort((a, b) => {
+    if (sortRent === 'low') return Number(a.monthlyRent) - Number(b.monthlyRent);
+    if (sortRent === 'high') return Number(b.monthlyRent) - Number(a.monthlyRent);
+    return 0;
   });
 
   return (
@@ -98,6 +103,11 @@ const LeasesPage = () => {
           <option value="all">All Statuses</option>
           <option value="active">Active</option>
           <option value="terminated">Terminated</option>
+        </select>
+        <select value={sortRent} onChange={e => setSortRent(e.target.value)} style={{ width: 'auto' }}>
+          <option value="none">Sort by Rent</option>
+          <option value="low">Rent: Low to High</option>
+          <option value="high">Rent: High to Low</option>
         </select>
       </div>
 
