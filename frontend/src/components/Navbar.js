@@ -14,7 +14,8 @@ const Navbar = () => {
   }, [dark]);
 
   const expiringLeases = leases.filter(l => {
-    const daysLeft = Math.ceil((new Date(l.endDate) - new Date()) / (1000 * 60 * 60 * 24));
+    const today = new Date().toISOString().slice(0, 10);
+    const daysLeft = Math.ceil((new Date(l.endDate) - new Date(today)) / (1000 * 60 * 60 * 24));
     return l.status === 'active' && daysLeft <= 30 && daysLeft > 0;
   }).length;
 
