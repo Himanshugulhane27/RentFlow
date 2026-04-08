@@ -83,7 +83,7 @@ const PaymentsPage = () => {
       {confirmId && <ConfirmDialog message="Delete this payment record?" onConfirm={confirmDelete} onCancel={() => setConfirmId(null)} />}
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h2>Payments</h2>
+        <h2>Payments ({filtered.length})</h2>
         <button onClick={() => setShowForm(!showForm)}>{showForm ? 'Cancel' : '+ Add Payment'}</button>
       </div>
 
