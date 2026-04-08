@@ -10,16 +10,19 @@ const TenantsPage = () => {
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({ name: '', email: '', phone: '' });
   const [emailError, setEmailError] = useState('');
+  const [phoneError, setPhoneError] = useState('');
   const [search, setSearch] = useState('');
   const [confirmId, setConfirmId] = useState(null);
   const { toast, showToast, hideToast } = useToast();
 
   const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const isValidPhone = (phone) => !phone || /^[\d\s\-\+\(\)]{7,15}$/.test(phone);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!isValidEmail(formData.email)) { setEmailError('Please enter a valid email address'); return; }
-    setEmailError('');
+    if (!isValidPhone(formData.phone)) { setPhoneError('Please enter a valid phone number'); return; }
+    setEmailError(''); setPhoneError('');
     try {
       await addTenant(formData);
       setFormData({ name: '', email: '', phone: '' });
@@ -74,8 +77,9 @@ const TenantsPage = () => {
           <input
             placeholder="Phone"
             value={formData.phone}
-            onChange={e => setFormData({ ...formData, phone: e.target.value })}
+            onChange={e => { setFormData({ ...formData, phone: e.target.value }); setPhoneError(''); }}
           />
+          {phoneError && <p style={{ color: '#e53935', fontSize: '13px', margin: '0 0 8px' }}>{phoneError}</p>}
           <button type="submit">Add Tenant</button>
         </form>
       )}
