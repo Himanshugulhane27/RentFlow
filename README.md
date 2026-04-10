@@ -96,3 +96,4 @@ Update `REACT_APP_API_URL` with your deployed API Gateway URL.
 - [x] 404 page
 - [x] Full backend CRUD for all 4 entities
 - [x] Unit tests for all models
+Last updated: April 10, 2026
