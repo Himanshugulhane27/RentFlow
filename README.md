@@ -2,6 +2,8 @@
 
 A full-stack rental property management app built with React and AWS serverless backend.
 
+Last updated: April 11, 2026
+
 ## What it does
 
 - Manage rental properties — add, edit, delete, toggle availability
