@@ -1,3 +1,4 @@
+// Tests for Property model
 const Property = require('../src/models/Property');
 
 describe('Property Model', () => {
