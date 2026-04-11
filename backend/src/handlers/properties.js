@@ -1,3 +1,4 @@
+// Handler for property operations
 const { success, error } = require('../utils/response');
 const { handleError, AppError } = require('../utils/errorHandler');
 const propertyService = require('../services/propertyService');
