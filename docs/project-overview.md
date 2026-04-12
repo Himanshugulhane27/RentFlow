@@ -1,5 +1,7 @@
 # Project Overview
 
+Last updated: April 12, 2026
+
 ## System Requirements
 - Property owners can add/manage properties
 - Tenants can view available rentals
