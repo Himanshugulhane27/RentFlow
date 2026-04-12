@@ -1,6 +1,6 @@
 # API Documentation
 
-Last updated: April 11, 2026
+Last updated: April 12, 2026
 
 ## Base URL
 `https://your-api-gateway-url.amazonaws.com/dev`
