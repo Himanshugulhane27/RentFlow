@@ -1,4 +1,5 @@
 // Main App component with routing
+// Updated on April 12, 2026
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
