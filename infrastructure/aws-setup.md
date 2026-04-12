@@ -1,4 +1,5 @@
 # AWS Infrastructure Setup
+<!-- Updated on April 12, 2026 -->
 
 ## Required AWS Services
 
