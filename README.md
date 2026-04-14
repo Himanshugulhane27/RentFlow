@@ -98,5 +98,24 @@ Update `REACT_APP_API_URL` with your deployed API Gateway URL.
 - [x] 404 page
 - [x] Full backend CRUD for all 4 entities
 - [x] Unit tests for all models
+
+## Testing
+
+Run backend tests:
+```bash
+cd backend
+npm test
+```
+
+## Contributing
+
+1. Create a feature branch: `git checkout -b feature/your-feature`
+2. Make your changes and commit
+3. Push to your branch: `git push origin feature/your-feature`
+4. Submit a pull request
+
+## License
+
+MIT License - feel free to use this project for personal or commercial purposes.
 Last updated: April 10, 2026
 Version 1.0
