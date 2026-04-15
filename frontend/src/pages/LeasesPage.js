@@ -3,6 +3,7 @@ import { useApp } from '../context/AppContext';
 import Toast from '../components/Toast';
 import useToast from '../hooks/useToast';
 import { exportToCSV } from '../utils/export';
+import CalendarView from '../components/CalendarView';
 
 const LeasesPage = () => {
   const { leases, addLease, renewLease, terminateLease, properties, tenants } = useApp();
@@ -14,6 +15,7 @@ const LeasesPage = () => {
   const [sortRent, setSortRent] = useState('none');
   const [renewingId, setRenewingId] = useState(null);
   const [renewDate, setRenewDate] = useState('');
+  const [view, setView] = useState('list');
   const { toast, showToast, hideToast } = useToast();
 
   const getDaysLeft = (endDate) => {
@@ -115,18 +117,23 @@ const LeasesPage = () => {
           <option value="low">Rent: Low to High</option>
           <option value="high">Rent: High to Low</option>
         </select>
+        <div style={{ display: 'flex', gap: '5px' }}>
+          <button onClick={() => setView('list')} style={{ backgroundColor: view === 'list' ? '#1976d2' : '#f5f5f5', color: view === 'list' ? 'white' : 'black', border: '1px solid #ddd', padding: '8px 12px', borderRadius: '4px', cursor: 'pointer' }}>List</button>
+          <button onClick={() => setView('calendar')} style={{ backgroundColor: view === 'calendar' ? '#1976d2' : '#f5f5f5', color: view === 'calendar' ? 'white' : 'black', border: '1px solid #ddd', padding: '8px 12px', borderRadius: '4px', cursor: 'pointer' }}>Calendar</button>
+        </div>
       </div>
 
       {visible.length === 0 && <p style={{ color: '#888', textAlign: 'center', padding: '40px' }}>No leases found.</p>}
 
-      {visible.map(lease => {
-        const daysLeft = getDaysLeft(lease.endDate);
-        const expiringSoon = daysLeft <= 30 && daysLeft > 0 && lease.status === 'active';
-        const expired = daysLeft <= 0 && lease.status === 'active';
+      {view === 'list' ? (
+        visible.map(lease => {
+          const daysLeft = getDaysLeft(lease.endDate);
+          const expiringSoon = daysLeft <= 30 && daysLeft > 0 && lease.status === 'active';
+          const expired = daysLeft <= 0 && lease.status === 'active';
 
-        return (
-          <div key={lease.leaseId} style={{
-            border: `1px solid ${expiringSoon || expired ? '#ff9800' : '#ddd'}`,
+          return (
+            <div key={lease.leaseId} style={{
+              border: `1px solid ${expiringSoon || expired ? '#ff9800' : '#ddd'}`,
             padding: '15px', borderRadius: '8px', marginBottom: '12px',
             backgroundColor: lease.status === 'terminated' ? '#ffebee' : expiringSoon || expired ? '#fff8e1' : '#f1f8e9',
             boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
@@ -183,7 +190,10 @@ const LeasesPage = () => {
             <p style={{ margin: '4px 0', color: '#555' }}>Monthly Rent: ${lease.monthlyRent}</p>
           </div>
         );
-      })}
+      })
+      ) : (
+        <CalendarView leases={visible} />
+      )}
     </div>
   );
 };
