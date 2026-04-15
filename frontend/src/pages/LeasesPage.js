@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import Toast from '../components/Toast';
 import useToast from '../hooks/useToast';
+import { exportToCSV } from '../utils/export';
 
 const LeasesPage = () => {
   const { leases, addLease, renewLease, terminateLease, properties, tenants } = useApp();
@@ -71,7 +72,12 @@ const LeasesPage = () => {
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <h2>Leases ({visible.length})</h2>
-        <button onClick={() => setShowForm(!showForm)}>{showForm ? 'Cancel' : '+ Add Lease'}</button>
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <button onClick={() => exportToCSV(visible, 'leases.csv')} style={{ backgroundColor: '#4caf50', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '4px', cursor: 'pointer' }}>
+            Export CSV
+          </button>
+          <button onClick={() => setShowForm(!showForm)}>{showForm ? 'Cancel' : '+ Add Lease'}</button>
+        </div>
       </div>
 
       {showForm && (

@@ -5,6 +5,7 @@ import PropertyList from '../components/PropertyList';
 import Toast from '../components/Toast';
 import useToast from '../hooks/useToast';
 import ConfirmDialog from '../components/ConfirmDialog';
+import { exportToCSV } from '../utils/export';
 
 const PropertiesPage = () => {
   const { properties, addProperty, deleteProperty, toggleAvailability, editProperty } = useApp();
@@ -58,9 +59,14 @@ const PropertiesPage = () => {
       {confirmId && <ConfirmDialog message="Delete this property?" onConfirm={confirmDelete} onCancel={() => setConfirmId(null)} />}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <h2>Properties ({filtered.length})</h2>
-        <button onClick={() => setShowForm(!showForm)}>
-          {showForm ? 'Cancel' : '+ Add Property'}
-        </button>
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <button onClick={() => exportToCSV(filtered, 'properties.csv')} style={{ backgroundColor: '#4caf50', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '4px', cursor: 'pointer' }}>
+            Export CSV
+          </button>
+          <button onClick={() => setShowForm(!showForm)}>
+            {showForm ? 'Cancel' : '+ Add Property'}
+          </button>
+        </div>
       </div>
       {showForm && <PropertyForm onSubmit={handleAdd} />}
 

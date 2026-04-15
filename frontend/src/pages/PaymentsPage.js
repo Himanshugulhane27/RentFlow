@@ -3,6 +3,7 @@ import { useApp } from '../context/AppContext';
 import Toast from '../components/Toast';
 import useToast from '../hooks/useToast';
 import ConfirmDialog from '../components/ConfirmDialog';
+import { exportToCSV } from '../utils/export';
 
 const PaymentsPage = () => {
   const { payments, addPayment, markPaymentPaid, deletePayment, tenants } = useApp();
@@ -84,7 +85,12 @@ const PaymentsPage = () => {
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <h2>Payments ({filtered.length})</h2>
-        <button onClick={() => setShowForm(!showForm)}>{showForm ? 'Cancel' : '+ Add Payment'}</button>
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <button onClick={() => exportToCSV(filtered, 'payments.csv')} style={{ backgroundColor: '#4caf50', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '4px', cursor: 'pointer' }}>
+            Export CSV
+          </button>
+          <button onClick={() => setShowForm(!showForm)}>{showForm ? 'Cancel' : '+ Add Payment'}</button>
+        </div>
       </div>
 
       <input
