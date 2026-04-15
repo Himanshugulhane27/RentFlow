@@ -34,7 +34,8 @@ const Navbar = () => {
     { path: '/properties', label: 'Properties' },
     { path: '/tenants', label: 'Tenants' },
     { path: '/leases', label: 'Leases', badge: expiringLeases || activeLeaseCount },
-    { path: '/payments', label: 'Payments', badge: overduePayments }
+    { path: '/payments', label: 'Payments', badge: overduePayments },
+    { path: '/reports', label: 'Reports' }
   ];
 
   const isActive = (path) => path === '/' ? location.pathname === '/' : location.pathname.startsWith(path);

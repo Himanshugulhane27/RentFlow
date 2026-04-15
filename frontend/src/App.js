@@ -1,5 +1,3 @@
-// Main App component with routing
-// Updated on April 12, 2026
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
@@ -8,6 +6,7 @@ import PropertiesPage from './pages/PropertiesPage';
 import TenantsPage from './pages/TenantsPage';
 import LeasesPage from './pages/LeasesPage';
 import PaymentsPage from './pages/PaymentsPage';
+import ReportsPage from './pages/ReportsPage';
 import NotFound from './pages/NotFound';
 import PropertyDetailPage from './pages/PropertyDetailPage';
 import TenantDetailPage from './pages/TenantDetailPage';
@@ -36,7 +35,7 @@ const AppRoutes = () => {
   useEffect(() => {
     const titles = {
       '/': 'Dashboard', '/properties': 'Properties', '/tenants': 'Tenants',
-      '/leases': 'Leases', '/payments': 'Payments'
+      '/leases': 'Leases', '/payments': 'Payments', '/reports': 'Reports'
     };
     const match = Object.keys(titles).find(k => k === location.pathname || (k !== '/' && location.pathname.startsWith(k)));
     document.title = match ? `${titles[match]} — Rental Manager` : 'Rental Manager';
@@ -64,6 +63,7 @@ const AppRoutes = () => {
         <Route path="/tenants" element={<TenantsPage />} />
         <Route path="/leases" element={<LeasesPage />} />
         <Route path="/payments" element={<PaymentsPage />} />
+        <Route path="/reports" element={<ReportsPage />} />
         <Route path="/properties/:id" element={<PropertyDetailPage />} />
         <Route path="/tenants/:id" element={<TenantDetailPage />} />
         <Route path="*" element={<NotFound />} />
