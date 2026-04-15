@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 
-const PropertyList = ({ properties = [], onDelete, onToggle, onEdit }) => {
+const PropertyList = ({ properties = [], onDelete, onToggle, onEdit, selected = [], onSelect }) => {
   const { leases, tenants } = useApp();
   const navigate = useNavigate();
   const [editingId, setEditingId] = useState(null);
@@ -41,6 +41,14 @@ const PropertyList = ({ properties = [], onDelete, onToggle, onEdit }) => {
             marginBottom: '12px', backgroundColor: 'white',
             boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
           }}>
+            {onSelect && (
+              <input
+                type="checkbox"
+                checked={selected.includes(property.propertyId)}
+                onChange={() => onSelect(property.propertyId)}
+                style={{ marginRight: '10px' }}
+              />
+            )}
             {editingId === property.propertyId ? (
               <div>
                 <input value={editData.address} onChange={e => setEditData({ ...editData, address: e.target.value })} placeholder="Address" style={{ marginBottom: '6px' }} />

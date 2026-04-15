@@ -15,6 +15,7 @@ const PropertiesPage = () => {
   const [filterAvail, setFilterAvail] = useState('all');
   const [filterBeds, setFilterBeds] = useState('any');
   const [confirmId, setConfirmId] = useState(null);
+  const [selected, setSelected] = useState([]);
   const { toast, showToast, hideToast } = useToast();
 
   const handleAdd = async (data) => {
@@ -40,6 +41,24 @@ const PropertiesPage = () => {
       await toggleAvailability(id);
       showToast('Availability updated', 'info');
     } catch { showToast('Failed to update availability', 'error'); }
+  };
+
+  const toggleSelect = (id) => setSelected(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
+
+  const handleBulkToggle = async () => {
+    try {
+      await Promise.all(selected.map(id => toggleAvailability(id)));
+      setSelected([]);
+      showToast(`${selected.length} propert${selected.length > 1 ? 'ies' : 'y'} availability toggled`);
+    } catch { showToast('Failed to update properties', 'error'); }
+  };
+
+  const handleBulkDelete = async () => {
+    try {
+      await Promise.all(selected.map(id => deleteProperty(id)));
+      setSelected([]);
+      showToast(`${selected.length} propert${selected.length > 1 ? 'ies' : 'y'} deleted`, 'error');
+    } catch { showToast('Failed to delete properties', 'error'); }
   };
 
   let filtered = properties
@@ -96,7 +115,22 @@ const PropertiesPage = () => {
         )}
       </div>
 
-      <PropertyList properties={filtered} onDelete={handleDelete} onToggle={handleToggle} onEdit={async (id, data) => { try { await editProperty(id, data); showToast('Property updated'); } catch { showToast('Failed to update property', 'error'); } }} />
+      {selected.length > 0 && (
+        <div style={{ display: 'flex', gap: '10px', marginBottom: '16px', alignItems: 'center' }}>
+          <span>{selected.length} selected</span>
+          <button onClick={handleBulkToggle} style={{ backgroundColor: '#ff9800', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '4px', cursor: 'pointer' }}>
+            Toggle Availability
+          </button>
+          <button onClick={handleBulkDelete} style={{ backgroundColor: '#e53935', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '4px', cursor: 'pointer' }}>
+            Delete Selected
+          </button>
+          <button onClick={() => setSelected([])} style={{ backgroundColor: '#757575', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '4px', cursor: 'pointer' }}>
+            Clear Selection
+          </button>
+        </div>
+      )}
+
+      <PropertyList properties={filtered} onDelete={handleDelete} onToggle={handleToggle} onEdit={async (id, data) => { try { await editProperty(id, data); showToast('Property updated'); } catch { showToast('Failed to update property', 'error'); } }} selected={selected} onSelect={toggleSelect} />
     </div>
   );
 };
