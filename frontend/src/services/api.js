@@ -1,10 +1,7 @@
-const BASE = process.env.REACT_APP_API_URL;
+import config from '../config';
 
-if (!BASE) {
-  console.warn('REACT_APP_API_URL is not set. API calls will fail. Copy .env.example to .env and set the value.');
-}
-
-const ALLOWED_BASE = BASE || '';
+const BASE = config.apiUrl;
+const ALLOWED_BASE = BASE;
 
 const request = async (path, method = 'GET', body = null) => {
   if (!ALLOWED_BASE) throw new Error('API URL is not configured. Set REACT_APP_API_URL in your .env file.');
