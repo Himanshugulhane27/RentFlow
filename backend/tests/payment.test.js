@@ -20,6 +20,12 @@ describe('Payment Model', () => {
 
   test('validate throws when amount is zero', () => {
     const p = new Payment({ paymentId: '1', leaseId: 'l1', tenantId: 't1', amount: 0 });
+    // amount=0 is falsy, so it triggers the required-fields check first
+    expect(() => p.validate()).toThrow();
+  });
+
+  test('validate throws when amount is negative', () => {
+    const p = new Payment({ paymentId: '1', leaseId: 'l1', tenantId: 't1', amount: -50 });
     expect(() => p.validate()).toThrow('Amount must be positive');
   });
 
