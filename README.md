@@ -2,7 +2,7 @@
 
 A full-stack rental property management app built with React and AWS serverless backend.
 
-Last updated: April 12, 2026
+Last updated: April 18, 2026
 
 ## What it does
 
@@ -28,17 +28,18 @@ rental-management-system/
 │   │   ├── handlers/       # Lambda functions (properties, tenants, leases, payments)
 │   │   ├── models/         # Property, Tenant, Lease, Payment
 │   │   ├── services/       # DynamoDB business logic
-│   │   ├── utils/          # response, validation, errorHandler, dbHelper
+│   │   ├── utils/          # response, validation, errorHandler, dbHelper, logger
 │   │   └── config/
-│   ├── tests/              # Unit tests for all models
+│   ├── tests/              # Unit tests (models, validation, payments)
 │   └── serverless.yml
 ├── frontend/
 │   ├── src/
 │   │   ├── components/     # Navbar, PropertyList, TenantList, Toast, ConfirmDialog, TenantModal
 │   │   ├── context/        # AppContext — global state
-│   │   ├── hooks/          # useToast
+│   │   ├── hooks/          # useToast, useDebounce
 │   │   ├── pages/          # Dashboard, Properties, Tenants, Leases, Payments, NotFound
-│   │   └── services/       # api.js
+│   │   ├── services/       # api.js
+│   │   └── utils/          # formatters, export helpers
 │   └── public/
 ├── docs/
 │   ├── api.md
@@ -97,7 +98,11 @@ Update `REACT_APP_API_URL` with your deployed API Gateway URL.
 - [x] Responsive navbar with mobile menu
 - [x] 404 page
 - [x] Full backend CRUD for all 4 entities
-- [x] Unit tests for all models
+- [x] Unit tests for models, validation, and payments
+- [x] Request logging middleware
+- [x] Input validation with sanitization
+- [x] Frontend utility hooks (useDebounce) and formatters
+- [x] Centralized error handling and structured logging
 
 ## Testing
 
@@ -117,5 +122,5 @@ npm test
 ## License
 
 MIT License - feel free to use this project for personal or commercial purposes.
-Last updated: April 10, 2026
-Version 1.0
+
+Version 1.1

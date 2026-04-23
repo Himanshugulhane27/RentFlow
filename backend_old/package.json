@@ -1,0 +1,20 @@
+{
+  "name": "rental-management-backend",
+  "version": "1.0.0",
+  "description": "Backend API for Rental Management System",
+  "main": "index.js",
+  "scripts": {
+    "deploy": "serverless deploy",
+    "test": "jest"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.1400.0",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "jest": "^29.0.0",
+    "serverless": "^3.30.0"
+  },
+  "author": "Student",
+  "license": "MIT"
+}
