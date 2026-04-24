@@ -15,8 +15,9 @@ import { closeQueues } from './config/queue';
 const app = express();
 
 // ─── Security ───────────────────────────────────────────────
-app.use(helmet());
 app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
+app.use(helmet());
 app.use(rateLimiter);
 
 // ─── Body parsing ───────────────────────────────────────────
