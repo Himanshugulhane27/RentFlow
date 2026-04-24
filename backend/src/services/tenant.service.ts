@@ -27,7 +27,7 @@ class TenantService {
     return tenantRepository.create({
       ...data,
       organizationId: new mongoose.Types.ObjectId(organizationId),
-    });
+    } as any);
   }
 
   async update(id: string, organizationId: string, data: UpdateTenantInput) {

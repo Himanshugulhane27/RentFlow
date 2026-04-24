@@ -36,7 +36,7 @@ const userSchema = new Schema<UserDocument>(
     toJSON: {
       virtuals: true,
       transform(_doc, ret) {
-        delete ret.password;
+        delete (ret as any).password;
         return ret;
       },
     },

@@ -15,7 +15,7 @@ class AuthService {
    * Register a new user + create their organization.
    * Runs in a transaction so both succeed or both fail.
    */
-  async register(input: RegisterInput): Promise<{ user: InstanceType<typeof User>; tokens: TokenPair }> {
+  async register(input: RegisterInput): Promise<{ user: any; tokens: TokenPair }> {
     const exists = await userRepository.emailExists(input.email);
     if (exists) {
       throw new ConflictError('Email already registered');
@@ -68,7 +68,7 @@ class AuthService {
   /**
    * Login with email and password.
    */
-  async login(input: LoginInput): Promise<{ user: InstanceType<typeof User>; tokens: TokenPair }> {
+  async login(input: LoginInput): Promise<{ user: any; tokens: TokenPair }> {
     const user = await userRepository.findByEmail(input.email);
     if (!user) {
       throw new UnauthorizedError('Invalid email or password');
@@ -99,7 +99,7 @@ class AuthService {
     input: InviteUserInput,
     organizationId: string,
     invitedByUserId: string
-  ): Promise<InstanceType<typeof User>> {
+  ): Promise<any> {
     const exists = await userRepository.emailExists(input.email);
     if (exists) {
       throw new ConflictError('Email already registered');
@@ -158,7 +158,7 @@ class AuthService {
   /**
    * Generate JWT access + refresh tokens.
    */
-  private generateTokens(user: InstanceType<typeof User>): TokenPair {
+  private generateTokens(user: any): TokenPair {
     const payload: AuthPayload = {
       userId: user._id.toString(),
       organizationId: user.organizationId.toString(),
@@ -166,12 +166,12 @@ class AuthService {
       email: user.email,
     };
 
-    const accessToken = jwt.sign(payload, env.JWT_SECRET, {
-      expiresIn: env.JWT_EXPIRES_IN,
+    const accessToken = jwt.sign(payload, env.JWT_SECRET as string, {
+      expiresIn: env.JWT_EXPIRES_IN as any,
     });
 
-    const refreshToken = jwt.sign(payload, env.JWT_REFRESH_SECRET, {
-      expiresIn: env.JWT_REFRESH_EXPIRES_IN,
+    const refreshToken = jwt.sign(payload, env.JWT_REFRESH_SECRET as string, {
+      expiresIn: env.JWT_REFRESH_EXPIRES_IN as any,
     });
 
     return { accessToken, refreshToken };
