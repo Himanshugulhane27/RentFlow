@@ -20,6 +20,7 @@
     "sourceMap": true,
     "baseUrl": "./src",
     "ignoreDeprecations": "6.0",
+    "noImplicitAny": false,
     "paths": {
       "@config/*": ["config/*"],
       "@controllers/*": ["controllers/*"],
