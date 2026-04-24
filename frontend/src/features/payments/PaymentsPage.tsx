@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
-import { Plus, CreditCard, Search, CheckCircle } from 'lucide-react';
+import { CreditCard, CheckCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { paymentApi } from '../../api/payments.api';
 import { Card } from '../../components/ui/Card';

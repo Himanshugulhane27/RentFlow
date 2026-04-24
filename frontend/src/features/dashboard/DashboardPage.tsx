@@ -138,7 +138,10 @@ const DashboardPage: React.FC = () => {
                         border: '1px solid #e2e8f0',
                         fontSize: '13px',
                       }}
-                      formatter={(value: number) => [formatCurrency(value), 'Revenue']}
+                      formatter={(value) => [
+                        formatCurrency(typeof value === 'number' ? value : Number(value ?? 0)),
+                        'Revenue'
+                      ]}
                     />
                     <Area
                       type="monotone"

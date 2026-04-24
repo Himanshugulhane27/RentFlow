@@ -33,7 +33,9 @@ const PropertiesPage: React.FC = () => {
 
   const { data, isLoading } = useQuery({
     queryKey: ['properties', { search }],
-    queryFn: () => search ? propertyApi.search(search).then(d => ({ data: d, pagination: undefined })) : propertyApi.getAll(),
+    queryFn: async () => search 
+      ? propertyApi.search(search).then(d => ({ success: true, data: d, pagination: undefined })) 
+      : propertyApi.getAll(),
   });
 
   const createMutation = useMutation({
@@ -84,7 +86,7 @@ const PropertiesPage: React.FC = () => {
   const update = (field: string, value: string | number) =>
     setForm(prev => ({ ...prev, [field]: value }));
 
-  const properties = data?.data || [];
+  const properties = (data?.data || []) as Property[];
 
   return (
     <div className="space-y-6">
