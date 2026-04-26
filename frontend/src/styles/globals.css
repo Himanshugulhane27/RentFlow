@@ -2,74 +2,121 @@
 
 /* ─── Design Tokens (CSS Custom Properties) ─────────────────── */
 @theme {
-  /* Colors — Primary */
-  --color-primary-50: #eef2ff;
-  --color-primary-100: #e0e7ff;
-  --color-primary-200: #c7d2fe;
-  --color-primary-300: #a5b4fc;
-  --color-primary-400: #818cf8;
-  --color-primary-500: #6366f1;
-  --color-primary-600: #4f46e5;
-  --color-primary-700: #4338ca;
-  --color-primary-800: #3730a3;
-  --color-primary-900: #312e81;
-
-  /* Colors — Secondary (Violet) */
-  --color-secondary-400: #a78bfa;
-  --color-secondary-500: #8b5cf6;
-  --color-secondary-600: #7c3aed;
+  /* Colors — Brand */
+  --color-brand-50: hsl(var(--brand-50));
+  --color-brand-100: hsl(var(--brand-100));
+  --color-brand-200: hsl(var(--brand-200));
+  --color-brand-300: hsl(var(--brand-300));
+  --color-brand-400: hsl(var(--brand-400));
+  --color-brand-500: hsl(var(--brand-500));
+  --color-brand-600: hsl(var(--brand-600));
+  --color-brand-700: hsl(var(--brand-700));
+  --color-brand-800: hsl(var(--brand-800));
+  --color-brand-900: hsl(var(--brand-900));
 
   /* Colors — Success */
-  --color-success-50: #ecfdf5;
-  --color-success-400: #34d399;
-  --color-success-500: #10b981;
-  --color-success-600: #059669;
+  --color-success-50: #f0fdf4;
+  --color-success-100: #dcfce7;
+  --color-success-200: #bbf7d0;
+  --color-success-300: #86efac;
+  --color-success-400: #4ade80;
+  --color-success-500: #22c55e;
+  --color-success-600: #16a34a;
+  --color-success-700: #15803d;
+  --color-success-800: #166534;
+  --color-success-900: #14532d;
 
   /* Colors — Warning */
   --color-warning-50: #fffbeb;
+  --color-warning-100: #fef3c7;
+  --color-warning-200: #fde68a;
+  --color-warning-300: #fcd34d;
   --color-warning-400: #fbbf24;
   --color-warning-500: #f59e0b;
   --color-warning-600: #d97706;
+  --color-warning-700: #b45309;
+  --color-warning-800: #92400e;
+  --color-warning-900: #78350f;
 
   /* Colors — Danger */
   --color-danger-50: #fef2f2;
+  --color-danger-100: #fee2e2;
+  --color-danger-200: #fecaca;
+  --color-danger-300: #fca5a5;
   --color-danger-400: #f87171;
   --color-danger-500: #ef4444;
   --color-danger-600: #dc2626;
+  --color-danger-700: #b91c1c;
+  --color-danger-800: #991b1b;
+  --color-danger-900: #7f1d1d;
 
-  /* Colors — Surface (Light) */
-  --color-surface-50: #f8fafc;
-  --color-surface-100: #f1f5f9;
-  --color-surface-200: #e2e8f0;
-  --color-surface-300: #cbd5e1;
-  --color-surface-400: #94a3b8;
-  --color-surface-500: #64748b;
-  --color-surface-600: #475569;
-  --color-surface-700: #334155;
-  --color-surface-800: #1e293b;
-  --color-surface-900: #0f172a;
-  --color-surface-950: #020617;
+  /* Colors — Neutral */
+  --color-neutral-50: #f9fafb;
+  --color-neutral-100: #f3f4f6;
+  --color-neutral-200: #e5e7eb;
+  --color-neutral-300: #d1d5db;
+  --color-neutral-400: #9ca3af;
+  --color-neutral-500: #6b7280;
+  --color-neutral-600: #4b5563;
+  --color-neutral-700: #374151;
+  --color-neutral-800: #1f2937;
+  --color-neutral-900: #111827;
 
-  /* Shadows */
-  --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.03);
-  --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.06), 0 1px 2px -1px rgb(0 0 0 / 0.04);
-  --shadow-card: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.03);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.05);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.04);
-  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.08), 0 8px 10px -6px rgb(0 0 0 / 0.04);
+  /* Legacy Aliases to prevent breaking old components */
+  --color-surface-50: var(--color-neutral-50);
+  --color-surface-100: var(--color-neutral-100);
+  --color-surface-200: var(--color-neutral-200);
+  --color-surface-300: var(--color-neutral-300);
+  --color-surface-400: var(--color-neutral-400);
+  --color-surface-500: var(--color-neutral-500);
+  --color-surface-600: var(--color-neutral-600);
+  --color-surface-700: var(--color-neutral-700);
+  --color-surface-800: var(--color-neutral-800);
+  --color-surface-900: var(--color-neutral-900);
+  --color-surface-950: var(--color-neutral-900);
+
+  --color-primary-50: var(--color-brand-50);
+  --color-primary-100: var(--color-brand-100);
+  --color-primary-200: var(--color-brand-200);
+  --color-primary-300: var(--color-brand-300);
+  --color-primary-400: var(--color-brand-400);
+  --color-primary-500: var(--color-brand-500);
+  --color-primary-600: var(--color-brand-600);
+  --color-primary-700: var(--color-brand-700);
+  --color-primary-800: var(--color-brand-800);
+  --color-primary-900: var(--color-brand-900);
+
+  /* Font Families */
+  --font-sans: 'Inter', sans-serif;
+
+  /* Font Sizes */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 2rem;
+  --text-4xl: 2.5rem;
 
   /* Border Radius */
+  --radius-card: 12px;
+  --radius-badge: 999px;
+  --radius-input: 8px;
+  
+  /* Fallbacks to not break existing classes */
   --radius-sm: 6px;
   --radius-md: 8px;
   --radius-lg: 12px;
   --radius-xl: 16px;
   --radius-full: 9999px;
 
-  /* Font Families */
-  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-heading: 'Plus Jakarta Sans', 'Inter', ui-sans-serif, system-ui, sans-serif;
-
-  /* Sidebar */
+  /* Shadows */
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-card-hover: 0 4px 12px rgba(0,0,0,0.08);
+  --shadow-dropdown: 0 8px 24px rgba(0,0,0,0.12);
+  
+  /* Retain existing sidebar variables just in case */
   --sidebar-width: 256px;
   --sidebar-collapsed-width: 72px;
   --header-height: 64px;
@@ -84,18 +131,23 @@ html {
 }
 
 body {
-  @apply bg-surface-50 text-surface-900 transition-colors duration-200;
+  font-family: var(--font-sans);
+  color: hsl(var(--text-primary));
+  background: hsl(var(--surface-1));
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.2s, color 0.2s;
 }
 
 /* ─── Dark Mode ─────────────────────────────────────────────── */
 
 .dark body,
 body.dark {
-  @apply bg-surface-950 text-surface-100;
+  color: hsl(var(--text-primary));
+  background: hsl(var(--surface-1));
 }
 
 .dark .card-surface {
-  @apply bg-surface-800 border-surface-700;
+  @apply bg-neutral-800 border-neutral-700;
 }
 
 /* ─── Scrollbar ─────────────────────────────────────────────── */
@@ -110,12 +162,12 @@ body.dark {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-surface-300);
+  background: var(--color-neutral-300);
   border-radius: var(--radius-full);
 }
 
 .dark ::-webkit-scrollbar-thumb {
-  background: var(--color-surface-600);
+  background: var(--color-neutral-600);
 }
 
 /* ─── Skeleton Shimmer Animation ────────────────────────────── */
@@ -128,9 +180,9 @@ body.dark {
 .skeleton {
   background: linear-gradient(
     90deg,
-    var(--color-surface-200) 25%,
-    var(--color-surface-100) 50%,
-    var(--color-surface-200) 75%
+    var(--color-neutral-200) 25%,
+    var(--color-neutral-100) 50%,
+    var(--color-neutral-200) 75%
   );
   background-size: 200% 100%;
   animation: shimmer 1.5s ease-in-out infinite;
@@ -140,9 +192,9 @@ body.dark {
 .dark .skeleton {
   background: linear-gradient(
     90deg,
-    var(--color-surface-700) 25%,
-    var(--color-surface-800) 50%,
-    var(--color-surface-700) 75%
+    var(--color-neutral-700) 25%,
+    var(--color-neutral-800) 50%,
+    var(--color-neutral-700) 75%
   );
   background-size: 200% 100%;
 }
@@ -150,9 +202,186 @@ body.dark {
 /* ─── Focus Ring ────────────────────────────────────────────── */
 
 .focus-ring {
-  @apply outline-none ring-2 ring-primary-500/40 ring-offset-2;
+  outline: none;
+  box-shadow: var(--shadow-glow-brand);
 }
 
 .dark .focus-ring {
-  @apply ring-offset-surface-900;
+  outline: none;
+  box-shadow: 0 0 0 3px hsl(var(--brand-500) / 0.3);
+}
+
+:root {
+  /* Surface layers — creates visual depth hierarchy */
+  --surface-0: 0 0% 100%;           /* pure white — modals, popovers */
+  --surface-1: 220 20% 98%;         /* page background */
+  --surface-2: 220 16% 96%;         /* card background */
+  --surface-3: 220 14% 93%;         /* subtle section fills */
+  --surface-border: 220 13% 90%;    /* all borders */
+
+  /* Brand */
+  --brand-50:  224 100% 97%;
+  --brand-100: 224 96%  93%;
+  --brand-200: 224 90%  85%;
+  --brand-300: 224 85%  75%;
+  --brand-400: 224 80%  60%;
+  --brand-500: 224 76%  48%;        /* primary actions */
+  --brand-600: 224 72%  40%;        /* primary hover */
+  --brand-700: 224 68%  30%;
+  --brand-800: 224 64%  20%;
+  --brand-900: 224 60%  15%;
+
+  /* Semantic */
+  --success: 142 71% 45%;
+  --warning: 38  92% 50%;
+  --danger:  0   84% 60%;
+  --info:    199 89% 48%;
+
+  /* Text hierarchy */
+  --text-primary:   220 20% 10%;
+  --text-secondary: 220 12% 40%;
+  --text-tertiary:  220 10% 60%;
+  --text-disabled:  220  8% 75%;
+
+  /* Shadow Scale */
+  --shadow-xs: 0 1px 2px hsl(220 20% 10% / 0.04);
+  --shadow-sm: 0 1px 3px hsl(220 20% 10% / 0.06), 0 1px 2px hsl(220 20% 10% / 0.04);
+  --shadow-md: 0 4px 6px hsl(220 20% 10% / 0.05), 0 2px 4px hsl(220 20% 10% / 0.04);
+  --shadow-lg: 0 10px 24px hsl(220 20% 10% / 0.08), 0 4px 8px hsl(220 20% 10% / 0.04);
+  --shadow-xl: 0 24px 48px hsl(220 20% 10% / 0.12), 0 8px 16px hsl(220 20% 10% / 0.06);
+  --shadow-glow-brand: 0 0 0 3px hsl(var(--brand-500) / 0.15);
+
+  /* Border Radius Scale */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-2xl: 28px;
+  --radius-full: 9999px;
+
+  /* Typography Scale */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+  --text-xs:   0.75rem;    /* 12px */
+  --text-sm:   0.875rem;   /* 14px */
+  --text-base: 1rem;       /* 16px */
+  --text-lg:   1.125rem;   /* 18px */
+  --text-xl:   1.25rem;    /* 20px */
+  --text-2xl:  1.5rem;     /* 24px */
+  --text-3xl:  1.875rem;   /* 30px */
+
+  --leading-tight:  1.25;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.7;
+
+  --tracking-tight:  -0.025em;
+  --tracking-normal: 0em;
+  --tracking-wide:   0.025em;
+  --tracking-wider:  0.05em;
+}
+
+.dark {
+  --surface-0: 220 20% 8%;
+  --surface-1: 220 18% 10%;
+  --surface-2: 220 16% 12%;
+  --surface-3: 220 14% 15%;
+  --surface-border: 220 14% 18%;
+
+  --text-primary:   220 20% 98%;
+  --text-secondary: 220 12% 70%;
+  --text-tertiary:  220 10% 50%;
+  --text-disabled:  220  8% 30%;
+
+  --shadow-xs: 0 1px 2px hsl(0 0% 0% / 0.3);
+  --shadow-sm: 0 1px 3px hsl(0 0% 0% / 0.4), 0 1px 2px hsl(0 0% 0% / 0.2);
+  --shadow-md: 0 4px 6px hsl(0 0% 0% / 0.5), 0 2px 4px hsl(0 0% 0% / 0.3);
+  --shadow-lg: 0 10px 24px hsl(0 0% 0% / 0.6), 0 4px 8px hsl(0 0% 0% / 0.4);
+  --shadow-xl: 0 24px 48px hsl(0 0% 0% / 0.8), 0 8px 16px hsl(0 0% 0% / 0.6);
+}
+
+@layer utilities {
+  /* Elevation system */
+  .elevation-0 { box-shadow: none; }
+  .elevation-1 { box-shadow: var(--shadow-xs); }
+  .elevation-2 { box-shadow: var(--shadow-sm); }
+  .elevation-3 { box-shadow: var(--shadow-md); }
+  .elevation-4 { box-shadow: var(--shadow-lg); }
+  .elevation-5 { box-shadow: var(--shadow-xl); }
+
+  /* Glass surfaces */
+  .glass-subtle {
+    background: hsl(var(--surface-0) / 0.7);
+    backdrop-filter: blur(8px) saturate(150%);
+    -webkit-backdrop-filter: blur(8px) saturate(150%);
+    border: 1px solid hsl(var(--surface-border) / 0.6);
+  }
+  .glass-medium {
+    background: hsl(var(--surface-0) / 0.55);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid hsl(var(--surface-border) / 0.4);
+  }
+  .glass-strong {
+    background: hsl(var(--surface-0) / 0.35);
+    backdrop-filter: blur(24px) saturate(200%);
+    -webkit-backdrop-filter: blur(24px) saturate(200%);
+    border: 1px solid hsl(var(--surface-border) / 0.25);
+  }
+
+  /* Dark mode glass overrides */
+  .dark .glass-subtle  { background: hsl(220 20% 12% / 0.75); border-color: hsl(220 14% 22% / 0.5); }
+  .dark .glass-medium  { background: hsl(220 20% 10% / 0.6);  border-color: hsl(220 14% 20% / 0.35); }
+  .dark .glass-strong  { background: hsl(220 20% 8%  / 0.4);  border-color: hsl(220 14% 18% / 0.2); }
+
+  /* Gradient surfaces */
+  .gradient-brand {
+    background: linear-gradient(135deg, hsl(var(--brand-500)), hsl(224 80% 58%));
+  }
+  .gradient-surface {
+    background: linear-gradient(180deg, hsl(var(--surface-1)), hsl(var(--surface-2)));
+  }
+
+  /* Text utilities */
+  .text-gradient-brand {
+    background: linear-gradient(135deg, hsl(var(--brand-500)), hsl(224 80% 65%));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .text-balance { text-wrap: balance; }
+
+  /* Inset border trick for cards */
+  .card-border {
+    box-shadow: inset 0 0 0 1px hsl(var(--surface-border));
+  }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    hsl(var(--surface-3))           0%,
+    hsl(var(--surface-2))          40%,
+    hsl(220 16% 91%)               50%,
+    hsl(var(--surface-2))          60%,
+    hsl(var(--surface-3))         100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+.dark .shimmer {
+  background: linear-gradient(
+    90deg,
+    hsl(220 14% 16%) 0%,
+    hsl(220 14% 20%) 40%,
+    hsl(220 14% 24%) 50%,
+    hsl(220 14% 20%) 60%,
+    hsl(220 14% 16%) 100%
+  );
+  background-size: 200% 100%;
 }

@@ -11,13 +11,14 @@ interface UiState {
   isDarkMode: boolean;
 }
 
-// ─── Persist helpers ────────────────────────────────────────
 const getPersistedTheme = (): Theme => {
   const stored = localStorage.getItem('rms_theme');
   if (stored === 'light' || stored === 'dark' || stored === 'system') {
     return stored;
   }
-  return 'system';
+  // Enforce consistent default theme (light) if not present
+  localStorage.setItem('rms_theme', 'light');
+  return 'light';
 };
 
 const resolveIsDark = (theme: Theme): boolean => {
