@@ -27,7 +27,7 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
   variant = 'danger',
 }) => {
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title={title} size="sm">
+    <Modal open={isOpen} onClose={onClose} title={title} size="sm">
       <div className="flex flex-col items-center text-center">
         <div className={`w-12 h-12 rounded-full flex items-center justify-center mb-4 ${
           variant === 'danger' ? 'bg-danger-50 text-danger-600 dark:bg-danger-500/15' : 'bg-warning-50 text-warning-600 dark:bg-warning-500/15'

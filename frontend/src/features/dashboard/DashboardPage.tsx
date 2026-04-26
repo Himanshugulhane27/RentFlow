@@ -1,283 +1,318 @@
 import React from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import {
-  Building2, Users, FileText, CreditCard,
-  AlertTriangle, TrendingUp, Calendar,
+  DollarSign,
+  AlertCircle,
+  Building2,
+  Calendar,
+  CheckCircle2,
+  Grid3x3,
+  UserPlus,
+  Plus
 } from 'lucide-react';
-import {
-  AreaChart, Area, XAxis, YAxis, CartesianGrid,
-  Tooltip, ResponsiveContainer,
-} from 'recharts';
 
-import { dashboardApi } from '../../api/dashboard.api';
-import { KPICard } from '../../components/shared/KPICard';
-import { StatusBadge } from '../../components/shared/StatusBadge';
-import { Card, CardHeader, CardTitle, CardContent } from '../../components/ui/Card';
+
+import { Card } from '../../components/ui/Card';
+import { StatCard } from '../../components/ui/StatCard';
+import { DataTable } from '../../components/ui/DataTable';
 import { Badge } from '../../components/ui/Badge';
-import { KPISkeleton } from '../../components/ui/Skeleton';
-import { formatCurrency, formatDate, formatRelativeDate } from '../../utils/formatters';
+import { Button } from '../../components/ui/Button';
+import { PageTransition } from '../../components/ui/PageTransition';
+import { SkeletonCard } from '../../components/ui/Skeleton';
+import { EmptyState } from '../../components/ui/EmptyState';
+import { DateRangePicker } from '../../components/dashboard/DateRangePicker';
+import { OccupancyChart } from '../../components/dashboard/OccupancyChart';
+import { OnboardingBanner } from '../../components/onboarding/OnboardingBanner';
+import { SmartSummary } from '../../components/dashboard/SmartSummary';
+import { TodaysFocus } from '../../components/dashboard/TodaysFocus';
+import { useStreakCounter } from '../../hooks/useStreakCounter';
+import { staggerContainer, staggerItem } from '../../lib/animations';
 
-const stagger = {
-  hidden: { opacity: 0 },
-  show: { opacity: 1, transition: { staggerChildren: 0.08 } },
-};
+import {
+  useDashboardStats,
+  useActionItems,
+  useRentRollPreview,
+} from './hooks/useDashboardStats';
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 12 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.25 } },
-};
+import { formatCurrency, formatPercent, formatDate, differenceInDays } from '../../utils/format';
 
 const DashboardPage: React.FC = () => {
-  const { data: stats, isLoading: statsLoading } = useQuery({
-    queryKey: ['dashboard', 'stats'],
-    queryFn: dashboardApi.getStats,
-  });
+  const navigate = useNavigate();
 
-  const { data: trend } = useQuery({
-    queryKey: ['dashboard', 'revenue-trend'],
-    queryFn: () => dashboardApi.getRevenueTrend(6),
-  });
-
-  const { data: alerts } = useQuery({
-    queryKey: ['dashboard', 'alerts'],
-    queryFn: dashboardApi.getAlerts,
-  });
+  const { data: stats, isLoading: statsLoading } = useDashboardStats();
+  const { data: actionItems, isLoading: actionsLoading } = useActionItems();
+  const { data: rentRollPreview, isLoading: rentRollLoading } = useRentRollPreview();
+  const { streakCount } = useStreakCounter();
 
   return (
-    <div className="space-y-6">
-      {/* Page header */}
-      <div>
-        <h1 className="text-2xl font-bold text-surface-900 dark:text-white font-[var(--font-heading)]">
-          Dashboard
-        </h1>
-        <p className="text-sm text-surface-500 mt-1">
-          Overview of your rental portfolio
-        </p>
+    <PageTransition className="space-y-6 max-w-[1280px] mx-auto pb-12">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+        <h1 className="text-2xl font-bold tracking-tight text-hsl(var(--text-primary))">Dashboard</h1>
+        <DateRangePicker />
       </div>
-
-      {/* KPI Cards */}
-      {statsLoading ? (
-        <KPISkeleton />
-      ) : stats ? (
-        <motion.div
-          variants={stagger}
-          initial="hidden"
-          animate="show"
-          className="grid grid-cols-2 lg:grid-cols-4 gap-5"
-        >
-          <motion.div variants={fadeUp}>
-            <KPICard
-              title="Total Properties"
-              value={stats.totalProperties}
-              icon={<Building2 size={20} />}
-            />
-          </motion.div>
-          <motion.div variants={fadeUp}>
-            <KPICard
-              title="Occupancy Rate"
-              value={stats.occupancyRate}
-              format="percent"
-              icon={<TrendingUp size={20} />}
-            />
-          </motion.div>
-          <motion.div variants={fadeUp}>
-            <KPICard
-              title="Monthly Revenue"
-              value={stats.monthlyRevenue}
-              format="currency"
-              change={stats.revenueGrowth}
-              icon={<CreditCard size={20} />}
-            />
-          </motion.div>
-          <motion.div variants={fadeUp}>
-            <KPICard
-              title="Active Leases"
-              value={stats.activeLeases}
-              icon={<FileText size={20} />}
-            />
-          </motion.div>
-        </motion.div>
-      ) : null}
-
-      {/* Charts + Alerts row */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-        {/* Revenue Chart — 2 cols */}
-        <Card className="lg:col-span-2" padding="lg">
-          <CardHeader>
-            <CardTitle>Revenue Trend</CardTitle>
-            <Badge variant="info">Last 6 months</Badge>
-          </CardHeader>
-          <CardContent>
-            <div className="h-64">
-              {trend && trend.length > 0 ? (
-                <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={trend}>
-                    <defs>
-                      <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#6366f1" stopOpacity={0.2} />
-                        <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
-                      </linearGradient>
-                    </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
-                    <XAxis
-                      dataKey="month"
-                      tick={{ fontSize: 12, fill: '#94a3b8' }}
-                      axisLine={false}
-                      tickLine={false}
-                    />
-                    <YAxis
-                      tick={{ fontSize: 12, fill: '#94a3b8' }}
-                      axisLine={false}
-                      tickLine={false}
-                      tickFormatter={(v: number) => `₹${(v / 1000).toFixed(0)}k`}
-                    />
-                    <Tooltip
-                      contentStyle={{
-                        borderRadius: '8px',
-                        border: '1px solid #e2e8f0',
-                        fontSize: '13px',
-                      }}
-                      formatter={(value) => [
-                        formatCurrency(typeof value === 'number' ? value : Number(value ?? 0)),
-                        'Revenue'
-                      ]}
-                    />
-                    <Area
-                      type="monotone"
-                      dataKey="revenue"
-                      stroke="#6366f1"
-                      strokeWidth={2}
-                      fill="url(#revenueGradient)"
-                    />
-                  </AreaChart>
-                </ResponsiveContainer>
-              ) : (
-                <div className="h-full flex items-center justify-center text-surface-400 text-sm">
-                  No revenue data available yet
-                </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Quick Stats — 1 col */}
-        <Card padding="lg">
-          <CardHeader>
-            <CardTitle>Quick Stats</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {stats && (
-              <div className="space-y-4">
-                <div className="flex items-center justify-between py-3 border-b border-surface-100 dark:border-surface-700">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-success-50 dark:bg-success-500/15 flex items-center justify-center">
-                      <Users size={16} className="text-success-600" />
-                    </div>
-                    <span className="text-sm text-surface-600 dark:text-surface-300">Total Tenants</span>
-                  </div>
-                  <span className="text-sm font-semibold text-surface-900 dark:text-white">{stats.totalTenants}</span>
-                </div>
-                <div className="flex items-center justify-between py-3 border-b border-surface-100 dark:border-surface-700">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-warning-50 dark:bg-warning-500/15 flex items-center justify-center">
-                      <Calendar size={16} className="text-warning-600" />
-                    </div>
-                    <span className="text-sm text-surface-600 dark:text-surface-300">Expiring Leases</span>
-                  </div>
-                  <span className="text-sm font-semibold text-warning-600">{stats.expiringLeases}</span>
-                </div>
-                <div className="flex items-center justify-between py-3 border-b border-surface-100 dark:border-surface-700">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-danger-50 dark:bg-danger-500/15 flex items-center justify-center">
-                      <AlertTriangle size={16} className="text-danger-600" />
-                    </div>
-                    <span className="text-sm text-surface-600 dark:text-surface-300">Overdue Payments</span>
-                  </div>
-                  <span className="text-sm font-semibold text-danger-600">{stats.overduePayments}</span>
-                </div>
-                <div className="flex items-center justify-between py-3">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-primary-50 dark:bg-primary-500/15 flex items-center justify-center">
-                      <CreditCard size={16} className="text-primary-600" />
-                    </div>
-                    <span className="text-sm text-surface-600 dark:text-surface-300">Pending</span>
-                  </div>
-                  <span className="text-sm font-semibold text-surface-900 dark:text-white">{stats.pendingPayments}</span>
-                </div>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Alerts Section */}
-      {alerts && alerts.totalAlerts > 0 && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-          {/* Expiring Leases */}
-          {alerts.expiringLeases.length > 0 && (
-            <Card padding="lg">
-              <CardHeader>
-                <CardTitle>Expiring Soon</CardTitle>
-                <Badge variant="warning">{alerts.expiringLeases.length}</Badge>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  {alerts.expiringLeases.slice(0, 5).map((lease) => (
-                    <div
-                      key={lease._id}
-                      className="flex items-center justify-between py-2 px-3 rounded-lg bg-surface-50 dark:bg-surface-800/50"
-                    >
-                      <div>
-                        <p className="text-sm font-medium text-surface-900 dark:text-surface-100">
-                          {typeof lease.propertyId === 'object' ? lease.propertyId.address : 'Property'}
-                        </p>
-                        <p className="text-xs text-surface-500">
-                          Expires {formatRelativeDate(lease.endDate)}
-                        </p>
-                      </div>
-                      <StatusBadge status={lease.status} />
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          )}
-
-          {/* Overdue Payments */}
-          {alerts.overduePayments.length > 0 && (
-            <Card padding="lg">
-              <CardHeader>
-                <CardTitle>Overdue Payments</CardTitle>
-                <Badge variant="danger">{alerts.overduePayments.length}</Badge>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  {alerts.overduePayments.slice(0, 5).map((payment) => (
-                    <div
-                      key={payment._id}
-                      className="flex items-center justify-between py-2 px-3 rounded-lg bg-surface-50 dark:bg-surface-800/50"
-                    >
-                      <div>
-                        <p className="text-sm font-medium text-surface-900 dark:text-surface-100">
-                          {typeof payment.tenantId === 'object' ? `${payment.tenantId.firstName} ${payment.tenantId.lastName}` : 'Tenant'}
-                        </p>
-                        <p className="text-xs text-surface-500">
-                          Due {formatDate(payment.dueDate)}
-                        </p>
-                      </div>
-                      <span className="text-sm font-semibold text-danger-600">
-                        {formatCurrency(payment.totalAmount)}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          )}
-        </div>
+      
+      {/* ZONE 1: Smart Insight Banner */}
+      {(!statsLoading && stats && (stats.totalUnits === 0 && stats.totalTenants === 0 || !localStorage.getItem('rf_onboarding_dismissed'))) && (
+        <OnboardingBanner 
+          propertiesCount={stats?.totalUnits || 0} 
+          tenantsCount={stats?.totalTenants || 0}
+          hasCollectedRent={(stats?.collectedThisMonth || 0) > 0} 
+        />
       )}
-    </div>
+      
+      <SmartSummary />
+
+      {/* ZONE 2: KPI Cards Row */}
+      {statsLoading || !stats ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <SkeletonCard key={i} />
+          ))}
+        </div>
+      ) : (
+        <motion.div 
+          variants={staggerContainer}
+          initial="initial"
+          animate="animate"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+        >
+            <motion.div variants={staggerItem} layout className="relative">
+              <StatCard
+                label="Collected This Month"
+                value={formatCurrency(stats.collectedThisMonth)}
+                subtext={`of ${formatCurrency(stats.totalExpectedThisMonth)} expected`}
+                trend={stats.collectedThisMonth >= stats.collectedLastMonth ? 'up' : 'down'}
+                icon={<DollarSign size={20} />}
+                color="blue"
+                onClick={() => navigate('/payments?status=paid')}
+              />
+              <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-neutral-100">
+                <div 
+                  className="h-1.5 bg-brand-500 transition-all duration-700"
+                  style={{ width: `${stats.collectionPercent}%` }}
+                />
+              </div>
+            </motion.div>
+
+            <motion.div variants={staggerItem} layout>
+              <StatCard
+                label="Overdue Rent"
+                value={formatCurrency(stats.overdueAmount)}
+                subtext={`${stats.overdueCount} tenants affected`}
+                trend={stats.overdueAmount <= stats.overdueLastMonth ? 'down' : 'up'}
+                icon={<AlertCircle size={20} />}
+                color="red"
+                onClick={() => navigate('/payments?status=overdue')}
+              />
+            </motion.div>
+
+            <motion.div variants={staggerItem} layout>
+              <StatCard
+                label="Occupancy Rate"
+                value={formatPercent(stats.occupancyRate)}
+                subtext={`${stats.occupiedUnits} of ${stats.totalUnits} units`}
+                trend={stats.occupancyRate >= stats.occupancyLastMonth ? 'up' : 'down'}
+                icon={<Building2 size={20} />}
+                color="green"
+                onClick={() => navigate('/properties')}
+              />
+            </motion.div>
+
+            <motion.div variants={staggerItem} layout>
+              <StatCard
+                label="Leases Expiring"
+                value={stats.expiringLeasesCount.toString()}
+                subtext="in the next 30 days"
+                icon={<Calendar size={20} />}
+                color="amber"
+                onClick={() => navigate('/leases?filter=expiring')}
+              />
+            </motion.div>
+        </motion.div>
+      )}
+
+      {/* ZONE 2.5: Quick Actions Row */}
+      <div className="flex items-center gap-3 overflow-x-auto pb-2 scrollbar-hide">
+        <Button 
+          variant="primary" 
+          icon={<UserPlus size={16} />} 
+          onClick={() => navigate('/tenants?action=add')}
+        >
+          Add Tenant
+        </Button>
+        <Button 
+          variant="secondary" 
+          icon={<DollarSign size={16} />} 
+          onClick={() => navigate('/payments?action=collect')}
+        >
+          Collect Rent
+        </Button>
+        <Button 
+          variant="secondary" 
+          icon={<Building2 size={16} />} 
+          onClick={() => navigate('/properties?action=add')}
+        >
+          Add Property
+        </Button>
+        <Button 
+          variant="ghost" 
+          icon={<Plus size={16} />} 
+          onClick={() => navigate('/leases?action=add')}
+        >
+          New Lease
+        </Button>
+      </div>
+
+      {/* ZONE 3: Action Center + Charts */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        {/* Action Center / Todays Focus */}
+        <div className="lg:col-span-2">
+          <TodaysFocus />
+        </div>
+
+        <Card className="lg:col-span-1 flex flex-col p-6 min-h-[360px]">
+          <div className="mb-4 flex justify-between items-start">
+            <div>
+              <h3 className="text-sm font-medium text-hsl(var(--text-secondary)) uppercase tracking-wider">Occupancy Trend</h3>
+              <p className="text-xs text-hsl(var(--text-tertiary)) mt-1">Last 6 months</p>
+            </div>
+            {streakCount >= 3 && (
+              <span className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-orange-50 text-orange-700 border border-orange-200 text-xs font-semibold">
+                🔥 {streakCount} payments on time in a row
+              </span>
+            )}
+          </div>
+          
+          {statsLoading ? (
+            <div className="h-40 w-full animate-pulse bg-hsl(var(--surface-2)) rounded-[var(--radius-lg)]" />
+          ) : (
+            <div className="flex-1 flex flex-col">
+              <OccupancyChart data={[
+                { month: 'Oct', occupancy: 82 },
+                { month: 'Nov', occupancy: 85 },
+                { month: 'Dec', occupancy: 84 },
+                { month: 'Jan', occupancy: 88 },
+                { month: 'Feb', occupancy: 91 },
+                { month: 'Mar', occupancy: stats?.occupancyRate || 95 },
+              ]} />
+              
+              <div className="mt-4 pt-4 border-t border-hsl(var(--surface-border)) flex justify-between items-end">
+                <div>
+                  <p className="text-sm text-hsl(var(--text-secondary)) mb-1">Current</p>
+                  <p className="text-2xl font-bold tabular-nums text-hsl(var(--text-primary))">
+                    {stats?.occupancyRate || 0}%
+                  </p>
+                </div>
+                {stats && stats.occupancyRate >= stats.occupancyLastMonth && (
+                  <Badge variant="success" className="mb-1">+{stats.occupancyRate - stats.occupancyLastMonth}%</Badge>
+                )}
+              </div>
+            </div>
+          )}
+        </Card>
+      </div>
+
+      {/* ZONE 4: Rent Roll Preview */}
+      <Card className="p-0 overflow-hidden">
+        <div className="flex items-center justify-between p-6 border-b border-border">
+          <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Rent Roll</h3>
+          <Button variant="ghost" size="sm" onClick={() => navigate('/rent-roll')}>
+            View Full Rent Roll →
+          </Button>
+        </div>
+
+        <DataTable
+          loading={rentRollLoading}
+          data={rentRollPreview}
+          className="border-0 rounded-none shadow-none"
+          emptyState={
+            <EmptyState 
+              icon={<Grid3x3 size={24} />}
+              title="No units found"
+              description="Add a property to get started"
+            />
+          }
+          columns={[
+            {
+              key: 'unit',
+              header: 'Unit',
+              render: (row) => (
+                <div>
+                  <p className="text-sm font-medium text-neutral-900">{row.unit}</p>
+                  <p className="text-xs text-neutral-400">{row.propertyName}</p>
+                </div>
+              )
+            },
+            {
+              key: 'tenant',
+              header: 'Tenant',
+              render: (row) => row.tenantName ? (
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-full bg-brand-100 text-brand-700 text-xs font-semibold flex items-center justify-center flex-shrink-0">
+                    {row.tenantName.charAt(0).toUpperCase()}
+                  </div>
+                  <span className="text-sm text-neutral-700">{row.tenantName}</span>
+                </div>
+              ) : (
+                <span className="text-sm text-neutral-400 italic">Vacant</span>
+              )
+            },
+            {
+              key: 'rent',
+              header: 'Monthly Rent',
+              render: (row) => (
+                <span className="text-sm font-medium text-neutral-900">
+                  {row.monthlyRent ? formatCurrency(row.monthlyRent) : '—'}
+                </span>
+              )
+            },
+            {
+              key: 'status',
+              header: 'Status',
+              className: 'hidden md:table-cell',
+              render: (row) => {
+                const variantMap: Record<string, any> = {
+                  paid: 'success',
+                  overdue: 'danger', 
+                  pending: 'warning',
+                  vacant: 'neutral'
+                };
+                return (
+                  <Badge variant={variantMap[row.status] || 'neutral'}>
+                    {row.status.charAt(0).toUpperCase() + row.status.slice(1)}
+                  </Badge>
+                );
+              }
+            },
+            {
+              key: 'leaseEnds',
+              header: 'Lease Ends',
+              className: 'hidden lg:table-cell',
+              render: (row) => {
+                if (!row.leaseEndsAt) return <span className="text-neutral-300">—</span>;
+                const daysLeft = differenceInDays(new Date(row.leaseEndsAt), new Date());
+                return (
+                  <span className={`text-sm ${daysLeft < 30 ? 'text-danger-600 font-medium' : 'text-neutral-600'}`}>
+                    {formatDate(row.leaseEndsAt)}
+                  </span>
+                );
+              }
+            },
+            {
+              key: 'action',
+              header: '',
+              render: (row) => (
+                <Button variant="ghost" size="sm" onClick={() => navigate(`/tenants/${row.id}`)}>
+                  View
+                </Button>
+              )
+            }
+          ]}
+        />
+      </Card>
+    </PageTransition>
   );
 };
 

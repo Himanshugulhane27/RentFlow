@@ -1,24 +1,26 @@
 import React, { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { CreditCard, CheckCircle } from 'lucide-react';
-import toast from 'react-hot-toast';
+import { toast } from '../../hooks/useToast';
 import { paymentApi } from '../../api/payments.api';
+import { useMarkPaymentPaid } from './hooks/useMarkPaymentPaid';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { Select } from '../../components/ui/Select';
 import { Modal } from '../../components/ui/Modal';
-import { CardSkeleton } from '../../components/ui/Skeleton';
+import { SkeletonCard } from '../../components/ui/Skeleton';
 import { EmptyState } from '../../components/ui/EmptyState';
 import { StatusBadge } from '../../components/shared/StatusBadge';
+import { PageTransition } from '../../components/ui/PageTransition';
+import { staggerContainer, staggerItem } from '../../lib/animations';
 import { formatCurrency, formatDate } from '../../utils/formatters';
 import { PAYMENT_METHODS } from '../../utils/constants';
 import type { Payment } from '../../types/models';
 import type { MarkPaidRequest } from '../../types/api';
 
 const PaymentsPage: React.FC = () => {
-  const qc = useQueryClient();
   const [filter, setFilter] = useState('all');
   const [payModal, setPayModal] = useState<string | null>(null);
   const [payForm, setPayForm] = useState<MarkPaidRequest>({ paymentMethod: 'bank_transfer' });
@@ -28,15 +30,20 @@ const PaymentsPage: React.FC = () => {
     queryFn: () => paymentApi.getAll(),
   });
 
-  const markPaidM = useMutation({
-    mutationFn: ({ id, d }: { id: string; d: MarkPaidRequest }) => paymentApi.markPaid(id, d),
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['payments'] });
-      toast.success('Payment marked as paid');
-      setPayModal(null);
-    },
-    onError: (e: { message?: string }) => toast.error(e.message || 'Failed'),
-  });
+  const { mutate: markPaidM, isPending } = useMarkPaymentPaid();
+
+  const handleMarkPaid = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (payModal) {
+      const payment = payments.find(p => p._id === payModal);
+      markPaidM(
+        { paymentId: payModal, paidAmount: payment?.totalAmount ?? 0, notes: payForm.notes },
+        {
+          onSuccess: () => setPayModal(null)
+        }
+      );
+    }
+  };
 
   const payments = (data?.data || []).filter((p: Payment) =>
     filter === 'all' || p.status === filter
@@ -45,11 +52,11 @@ const PaymentsPage: React.FC = () => {
   const methodOpts = Object.entries(PAYMENT_METHODS).map(([v, l]) => ({ value: v, label: l }));
 
   return (
-    <div className="space-y-6">
+    <PageTransition className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-surface-900 dark:text-white font-[var(--font-heading)]">Payments</h1>
-          <p className="text-sm text-surface-500 mt-1">{payments.length} payments</p>
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">Payments</h1>
+          <p className="text-sm text-muted-foreground mt-1">{payments.length} payments</p>
         </div>
       </div>
 
@@ -66,17 +73,26 @@ const PaymentsPage: React.FC = () => {
         ))}
       </div>
 
-      {isLoading ? <CardSkeleton count={6} /> : payments.length === 0 ? (
+      {isLoading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)}
+        </div>
+      ) : payments.length === 0 ? (
         <EmptyState
           title="No payments"
           description="Payments will appear here when created from active leases."
           icon={<CreditCard size={28} />}
         />
       ) : (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <motion.div 
+          variants={staggerContainer}
+          initial="initial"
+          animate="animate"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+        >
           {payments.map((p: Payment) => (
-            <Card key={p._id}>
+            <motion.div key={p._id} variants={staggerItem} layout layoutId={p._id}>
+              <Card hoverable>
               <div className="flex items-start justify-between mb-3">
                 <StatusBadge status={p.status} />
                 <span className="text-lg font-bold text-surface-900 dark:text-white">
@@ -112,22 +128,20 @@ const PaymentsPage: React.FC = () => {
                   </Button>
                 </div>
               )}
-            </Card>
+              </Card>
+            </motion.div>
           ))}
         </motion.div>
       )}
 
       {/* Mark Paid Modal */}
       <Modal
-        isOpen={!!payModal}
+        open={!!payModal}
         onClose={() => setPayModal(null)}
         title="Mark Payment as Paid"
         size="sm"
       >
-        <form onSubmit={e => {
-          e.preventDefault();
-          if (payModal) markPaidM.mutate({ id: payModal, d: payForm });
-        }} className="space-y-4">
+        <form onSubmit={handleMarkPaid} className="space-y-4">
           <Select
             label="Payment Method"
             value={payForm.paymentMethod}
@@ -146,11 +160,11 @@ const PaymentsPage: React.FC = () => {
           />
           <div className="flex gap-3 justify-end pt-2">
             <Button variant="secondary" type="button" onClick={() => setPayModal(null)}>Cancel</Button>
-            <Button type="submit" loading={markPaidM.isPending}>Confirm</Button>
+            <Button type="submit" loading={isPending}>Confirm</Button>
           </div>
         </form>
       </Modal>
-    </div>
+    </PageTransition>
   );
 };
 

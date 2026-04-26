@@ -1,6 +1,6 @@
 import React from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { MainLayout } from './components/layout/MainLayout';
+import { AppShell } from './components/layout/AppShell';
 import { ProtectedRoute, GuestRoute } from './components/layout/AuthGuard';
 
 // ─── Lazy loaded pages ──────────────────────────────────────
@@ -11,6 +11,9 @@ const PropertiesPage = React.lazy(() => import('./features/properties/Properties
 const TenantsPage = React.lazy(() => import('./features/tenants/TenantsPage'));
 const LeasesPage = React.lazy(() => import('./features/leases/LeasesPage'));
 const PaymentsPage = React.lazy(() => import('./features/payments/PaymentsPage'));
+const RentRollPage = React.lazy(() => import('./features/rent-roll/RentRollPage'));
+const SettingsPage = React.lazy(() => import('./features/settings/SettingsPage'));
+const ComingSoonPage = React.lazy(() => import('./features/placeholder/ComingSoonPage'));
 
 // ─── Suspense Wrapper ───────────────────────────────────────
 const SuspenseWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
@@ -47,7 +50,7 @@ const router = createBrowserRouter([
     element: <ProtectedRoute />,
     children: [
       {
-        element: <MainLayout />,
+        element: <AppShell />,
         children: [
           {
             path: '/',
@@ -56,6 +59,10 @@ const router = createBrowserRouter([
           {
             path: '/properties',
             element: <SuspenseWrapper><PropertiesPage /></SuspenseWrapper>,
+          },
+          {
+            path: '/rent-roll',
+            element: <SuspenseWrapper><RentRollPage /></SuspenseWrapper>,
           },
           {
             path: '/tenants',
@@ -68,6 +75,14 @@ const router = createBrowserRouter([
           {
             path: '/payments',
             element: <SuspenseWrapper><PaymentsPage /></SuspenseWrapper>,
+          },
+          {
+            path: '/documents',
+            element: <SuspenseWrapper><ComingSoonPage title="Documents" /></SuspenseWrapper>,
+          },
+          {
+            path: '/settings',
+            element: <SuspenseWrapper><SettingsPage /></SuspenseWrapper>,
           },
         ],
       },

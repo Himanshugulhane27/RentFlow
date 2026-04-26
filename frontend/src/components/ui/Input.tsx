@@ -1,5 +1,6 @@
-import React from 'react';
+import { forwardRef } from 'react';
 import { cn } from '../../utils/cn';
+import { motion } from 'framer-motion';
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -8,7 +9,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   icon?: React.ReactNode;
 }
 
-export const Input = React.forwardRef<HTMLInputElement, InputProps>(
+export const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ label, error, helperText, icon, className, id, ...props }, ref) => {
     const inputId = id || label?.toLowerCase().replace(/\s+/g, '-');
 
@@ -22,9 +23,13 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             {label}
           </label>
         )}
-        <div className="relative">
+        <motion.div 
+          className="relative"
+          animate={error ? { x: [0, -6, 6, -4, 4, -2, 2, 0] } : { x: 0 }}
+          transition={error ? { duration: 0.4 } : undefined}
+        >
           {icon && (
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-surface-400">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-hsl(var(--text-tertiary))">
               {icon}
             </div>
           )}
@@ -32,20 +37,19 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             ref={ref}
             id={inputId}
             className={cn(
-              'w-full rounded-lg border bg-white px-3.5 py-2.5 text-sm text-surface-900 placeholder:text-surface-400',
-              'transition-colors duration-150',
-              'focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-500',
-              'dark:bg-surface-800 dark:text-surface-100 dark:border-surface-600 dark:placeholder:text-surface-500',
-              'dark:focus:ring-primary-400/40 dark:focus:border-primary-400',
+              'w-full bg-hsl(var(--surface-0)) border rounded-[var(--radius-md)] px-3.5 py-2.5 text-sm shadow-[var(--shadow-xs)] text-hsl(var(--text-primary)) placeholder:text-hsl(var(--text-tertiary))',
+              'transition-all duration-150',
+              'focus-ring',
+              'disabled:bg-hsl(var(--surface-3)) disabled:text-hsl(var(--text-disabled)) disabled:cursor-not-allowed',
               error
-                ? 'border-danger-500 focus:ring-danger-500/40 focus:border-danger-500'
-                : 'border-surface-300',
+                ? 'border-hsl(var(--danger)) focus:ring-hsl(var(--danger)/0.2)'
+                : 'border-hsl(var(--surface-border))',
               icon && 'pl-10',
               className
             )}
             {...props}
           />
-        </div>
+        </motion.div>
         {error && (
           <p className="text-xs text-danger-600 dark:text-danger-400">{error}</p>
         )}

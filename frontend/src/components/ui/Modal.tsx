@@ -1,94 +1,119 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
+import { fadeIn, scaleIn } from '../../lib/animations';
 import { cn } from '../../utils/cn';
+import { useFocusTrap } from '../../hooks/useFocusTrap';
 
-interface ModalProps {
-  isOpen: boolean;
+export interface ModalProps {
+  open: boolean;
   onClose: () => void;
   title: string;
-  children: React.ReactNode;
+  description?: string;
   size?: 'sm' | 'md' | 'lg' | 'xl';
-  className?: string;
+  children: React.ReactNode;
+  footer?: React.ReactNode;
 }
 
-const sizeStyles = {
-  sm: 'max-w-md',
-  md: 'max-w-lg',
-  lg: 'max-w-2xl',
-  xl: 'max-w-4xl',
+const sizeClasses = {
+  sm: 'max-w-[384px]',
+  md: 'max-w-[512px]',
+  lg: 'max-w-[672px]',
+  xl: 'max-w-[800px]',
 };
 
 export const Modal: React.FC<ModalProps> = ({
-  isOpen,
+  open,
   onClose,
   title,
-  children,
+  description,
   size = 'md',
-  className,
+  children,
+  footer,
 }) => {
-  // Close on Escape key
+  const titleId = React.useId();
+  const modalRef = useRef<HTMLDivElement>(null);
+  useFocusTrap(modalRef as React.RefObject<HTMLElement>, open);
+
   useEffect(() => {
-    const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    if (isOpen) {
-      document.addEventListener('keydown', handleEsc);
+    if (open) {
       document.body.style.overflow = 'hidden';
+      const handleEscape = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') onClose();
+      };
+      window.addEventListener('keydown', handleEscape);
+      return () => {
+        document.body.style.overflow = '';
+        window.removeEventListener('keydown', handleEscape);
+      };
     }
-    return () => {
-      document.removeEventListener('keydown', handleEsc);
-      document.body.style.overflow = '';
-    };
-  }, [isOpen, onClose]);
+  }, [open, onClose]);
 
-  return (
+  if (typeof document === 'undefined') return null;
+
+  return createPortal(
     <AnimatePresence>
-      {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          {/* Backdrop */}
+      {open && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.15 }}
-            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+            variants={fadeIn}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            className="fixed inset-0 bg-hsl(220 20% 10% / 0.5) backdrop-blur-sm z-40"
             onClick={onClose}
+            aria-hidden="true"
           />
-
-          {/* Panel */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 10 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 10 }}
-            transition={{ duration: 0.2, ease: 'easeOut' }}
+            ref={modalRef}
+            variants={scaleIn}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={titleId}
             className={cn(
-              'relative w-full bg-white rounded-xl shadow-xl',
-              'dark:bg-surface-800 dark:border dark:border-surface-700',
-              sizeStyles[size],
-              className
+              'glass-strong elevation-5 rounded-[var(--radius-xl)] p-6 z-50 w-full relative flex flex-col max-h-[90vh] overflow-hidden',
+              sizeClasses[size]
             )}
           >
-            {/* Header */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-surface-200 dark:border-surface-700">
-              <h2 className="text-lg font-semibold text-surface-900 dark:text-surface-100">
-                {title}
-              </h2>
-              <button
+            <div className="flex items-start justify-between mb-4 flex-shrink-0">
+              <div>
+                <h2 id={titleId} className="text-lg font-semibold text-hsl(var(--text-primary))">
+                  {title}
+                </h2>
+                {description && (
+                  <p className="text-sm text-hsl(var(--text-secondary)) mt-1">
+                    {description}
+                  </p>
+                )}
+              </div>
+              <motion.button
+                whileHover={{ rotate: 90 }}
+                transition={{ type: 'spring', stiffness: 400, damping: 25 }}
                 onClick={onClose}
-                className="p-1.5 rounded-lg text-surface-400 hover:text-surface-600 hover:bg-surface-100 dark:hover:bg-surface-700 dark:hover:text-surface-300 transition-colors"
+                className="p-1.5 rounded-[var(--radius-md)] text-hsl(var(--text-tertiary)) hover:bg-hsl(var(--surface-3)) hover:text-hsl(var(--text-primary)) transition-colors focus-ring"
+                aria-label="Close modal"
               >
                 <X size={18} />
-              </button>
+              </motion.button>
             </div>
 
-            {/* Body */}
-            <div className="px-6 py-5 max-h-[70vh] overflow-y-auto">
+            <div className="flex-1 overflow-y-auto min-h-0 pr-1 -mr-1">
               {children}
             </div>
+
+            {footer && (
+              <div className="border-t border-hsl(var(--surface-border)) pt-4 mt-6 flex justify-end gap-3 flex-shrink-0">
+                {footer}
+              </div>
+            )}
           </motion.div>
         </div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 };

@@ -1,73 +1,69 @@
-import React from 'react';
 import { cn } from '../../utils/cn';
 
-interface SkeletonProps {
-  className?: string;
-  variant?: 'text' | 'circular' | 'rectangular';
-  width?: string | number;
-  height?: string | number;
-}
-
-export const Skeleton: React.FC<SkeletonProps> = ({
-  className,
-  variant = 'rectangular',
-  width,
-  height,
-}) => {
+export function Skeleton({ className, delay = 0 }: { className?: string, delay?: number }) {
   return (
-    <div
-      className={cn(
-        'skeleton animate-pulse',
-        variant === 'circular' && 'rounded-full',
-        variant === 'text' && 'rounded h-4',
-        variant === 'rectangular' && 'rounded-lg',
-        className
-      )}
-      style={{ width, height }}
+    <div 
+      className={cn('shimmer rounded-[var(--radius-md)]', className)} 
+      style={{ animationDelay: `${delay}ms` }}
     />
   );
-};
+}
 
-/**
- * Pre-built skeleton for a card layout.
- */
-export const CardSkeleton: React.FC<{ count?: number }> = ({ count = 3 }) => {
+export function SkeletonCard({ delay = 0 }: { delay?: number }) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-      {Array.from({ length: count }).map((_, i) => (
-        <div
-          key={i}
-          className="bg-white dark:bg-surface-800 rounded-xl border border-surface-200 dark:border-surface-700 p-5 space-y-4"
-        >
-          <Skeleton className="h-36 w-full" />
-          <Skeleton className="h-5 w-3/4" variant="text" />
-          <Skeleton className="h-4 w-1/2" variant="text" />
-          <div className="flex gap-2 pt-2">
-            <Skeleton className="h-8 w-20" />
-            <Skeleton className="h-8 w-20" />
-          </div>
+    <div className="bg-hsl(var(--surface-0)) rounded-[var(--radius-xl)] elevation-2 card-border p-6">
+      <Skeleton delay={delay} className="h-3 w-1/3 mb-4" />
+      <Skeleton delay={delay} className="h-8 w-1/2 mb-4" />
+      <Skeleton delay={delay} className="h-2 w-full mb-3" />
+      <Skeleton delay={delay} className="h-2 w-1/4" />
+    </div>
+  );
+}
+
+export function SkeletonTableRow({ cols, delay = 0 }: { cols: number, delay?: number }) {
+  return (
+    <div className="flex items-center justify-between px-6 py-4 border-b border-hsl(var(--surface-border)) bg-hsl(var(--surface-0))">
+      {Array.from({ length: cols }).map((_, i) => (
+        <div key={i} className={`flex-1 ${i === 0 ? 'max-w-[200px]' : ''}`}>
+          <Skeleton delay={delay} className="h-4 w-3/4 mb-1.5" />
+          <Skeleton delay={delay} className="h-3 w-1/2 opacity-70" />
         </div>
       ))}
     </div>
   );
-};
+}
 
-/**
- * Pre-built skeleton for a stats/KPI row.
- */
-export const KPISkeleton: React.FC = () => {
+export function SkeletonList({ rows }: { rows: number }) {
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
-      {Array.from({ length: 4 }).map((_, i) => (
-        <div
-          key={i}
-          className="bg-white dark:bg-surface-800 rounded-xl border border-surface-200 dark:border-surface-700 p-5 space-y-3"
-        >
-          <Skeleton className="h-4 w-24" variant="text" />
-          <Skeleton className="h-8 w-16" variant="text" />
-          <Skeleton className="h-3 w-20" variant="text" />
-        </div>
+    <div className="space-y-3" aria-busy="true" aria-label="Loading...">
+      {Array.from({ length: rows }).map((_, i) => (
+        <SkeletonCard key={i} delay={i * 80} />
       ))}
     </div>
   );
-};
+}
+
+export function SkeletonTenantCard({ delay = 0 }: { delay?: number }) {
+  return (
+    <div className="bg-hsl(var(--surface-0)) rounded-[var(--radius-xl)] elevation-2 card-border p-6 flex items-start gap-4">
+      <Skeleton delay={delay} className="w-12 h-12 rounded-full flex-shrink-0" />
+      <div className="flex-1">
+        <Skeleton delay={delay} className="h-5 w-1/2 mb-3" />
+        <Skeleton delay={delay} className="h-3 w-3/4 mb-2" />
+        <Skeleton delay={delay} className="h-3 w-2/3" />
+      </div>
+    </div>
+  );
+}
+
+export function SkeletonTimelineItem({ delay = 0 }: { delay?: number }) {
+  return (
+    <div className="relative flex gap-4 pb-6">
+      <Skeleton delay={delay} className="relative z-10 w-7 h-7 rounded-full flex-shrink-0 border-2 border-white" />
+      <div className="flex-1 space-y-2 pt-1">
+        <Skeleton delay={delay} className="h-4 w-1/2" />
+        <Skeleton delay={delay} className="h-3 w-1/3 opacity-70" />
+      </div>
+    </div>
+  );
+}

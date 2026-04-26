@@ -1,6 +1,7 @@
 import React from 'react';
 import { cn } from '../../utils/cn';
 import { getInitials } from '../../utils/formatters';
+import { FadeImage } from './FadeImage';
 
 interface AvatarProps {
   name: string;
@@ -34,7 +35,7 @@ export const Avatar: React.FC<AvatarProps> = ({
 }) => {
   if (src) {
     return (
-      <img
+      <FadeImage
         src={src}
         alt={name}
         className={cn(

@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { Plus, Search, Building2, Bed, Bath, MapPin } from 'lucide-react';
-import toast from 'react-hot-toast';
+import { toast } from '../../hooks/useToast';
 
 import { propertyApi } from '../../api/properties.api';
 import { Card } from '../../components/ui/Card';
@@ -11,10 +11,14 @@ import { Input } from '../../components/ui/Input';
 import { Badge } from '../../components/ui/Badge';
 import { Modal } from '../../components/ui/Modal';
 import { Select } from '../../components/ui/Select';
-import { CardSkeleton } from '../../components/ui/Skeleton';
+import { SkeletonCard } from '../../components/ui/Skeleton';
 import { EmptyState } from '../../components/ui/EmptyState';
+import { PageTransition } from '../../components/ui/PageTransition';
+import { staggerContainer, staggerItem } from '../../lib/animations';
 import { formatCurrency } from '../../utils/formatters';
 import { PROPERTY_TYPES } from '../../utils/constants';
+import { ContextTooltip } from '../../components/ui/ContextTooltip';
+import { useFirstVisit } from '../../hooks/useFirstVisit';
 import type { Property } from '../../types/models';
 import type { CreatePropertyRequest } from '../../types/api';
 
@@ -30,6 +34,9 @@ const PropertiesPage: React.FC = () => {
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState<CreatePropertyRequest>(defaultForm);
   const [editingId, setEditingId] = useState<string | null>(null);
+
+  const tooltipAnchorRef = useRef<HTMLDivElement>(null);
+  const { isFirstVisit, dismiss: dismissFirstVisit } = useFirstVisit('properties_tip');
 
   const { data, isLoading } = useQuery({
     queryKey: ['properties', { search }],
@@ -89,13 +96,23 @@ const PropertiesPage: React.FC = () => {
   const properties = (data?.data || []) as Property[];
 
   return (
-    <div className="space-y-6">
+    <PageTransition className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-surface-900 dark:text-white font-[var(--font-heading)]">Properties</h1>
-          <p className="text-sm text-surface-500 mt-1">{properties.length} properties</p>
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">Properties</h1>
+          <p className="text-sm text-muted-foreground mt-1">{properties.length} properties</p>
         </div>
-        <Button icon={<Plus size={16} />} onClick={() => setShowForm(true)}>Add Property</Button>
+        <div className="flex items-center gap-2">
+          <div ref={tooltipAnchorRef}>
+            <Button icon={<Plus size={16} />} onClick={() => setShowForm(true)}>Add Property</Button>
+          </div>
+          <ContextTooltip
+            isVisible={isFirstVisit}
+            onDismiss={dismissFirstVisit}
+            text="Start by adding your first rental property."
+            anchorRef={tooltipAnchorRef}
+          />
+        </div>
       </div>
 
       <div className="max-w-sm">
@@ -108,23 +125,27 @@ const PropertiesPage: React.FC = () => {
       </div>
 
       {isLoading ? (
-        <CardSkeleton count={6} />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)}
+        </div>
       ) : properties.length === 0 ? (
         <EmptyState
           title="No properties yet"
           description="Add your first property to start managing your portfolio."
           icon={<Building2 size={28} />}
-          action={<Button onClick={() => setShowForm(true)} icon={<Plus size={16} />}>Add Property</Button>}
+          action={{ label: "Add Property", onClick: () => setShowForm(true) }}
         />
       ) : (
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
+          variants={staggerContainer}
+          initial="initial"
+          animate="animate"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
         >
           {properties.map((p: Property) => (
-            <Card key={p._id} interactive onClick={() => openEdit(p)}>
-              <div className="flex items-start justify-between mb-3">
+            <motion.div key={p._id} variants={staggerItem} layout layoutId={p._id}>
+              <Card hoverable interactive onClick={() => openEdit(p)}>
+                <div className="flex items-start justify-between mb-3">
                 <Badge variant={p.available ? 'success' : 'warning'} dot>
                   {p.available ? 'Available' : 'Occupied'}
                 </Badge>
@@ -140,12 +161,13 @@ const PropertiesPage: React.FC = () => {
                 <span>{PROPERTY_TYPES[p.propertyType]}</span>
               </div>
             </Card>
+          </motion.div>
           ))}
         </motion.div>
       )}
 
       {/* Create / Edit Modal */}
-      <Modal isOpen={showForm} onClose={closeForm} title={editingId ? 'Edit Property' : 'Add Property'} size="lg">
+      <Modal open={showForm} onClose={closeForm} title={editingId ? 'Edit Property' : 'Add Property'} size="lg">
         <form onSubmit={handleSubmit} className="space-y-4">
           <Input label="Address" value={form.address} onChange={e => update('address', e.target.value)} required />
           <div className="grid grid-cols-3 gap-4">
@@ -158,7 +180,7 @@ const PropertiesPage: React.FC = () => {
             <Input label="Bedrooms" type="number" value={form.bedrooms} onChange={e => update('bedrooms', Number(e.target.value))} />
             <Input label="Bathrooms" type="number" value={form.bathrooms} onChange={e => update('bathrooms', Number(e.target.value))} />
           </div>
-          <Input label="Monthly Rent (₹)" type="number" value={form.rent} onChange={e => update('rent', Number(e.target.value))} required />
+          <Input label="Monthly Rent" type="number" value={form.rent} onChange={e => update('rent', Number(e.target.value))} required />
           <Input label="Description" value={form.description || ''} onChange={e => update('description', e.target.value)} />
           <div className="flex gap-3 justify-end pt-2">
             {editingId && <Button variant="danger" type="button" onClick={() => { deleteMutation.mutate(editingId); closeForm(); }}>Delete</Button>}
@@ -169,7 +191,7 @@ const PropertiesPage: React.FC = () => {
           </div>
         </form>
       </Modal>
-    </div>
+    </PageTransition>
   );
 };
 

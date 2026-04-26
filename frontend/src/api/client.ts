@@ -3,7 +3,7 @@ import { API_URL } from '../utils/constants';
 
 // ─── Axios Instance ─────────────────────────────────────────
 const apiClient = axios.create({
-  baseURL: API_URL,
+  baseURL: import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/api/v1` : '/api/v1',
   timeout: 15000,
   headers: {
     'Content-Type': 'application/json',
