@@ -5,6 +5,8 @@ import { PaginationQuery } from '../types/api.types';
 import { parsePagination } from '../utils/pagination';
 import { AppError, ConflictError } from '../utils/errors';
 import mongoose from 'mongoose';
+import { paymentService } from './payment.service';
+import { TimelineEventService } from './timelineEvent.service';
 
 class LeaseService {
   async getAll(organizationId: string, query: PaginationQuery) {
@@ -47,11 +49,35 @@ class LeaseService {
       available: false,
     });
 
+    // Generate monthly payment schedule
+    const payments = await paymentService.generateLeasePayments(lease);
+
+    // Write timeline event
+    await TimelineEventService.write({
+      entityType: 'lease',
+      entityId: lease._id.toString(),
+      type: 'lease',
+      title: 'Lease Created',
+      description: `Lease created for ${lease.monthlyRent}/month. ${payments.length} payment records generated.`,
+      organizationId: lease.organizationId.toString(),
+    });
+
     return lease;
   }
 
   async update(id: string, organizationId: string, data: UpdateLeaseInput) {
-    return leaseRepository.update(id, organizationId, data);
+    const oldLease = await leaseRepository.findById(id, organizationId);
+    const lease = await leaseRepository.update(id, organizationId, data);
+
+    const rentChanged = data.monthlyRent !== undefined && data.monthlyRent !== oldLease.monthlyRent;
+    const startChanged = data.startDate !== undefined && new Date(data.startDate).getTime() !== new Date(oldLease.startDate).getTime();
+    const endChanged = data.endDate !== undefined && new Date(data.endDate).getTime() !== new Date(oldLease.endDate).getTime();
+
+    if (rentChanged || startChanged || endChanged) {
+      await paymentService.generateLeasePayments(lease);
+    }
+
+    return lease;
   }
 
   async terminate(id: string, organizationId: string) {

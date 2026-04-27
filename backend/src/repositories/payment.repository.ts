@@ -7,13 +7,42 @@ export class PaymentRepository extends BaseRepository<PaymentDocument> {
     super(Payment);
   }
 
+  async findPaginated(organizationId: string, options: any, filter: FilterQuery<PaymentDocument> = {}) {
+    const query = { ...filter, organizationId } as FilterQuery<PaymentDocument>;
+    const [data, total] = await Promise.all([
+      this.model
+        .find(query)
+        .populate('tenantId', 'firstName lastName email phone')
+        .populate('leaseId', 'startDate endDate monthlyRent')
+        .populate('propertyId', 'name address')
+        .sort(options.sort)
+        .skip(options.skip)
+        .limit(options.limit)
+        .exec(),
+      this.model.countDocuments(query),
+    ]);
+    return { data, total, page: options.page, limit: options.limit };
+  }
+
+  async findAll(organizationId: string, filter: FilterQuery<PaymentDocument> = {}): Promise<PaymentDocument[]> {
+    return this.model
+      .find({ ...filter, organizationId } as FilterQuery<PaymentDocument>)
+      .populate('tenantId', 'firstName lastName email phone')
+      .populate('leaseId', 'startDate endDate monthlyRent')
+      .populate('propertyId', 'name address')
+      .sort({ createdAt: -1 })
+      .exec();
+  }
+
   async findByTenant(
     organizationId: string,
     tenantId: string
   ): Promise<PaymentDocument[]> {
     return this.model
       .find({ organizationId, tenantId })
-      .populate('propertyId', 'address')
+      .populate('tenantId', 'firstName lastName email phone')
+      .populate('leaseId', 'startDate endDate monthlyRent')
+      .populate('propertyId', 'name address')
       .sort({ dueDate: -1 })
       .exec();
   }
@@ -24,6 +53,9 @@ export class PaymentRepository extends BaseRepository<PaymentDocument> {
   ): Promise<PaymentDocument[]> {
     return this.model
       .find({ organizationId, leaseId })
+      .populate('tenantId', 'firstName lastName email phone')
+      .populate('leaseId', 'startDate endDate monthlyRent')
+      .populate('propertyId', 'name address')
       .sort({ dueDate: -1 })
       .exec();
   }
@@ -35,8 +67,9 @@ export class PaymentRepository extends BaseRepository<PaymentDocument> {
         status: { $in: ['pending', 'overdue'] },
         dueDate: { $lt: new Date() },
       })
-      .populate('tenantId', 'firstName lastName email')
-      .populate('propertyId', 'address')
+      .populate('tenantId', 'firstName lastName email phone')
+      .populate('leaseId', 'startDate endDate monthlyRent')
+      .populate('propertyId', 'name address')
       .sort({ dueDate: 1 })
       .exec();
   }

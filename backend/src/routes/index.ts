@@ -5,6 +5,7 @@ import tenantRoutes from './tenant.routes';
 import leaseRoutes from './lease.routes';
 import paymentRoutes from './payment.routes';
 import dashboardRoutes from './dashboard.routes';
+import timelineRoutes from './timeline.routes';
 
 const router = Router();
 
@@ -14,6 +15,7 @@ router.use('/tenants', tenantRoutes);
 router.use('/leases', leaseRoutes);
 router.use('/payments', paymentRoutes);
 router.use('/dashboard', dashboardRoutes);
+router.use('/timeline', timelineRoutes);
 
 // Health check
 router.get('/health', (_req, res) => {

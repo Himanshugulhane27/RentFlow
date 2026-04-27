@@ -5,11 +5,16 @@ import { sendSuccess, sendCreated, sendPaginated, sendNoContent } from '../utils
 export class PaymentController {
   async getAll(req: Request, res: Response, next: NextFunction) {
     try {
-      const { data, pagination } = await paymentService.getAll(
-        req.user!.organizationId,
-        req.query
-      );
-      sendPaginated(res, data, pagination);
+      const { status, tenantId, leaseId, month } = req.query;
+      const payments = await paymentService.getPayments({
+        organizationId: req.user!.organizationId,
+        status: status as string,
+        tenantId: tenantId as string,
+        leaseId: leaseId as string,
+        month: month as string,
+      });
+
+      sendSuccess(res, payments);
     } catch (error) {
       next(error);
     }

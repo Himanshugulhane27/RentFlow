@@ -11,6 +11,8 @@ import routes from './routes';
 import { logger } from './utils/logger';
 import { initScheduler } from './config/scheduler';
 import { closeQueues } from './config/queue';
+import swaggerUi from 'swagger-ui-express';
+import { swaggerSpec } from './config/swagger';
 
 const app = express();
 
@@ -29,6 +31,10 @@ app.use(requestLogger);
 
 // ─── Routes ─────────────────────────────────────────────────
 app.use('/api/v1', routes);
+
+// ─── API Documentation ──────────────────────────────────────
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, { explorer: true }));
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, { explorer: true }));
 
 // ─── 404 handler ────────────────────────────────────────────
 app.use((_req, res) => {

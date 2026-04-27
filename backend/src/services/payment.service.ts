@@ -1,5 +1,6 @@
 import { paymentRepository } from '../repositories/payment.repository';
 import { leaseRepository } from '../repositories/lease.repository';
+import { Payment } from '../models/Payment.model';
 import { Organization } from '../models/Organization.model';
 import { CreatePaymentInput, MarkPaidInput } from '../schemas/payment.schema';
 import { PaginationQuery } from '../types/api.types';
@@ -7,6 +8,7 @@ import { parsePagination } from '../utils/pagination';
 import { AppError, NotFoundError } from '../utils/errors';
 import { daysBetween } from '../utils/helpers';
 import mongoose from 'mongoose';
+import { TimelineEventService } from './timelineEvent.service';
 
 class PaymentService {
   async getAll(organizationId: string, query: PaginationQuery) {
@@ -16,6 +18,44 @@ class PaymentService {
 
   async getById(id: string, organizationId: string) {
     return paymentRepository.findById(id, organizationId);
+  }
+
+  async getPayments(filters: {
+    organizationId: string;
+    status?: string;
+    tenantId?: string;
+    leaseId?: string;
+    month?: string; // format: "2025-01"
+  }) {
+    const query: Record<string, unknown> = { 
+      organizationId: filters.organizationId 
+    };
+
+    if (filters.status && filters.status !== 'all') {
+      query.status = filters.status;
+    }
+
+    if (filters.tenantId) {
+      query.tenantId = filters.tenantId;
+    }
+
+    if (filters.leaseId) {
+      query.leaseId = filters.leaseId;
+    }
+
+    if (filters.month) {
+      const [year, month] = filters.month.split('-').map(Number);
+      query.dueDate = {
+        $gte: new Date(year, month - 1, 1),
+        $lt: new Date(year, month, 1)
+      };
+    }
+
+    return Payment.find(query)
+      .populate('tenantId', 'firstName lastName email phone')
+      .populate('leaseId', 'startDate endDate monthlyRent')
+      .populate('propertyId', 'name address')
+      .sort({ dueDate: -1 });
   }
 
   async create(data: CreatePaymentInput, organizationId: string) {
@@ -38,13 +78,28 @@ class PaymentService {
       throw new AppError('Payment is already marked as paid');
     }
 
-    return paymentRepository.update(id, organizationId, {
+    const updatedPayment = await paymentRepository.update(id, organizationId, {
       status: 'paid',
       paidDate: new Date(),
       paymentMethod: input.paymentMethod,
       transactionId: input.transactionId,
       notes: input.notes,
     });
+
+    // Write timeline event
+    await TimelineEventService.write({
+      entityType: 'tenant',
+      entityId: payment.tenantId.toString(),
+      type: 'payment',
+      title: 'Payment Received',
+      description: `₹${payment.totalAmount} received for ${
+        new Date(payment.dueDate).toLocaleString('en-IN', { month: 'long', year: 'numeric' })
+      }`,
+      amount: payment.totalAmount,
+      organizationId,
+    });
+
+    return paymentRepository.findById(id, organizationId);
   }
 
   async delete(id: string, organizationId: string) {
@@ -132,6 +187,39 @@ class PaymentService {
     }
 
     return created;
+  }
+
+  async generateLeasePayments(lease: any): Promise<any[]> {
+    // Delete any existing PENDING payments for this lease
+    await Payment.deleteMany({ 
+      leaseId: lease._id, 
+      status: 'pending',
+      organizationId: lease.organizationId 
+    });
+
+    const payments: any[] = [];
+    const current = new Date(lease.startDate);
+    const end = new Date(lease.endDate);
+
+    while (current <= end) {
+      const dueDate = new Date(current);
+      
+      const payment = await Payment.create({
+        leaseId: lease._id,
+        tenantId: lease.tenantId,
+        propertyId: lease.propertyId,
+        amount: lease.monthlyRent,
+        totalAmount: lease.monthlyRent,
+        dueDate: dueDate,
+        status: 'pending',
+        organizationId: lease.organizationId,
+      });
+      
+      payments.push(payment);
+      current.setMonth(current.getMonth() + 1);
+    }
+
+    return payments;
   }
 }
 

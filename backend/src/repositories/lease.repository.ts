@@ -7,6 +7,25 @@ export class LeaseRepository extends BaseRepository<LeaseDocument> {
     super(Lease);
   }
 
+  async findPaginated(
+    organizationId: string,
+    options: any,
+    filter: FilterQuery<LeaseDocument> = {}
+  ) {
+    const query = { ...filter, organizationId } as FilterQuery<LeaseDocument>;
+    const [data, total] = await Promise.all([
+      this.model
+        .find(query)
+        .populate('tenantId', 'firstName lastName email')
+        .sort(options.sort)
+        .skip(options.skip)
+        .limit(options.limit)
+        .exec(),
+      this.model.countDocuments(query),
+    ]);
+    return { data, pagination: { page: options.page, limit: options.limit, total, totalPages: Math.ceil(total / options.limit) } };
+  }
+
   async findActive(organizationId: string): Promise<LeaseDocument[]> {
     return this.findAll(organizationId, { status: 'active' } as FilterQuery<LeaseDocument>);
   }
