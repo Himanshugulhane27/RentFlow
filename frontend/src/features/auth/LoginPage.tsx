@@ -58,9 +58,7 @@ const LoginPage: React.FC = () => {
           <div className="absolute bottom-20 right-20 w-96 h-96 rounded-full bg-white/10 blur-3xl" />
         </div>
         <div className="relative z-10 flex flex-col justify-center px-16 text-white">
-          <div className="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center mb-8">
-            <span className="text-2xl font-bold">R</span>
-          </div>
+
           <h1 className="text-4xl font-bold mb-4 font-[var(--font-heading)]">
             Manage your properties<br />with confidence.
           </h1>
