@@ -53,6 +53,14 @@ const LoginPage: React.FC = () => {
     <div className="min-h-screen flex">
       {/* Left — Branding panel */}
       <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-brand-600 via-brand-700 to-white relative overflow-hidden">
+        {/* Top-left Anchor Logo */}
+        <div style={{ position: 'absolute', top: '40px', left: '40px', display: 'inline-flex', alignItems: 'center', gap: '8px', zIndex: 20 }}>
+          <div style={{ width: '28px', height: '28px', borderRadius: '8px', background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '13px', fontWeight: 600 }}>
+            R
+          </div>
+          <span style={{ fontSize: '15px', fontWeight: 600, color: '#ffffff' }}>RentFlow</span>
+        </div>
+
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-20 left-20 w-72 h-72 rounded-full bg-white/20 blur-3xl" />
           <div className="absolute bottom-20 right-20 w-96 h-96 rounded-full bg-white/10 blur-3xl" />
@@ -68,7 +76,7 @@ const LoginPage: React.FC = () => {
             background: 'rgba(255,255,255,0.08)',
             backdropFilter: 'blur(8px)',
             WebkitBackdropFilter: 'blur(8px)',
-            marginBottom: '20px',
+            marginBottom: '16px',
             width: 'max-content'
           }}>
             <div style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#7da4f5' }} />
@@ -108,15 +116,15 @@ const LoginPage: React.FC = () => {
         `}</style>
 
         {/* Glow Effects */}
-        <div style={{ position: 'absolute', top: '-80px', right: '-80px', width: '380px', height: '380px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(59,91,219,0.40) 0%, transparent 70%)', pointerEvents: 'none', zIndex: 0 }} />
-        <div style={{ position: 'absolute', bottom: '-100px', left: '-60px', width: '320px', height: '320px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(120,60,200,0.25) 0%, transparent 70%)', pointerEvents: 'none', zIndex: 0 }} />
-        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: '500px', height: '280px', borderRadius: '50%', background: 'radial-gradient(ellipse, rgba(40,70,180,0.15) 0%, transparent 70%)', pointerEvents: 'none', zIndex: 0 }} />
+        <div style={{ position: 'absolute', top: '-80px', right: '-80px', width: '400px', height: '400px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(59,91,219,0.45) 0%, transparent 65%)', pointerEvents: 'none', zIndex: 0 }} />
+        <div style={{ position: 'absolute', bottom: '-80px', left: '-60px', width: '320px', height: '320px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(120,60,200,0.28) 0%, transparent 65%)', pointerEvents: 'none', zIndex: 0 }} />
+        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: '500px', height: '280px', borderRadius: '50%', background: 'radial-gradient(ellipse, rgba(40,70,180,0.18) 0%, transparent 70%)', pointerEvents: 'none', zIndex: 0 }} />
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
-          style={{ position: 'relative', zIndex: 2, width: '360px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.11)', borderRadius: '20px', padding: '40px 36px', backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)' }}
+          style={{ position: 'relative', zIndex: 2, width: '360px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '20px', padding: '40px 36px', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)' }}
         >
           <h2 style={{ fontSize: '24px', fontWeight: 600, color: '#ffffff', marginBottom: '6px' }}>
             Welcome back
