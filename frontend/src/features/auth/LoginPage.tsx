@@ -69,25 +69,52 @@ const LoginPage: React.FC = () => {
       </div>
 
       {/* Right — Form */}
-      <div className="flex-1 flex items-center justify-center px-6 py-12 bg-surface-50 dark:bg-surface-950">
+      <div className="flex-1 flex items-center justify-center px-6 py-12 relative overflow-hidden auth-right-panel" style={{ backgroundColor: '#0f1623' }}>
+        <style>{`
+          .auth-right-panel label { color: rgba(255, 255, 255, 0.9) !important; }
+        `}</style>
+
+        {/* Glow Effects */}
+        <div 
+          className="absolute top-0 right-0 pointer-events-none"
+          style={{
+            width: '500px', height: '500px',
+            background: 'radial-gradient(circle at center, rgba(59, 91, 219, 0.18) 0%, transparent 70%)',
+            transform: 'translate(20%, -20%)'
+          }}
+        />
+        <div 
+          className="absolute bottom-0 left-0 pointer-events-none"
+          style={{
+            width: '500px', height: '500px',
+            background: 'radial-gradient(circle at center, rgba(99, 60, 180, 0.10) 0%, transparent 70%)',
+            transform: 'translate(-20%, 20%)'
+          }}
+        />
+
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
-          className="w-full max-w-md"
+          className="w-full max-w-md relative z-10"
+          style={{
+            background: 'rgba(255, 255, 255, 0.04)',
+            border: '1px solid rgba(255, 255, 255, 0.08)',
+            borderRadius: '20px',
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
+            padding: '40px 36px'
+          }}
         >
           {/* Mobile logo */}
           <div className="lg:hidden mb-8 flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-brand-500 to-white flex items-center justify-center">
-              <span className="text-white font-bold">R</span>
-            </div>
-            <span className="text-xl font-bold text-surface-900 dark:text-white">RentFlow</span>
+            <span className="text-xl font-bold text-white">RentFlow</span>
           </div>
 
-          <h2 className="text-2xl font-bold text-surface-900 dark:text-white mb-1">
+          <h2 className="text-white" style={{ fontSize: '28px', fontWeight: 600, marginBottom: '6px' }}>
             Welcome back
           </h2>
-          <p className="text-surface-500 text-sm mb-8">
+          <p style={{ color: 'rgba(255, 255, 255, 0.45)', fontSize: '14px', marginBottom: '32px' }}>
             Sign in to your account to continue
           </p>
 
@@ -99,7 +126,8 @@ const LoginPage: React.FC = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               error={errors.email}
-              icon={<Mail size={16} />}
+              icon={<Mail size={16} color="rgba(255,255,255,0.45)" />}
+              className="!bg-[rgba(255,255,255,0.06)] !border-[rgba(255,255,255,0.10)] focus:!ring-0 focus:!outline-none focus:!shadow-[0_0_0_3px_rgba(59,91,219,0.25)] !text-white placeholder:!text-[rgba(255,255,255,0.3)] transition-all"
             />
 
             <div className="relative">
@@ -110,25 +138,32 @@ const LoginPage: React.FC = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 error={errors.password}
-                icon={<Lock size={16} />}
+                icon={<Lock size={16} color="rgba(255,255,255,0.45)" />}
+                className="!bg-[rgba(255,255,255,0.06)] !border-[rgba(255,255,255,0.10)] focus:!ring-0 focus:!outline-none focus:!shadow-[0_0_0_3px_rgba(59,91,219,0.25)] !text-white placeholder:!text-[rgba(255,255,255,0.3)] transition-all"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-9 text-surface-400 hover:text-surface-600 transition-colors"
+                className="absolute right-3 top-9 text-white/40 hover:text-white/80 transition-colors"
+                style={{ marginTop: '2px' }}
               >
                 {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
             </div>
 
-            <Button type="submit" loading={loading} className="w-full">
+            <Button 
+              type="submit" 
+              loading={loading} 
+              className="w-full mt-2" 
+              style={{ boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.15)' }}
+            >
               Sign In
             </Button>
           </form>
 
-          <p className="text-center text-sm text-surface-500 mt-6">
+          <p className="text-center mt-6" style={{ fontSize: '14px', color: 'rgba(255, 255, 255, 0.45)' }}>
             Don&apos;t have an account?{' '}
-            <Link to="/register" className="text-primary-600 hover:text-primary-700 font-medium">
+            <Link to="/register" className="text-brand-400 hover:text-brand-300 font-medium transition-colors">
               Create one
             </Link>
           </p>
