@@ -78,7 +78,7 @@ class PaymentService {
       throw new AppError('Payment is already marked as paid');
     }
 
-    const updatedPayment = await paymentRepository.update(id, organizationId, {
+    await paymentRepository.update(id, organizationId, {
       status: 'paid',
       paidDate: new Date(),
       paymentMethod: input.paymentMethod,

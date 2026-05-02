@@ -25,6 +25,10 @@ interface TenantDrawerProps {
 }
 
 export const TenantDrawer: React.FC<TenantDrawerProps> = ({ tenantId, onClose, onEdit }) => {
+  const prefersReduced = window.matchMedia(
+    '(prefers-reduced-motion: reduce)'
+  ).matches;
+
   const [activeTab, setActiveTab] = useState<'overview' | 'history' | 'documents' | 'notes'>('overview');
   const drawerRef = React.useRef<HTMLDivElement>(null);
   useFocusTrap(drawerRef as React.RefObject<HTMLElement>, !!tenantId);
@@ -84,25 +88,25 @@ export const TenantDrawer: React.FC<TenantDrawerProps> = ({ tenantId, onClose, o
   return createPortal(
     <AnimatePresence>
       {tenantId && (
-        <div className="fixed inset-0 z-[100] flex justify-end">
+        <div className="fixed inset-0 z-[var(--z-modal)] flex justify-end">
           {/* Backdrop */}
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="fixed inset-0 bg-hsl(220 20% 10% / 0.3) backdrop-blur-[2px] z-40"
+            initial={prefersReduced ? false : { opacity: 0 }}
+            animate={prefersReduced ? {} : { opacity: 1 }}
+            exit={prefersReduced ? { opacity: 0 } : { opacity: 0 }}
+            transition={{ duration: prefersReduced ? 0 : 0.2 }}
+            className="fixed inset-0 bg-[hsl(220 20% 10% / 0.3)] backdrop-blur-[2px] z-40"
             onClick={onClose}
           />
 
           {/* Drawer */}
           <motion.div
             ref={drawerRef}
-            variants={slideInRight}
-            initial="initial"
-            animate="animate"
-            exit={{ x: '100%', transition: springGentle }}
-            className="relative w-full sm:w-[440px] lg:w-[520px] glass-strong elevation-5 z-50 flex flex-col h-full bg-hsl(var(--surface-0))"
+            variants={prefersReduced ? undefined : slideInRight}
+            initial={prefersReduced ? false : "initial"}
+            animate={prefersReduced ? {} : "animate"}
+            exit={prefersReduced ? { opacity: 0 } : { x: '100%', transition: springGentle }}
+            className="relative w-full sm:w-[440px] lg:w-[520px] glass-strong elevation-5 z-[var(--z-modal)] flex flex-col h-full bg-[var(--color-surface-raised)]"
             role="dialog"
             aria-modal="true"
             aria-labelledby="drawer-title"
@@ -118,7 +122,7 @@ export const TenantDrawer: React.FC<TenantDrawerProps> = ({ tenantId, onClose, o
             ) : tenant ? (
               <>
                 {/* Header */}
-                <div className="p-6 border-b border-hsl(var(--surface-border)) flex-shrink-0">
+                <div className="p-6 border-b border-[var(--color-border)] flex-shrink-0">
                   <div className="flex justify-between items-start">
                     <div className="flex items-center gap-4">
                       <FadeImage
@@ -127,17 +131,17 @@ export const TenantDrawer: React.FC<TenantDrawerProps> = ({ tenantId, onClose, o
                         className="w-12 h-12 rounded-[var(--radius-full)] object-cover"
                       />
                       <div>
-                        <h2 id="drawer-title" className="text-lg font-bold text-hsl(var(--text-primary))">
+                        <h2 id="drawer-title" className="text-lg font-bold text-[hsl(var(--text-primary))]">
                           {tenant.fullName}
                         </h2>
-                        <p className="text-sm text-hsl(var(--text-secondary))">
+                        <p className="text-sm text-[hsl(var(--text-secondary))]">
                           {property ? `${property.address} ${property.unit ? `Unit ${property.unit}` : ''}` : 'No active property'}
                         </p>
                       </div>
                     </div>
                     <button
                       onClick={onClose}
-                      className="p-1.5 rounded-[var(--radius-md)] text-hsl(var(--text-tertiary)) hover:bg-hsl(var(--surface-3)) hover:text-hsl(var(--text-primary)) transition-colors focus-ring"
+                      className="p-1.5 rounded-[var(--radius-md)] text-[hsl(var(--text-tertiary))] hover:bg-[var(--color-surface-subtle)] hover:text-[hsl(var(--text-primary))] transition-colors focus-ring"
                     >
                       <X size={18} />
                     </button>
@@ -145,21 +149,21 @@ export const TenantDrawer: React.FC<TenantDrawerProps> = ({ tenantId, onClose, o
                   
                   {/* Quick Stats */}
                   <div className="flex gap-3 mt-6">
-                    <div className="flex-1 bg-hsl(var(--surface-3)) rounded-[var(--radius-md)] px-3 py-2 text-center">
-                      <p className="text-xs text-hsl(var(--text-tertiary)) mb-0.5">Monthly Rent</p>
-                      <p className="text-sm font-semibold tabular-nums text-hsl(var(--text-primary))">
+                    <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-3 py-2 text-center">
+                      <p className="text-xs text-[hsl(var(--text-tertiary))] mb-0.5">Monthly Rent</p>
+                      <p className="text-sm font-semibold tabular-nums text-[hsl(var(--text-primary))]">
                         {activeLease ? formatCurrency(activeLease.monthlyRent) : '-'}
                       </p>
                     </div>
-                    <div className="flex-1 bg-hsl(var(--surface-3)) rounded-[var(--radius-md)] px-3 py-2 text-center">
-                      <p className="text-xs text-hsl(var(--text-tertiary)) mb-0.5">Lease End</p>
-                      <p className="text-sm font-semibold tabular-nums text-hsl(var(--text-primary))">
+                    <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-3 py-2 text-center">
+                      <p className="text-xs text-[hsl(var(--text-tertiary))] mb-0.5">Lease End</p>
+                      <p className="text-sm font-semibold tabular-nums text-[hsl(var(--text-primary))]">
                         {activeLease ? formatDate(activeLease.endDate) : '-'}
                       </p>
                     </div>
-                    <div className="flex-1 bg-hsl(var(--surface-3)) rounded-[var(--radius-md)] px-3 py-2 text-center">
-                      <p className="text-xs text-hsl(var(--text-tertiary)) mb-0.5">Status</p>
-                      <p className="text-sm font-semibold text-hsl(var(--text-primary))">
+                    <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-3 py-2 text-center">
+                      <p className="text-xs text-[hsl(var(--text-tertiary))] mb-0.5">Status</p>
+                      <p className="text-sm font-semibold text-[hsl(var(--text-primary))]">
                         {activeLease ? 'Active' : 'Inactive'}
                       </p>
                     </div>
@@ -167,7 +171,7 @@ export const TenantDrawer: React.FC<TenantDrawerProps> = ({ tenantId, onClose, o
                 </div>
 
                 {/* Tabs */}
-                <div className="flex border-b border-hsl(var(--surface-border)) px-6 flex-shrink-0">
+                <div className="flex border-b border-[var(--color-border)] px-6 flex-shrink-0">
                   {['overview', 'history', 'documents', 'notes'].map((tab) => (
                     <button
                       key={tab}
@@ -175,8 +179,8 @@ export const TenantDrawer: React.FC<TenantDrawerProps> = ({ tenantId, onClose, o
                       className={cn(
                         'px-4 py-3 text-sm font-medium capitalize border-b-2 transition-colors focus-ring',
                         activeTab === tab
-                          ? 'border-hsl(var(--brand-500)) text-hsl(var(--brand-500))'
-                          : 'border-transparent text-hsl(var(--text-secondary)) hover:text-hsl(var(--text-primary))'
+                          ? 'border-[hsl(var(--brand-500))] text-[hsl(var(--brand-500))]'
+                          : 'border-transparent text-[hsl(var(--text-secondary))] hover:text-[hsl(var(--text-primary))]'
                       )}
                     >
                       {tab === 'history' ? 'Payment History' : tab}
@@ -189,20 +193,20 @@ export const TenantDrawer: React.FC<TenantDrawerProps> = ({ tenantId, onClose, o
                   {activeTab === 'overview' && (
                     <div className="space-y-6">
                       <section>
-                        <h3 className="text-sm font-semibold text-hsl(var(--text-primary)) mb-3">Contact Information</h3>
+                        <h3 className="text-sm font-semibold text-[hsl(var(--text-primary))] mb-3">Contact Information</h3>
                         <div className="space-y-3">
                           <div className="flex justify-between items-center text-sm">
-                            <span className="text-hsl(var(--text-secondary))">Email</span>
+                            <span className="text-[hsl(var(--text-secondary))]">Email</span>
                             <div className="flex items-center gap-2">
-                              <span className="text-hsl(var(--text-primary)) font-medium">{tenant.email}</span>
-                              <button className="text-hsl(var(--text-tertiary)) hover:text-hsl(var(--brand-500))"><Copy size={14}/></button>
+                              <span className="text-[hsl(var(--text-primary))] font-medium">{tenant.email}</span>
+                              <button className="p-1 rounded-sm text-[hsl(var(--text-tertiary))] hover:text-[hsl(var(--brand-500))] hover:bg-[var(--color-surface)] transition-colors duration-150 ease-out focus-ring"><Copy size={14}/></button>
                             </div>
                           </div>
                           <div className="flex justify-between items-center text-sm">
-                            <span className="text-hsl(var(--text-secondary))">Phone</span>
+                            <span className="text-[hsl(var(--text-secondary))]">Phone</span>
                             <div className="flex items-center gap-2">
-                              <span className="text-hsl(var(--text-primary)) font-medium">{tenant.phone}</span>
-                              <button className="text-hsl(var(--text-tertiary)) hover:text-hsl(var(--brand-500))"><Copy size={14}/></button>
+                              <span className="text-[hsl(var(--text-primary))] font-medium">{tenant.phone}</span>
+                              <button className="p-1 rounded-sm text-[hsl(var(--text-tertiary))] hover:text-[hsl(var(--brand-500))] hover:bg-[var(--color-surface)] transition-colors duration-150 ease-out focus-ring"><Copy size={14}/></button>
                             </div>
                           </div>
                         </div>
@@ -210,10 +214,10 @@ export const TenantDrawer: React.FC<TenantDrawerProps> = ({ tenantId, onClose, o
 
                       {tenant.emergencyContact && (
                         <section>
-                          <h3 className="text-sm font-semibold text-hsl(var(--text-primary)) mb-3">Emergency Contact</h3>
-                          <div className="bg-hsl(var(--surface-2)) rounded-[var(--radius-md)] p-3 space-y-1">
-                            <p className="text-sm font-medium text-hsl(var(--text-primary))">{tenant.emergencyContact.name}</p>
-                            <p className="text-xs text-hsl(var(--text-secondary))">{tenant.emergencyContact.relationship} • {tenant.emergencyContact.phone}</p>
+                          <h3 className="text-sm font-semibold text-[hsl(var(--text-primary))] mb-3">Emergency Contact</h3>
+                          <div className="bg-[var(--color-surface)] rounded-[var(--radius-md)] p-3 space-y-1">
+                            <p className="text-sm font-medium text-[hsl(var(--text-primary))]">{tenant.emergencyContact.name}</p>
+                            <p className="text-xs text-[hsl(var(--text-secondary))]">{tenant.emergencyContact.relationship} • {tenant.emergencyContact.phone}</p>
                           </div>
                         </section>
                       )}
@@ -224,13 +228,13 @@ export const TenantDrawer: React.FC<TenantDrawerProps> = ({ tenantId, onClose, o
                     <div className="space-y-4">
                       {tenantPayments.length > 0 ? (
                         tenantPayments.slice(0, 10).map((payment: any) => (
-                          <div key={payment._id} className="flex justify-between items-center py-2 border-b border-hsl(var(--surface-border)) last:border-0">
+                          <div key={payment._id} className="flex justify-between items-center py-2 border-b border-[var(--color-border)] last:border-0">
                             <div>
-                              <p className="text-sm font-medium text-hsl(var(--text-primary))">{formatDate(payment.dueDate)}</p>
-                              <p className="text-xs text-hsl(var(--text-secondary)) capitalize">{payment.paymentMethod || 'Unpaid'}</p>
+                              <p className="text-sm font-medium text-[hsl(var(--text-primary))]">{formatDate(payment.dueDate)}</p>
+                              <p className="text-xs text-[hsl(var(--text-secondary))] capitalize">{payment.paymentMethod || 'Unpaid'}</p>
                             </div>
                             <div className="text-right">
-                              <p className="text-sm font-semibold text-hsl(var(--text-primary)) tabular-nums">{formatCurrency(payment.amount)}</p>
+                              <p className="text-sm font-semibold text-[hsl(var(--text-primary))] tabular-nums">{formatCurrency(payment.amount)}</p>
                               <Badge variant={payment.status === 'paid' ? 'success' : payment.status === 'overdue' ? 'danger' : 'warning'} className="mt-1">
                                 {payment.status}
                               </Badge>
@@ -238,28 +242,28 @@ export const TenantDrawer: React.FC<TenantDrawerProps> = ({ tenantId, onClose, o
                           </div>
                         ))
                       ) : (
-                        <EmptyState icon={<FileText size={32} className="text-hsl(var(--text-tertiary))" />} title="No payments found" description="This tenant hasn't made any payments yet." />
+                        <EmptyState icon={<FileText size={32} className="text-[hsl(var(--text-tertiary))]" />} title="No payments found" description="This tenant hasn't made any payments yet." />
                       )}
                     </div>
                   )}
 
                   {activeTab === 'documents' && (
-                    <EmptyState icon={<FileText size={32} className="text-hsl(var(--text-tertiary))"/>} title="No documents" description="There are no documents uploaded for this tenant." />
+                    <EmptyState icon={<FileText size={32} className="text-[hsl(var(--text-tertiary))]"/>} title="No documents" description="There are no documents uploaded for this tenant." />
                   )}
 
                   {activeTab === 'notes' && (
                     <div className="space-y-4 flex flex-col h-full">
                       <div className="flex-1 space-y-3">
                         {tenant.notes ? (
-                          <div className="bg-hsl(var(--surface-2)) p-3 rounded-[var(--radius-md)]">
-                            <p className="text-xs text-hsl(var(--text-tertiary)) mb-1">System Note</p>
-                            <p className="text-sm text-hsl(var(--text-primary))">{tenant.notes}</p>
+                          <div className="bg-[var(--color-surface)] p-3 rounded-[var(--radius-md)]">
+                            <p className="text-xs text-[hsl(var(--text-tertiary))] mb-1">System Note</p>
+                            <p className="text-sm text-[hsl(var(--text-primary))]">{tenant.notes}</p>
                           </div>
                         ) : (
-                          <EmptyState icon={<FileText size={32} className="text-hsl(var(--text-tertiary))" />} title="No notes" description="Add some notes about this tenant." />
+                          <EmptyState icon={<FileText size={32} className="text-[hsl(var(--text-tertiary))]" />} title="No notes" description="Add some notes about this tenant." />
                         )}
                       </div>
-                      <div className="mt-auto pt-4 border-t border-hsl(var(--surface-border))">
+                      <div className="mt-auto pt-4 border-t border-[var(--color-border)]">
                         <Input placeholder="Add a new note..." className="mb-2" />
                         <Button className="w-full">Add Note</Button>
                       </div>
@@ -268,7 +272,7 @@ export const TenantDrawer: React.FC<TenantDrawerProps> = ({ tenantId, onClose, o
                 </div>
 
                 {/* Footer Actions */}
-                <div className="border-t border-hsl(var(--surface-border)) p-4 flex gap-3 bg-hsl(var(--surface-1)) flex-shrink-0">
+                <div className="border-t border-[var(--color-border)] p-4 flex gap-3 bg-[var(--color-page-bg)] flex-shrink-0">
                   <Button variant="secondary" className="flex-1" onClick={() => alert('Send Reminder')}>Send Reminder</Button>
                   <Button variant="primary" className="flex-1" onClick={() => onEdit(tenant._id)}>Edit Tenant</Button>
                 </div>

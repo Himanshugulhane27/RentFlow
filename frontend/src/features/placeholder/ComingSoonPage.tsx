@@ -8,8 +8,8 @@ const ComingSoonPage: React.FC<{ title: string }> = ({ title }) => {
     <PageTransition className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-foreground">{title}</h1>
-          <p className="text-sm text-muted-foreground mt-1">This feature is currently under development</p>
+          <h1 className="text-2xl font-bold tracking-tight text-[hsl(var(--text-primary))]">{title}</h1>
+          <p className="text-sm text-[hsl(var(--text-secondary))] mt-1">This feature is currently under development</p>
         </div>
       </div>
       

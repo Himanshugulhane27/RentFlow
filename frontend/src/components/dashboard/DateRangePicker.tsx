@@ -26,13 +26,13 @@ export const DateRangePicker: React.FC = () => {
             onClick={() => dispatch(setDateRange(value))}
             className={cn(
               'relative px-3 py-1.5 text-xs font-semibold rounded-[var(--radius-md)] transition-colors focus-ring',
-              isActive ? 'text-hsl(var(--brand-600))' : 'text-hsl(var(--text-secondary)) hover:text-hsl(var(--text-primary)) hover:bg-hsl(var(--surface-3))'
+              isActive ? 'text-[hsl(var(--brand-600))]' : 'text-[hsl(var(--text-secondary))] hover:text-[hsl(var(--text-primary))] hover:bg-[var(--color-surface-subtle)]'
             )}
           >
             {isActive && (
               <motion.div
                 layoutId="date-range-active"
-                className="absolute inset-0 bg-hsl(var(--surface-0)) rounded-[var(--radius-md)] elevation-1"
+                className="absolute inset-0 bg-[var(--color-surface-raised)] rounded-[var(--radius-md)] elevation-1"
                 transition={{ type: 'spring', stiffness: 500, damping: 30 }}
               />
             )}

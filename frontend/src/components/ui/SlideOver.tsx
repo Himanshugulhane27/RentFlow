@@ -55,15 +55,15 @@ export const SlideOver: React.FC<SlideOverProps> = ({
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
             className={cn(
-              'fixed right-0 top-0 h-full bg-white shadow-dropdown z-50 w-full flex flex-col',
+              'fixed right-0 top-0 h-full bg-[var(--color-surface-raised)] border-l border-[var(--color-border)] shadow-[var(--shadow-xl)] z-50 w-full flex flex-col',
               widthStyles[width]
             )}
           >
-            <div className="flex items-center justify-between px-6 py-4 border-b border-neutral-100">
-              <h2 className="text-lg font-semibold text-neutral-900">{title}</h2>
+            <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--color-border)] bg-[var(--color-surface)]">
+              <h2 className="text-base font-semibold text-[hsl(var(--text-primary))]">{title}</h2>
               <button
                 onClick={onClose}
-                className="p-2 -mr-2 rounded-full text-neutral-400 hover:text-neutral-600 hover:bg-neutral-100 transition-colors"
+                className="p-2 -mr-2 rounded-full text-[hsl(var(--text-tertiary))] hover:text-[hsl(var(--text-primary))] hover:bg-[var(--color-surface)] transition-colors duration-150 ease-out focus-ring"
               >
                 <X size={20} />
               </button>

@@ -33,18 +33,18 @@ export const KPICard: React.FC<KPICardProps> = ({
     <Card className={cn('relative overflow-hidden', className)}>
       <div className="flex items-start justify-between">
         <div className="space-y-2">
-          <p className="text-xs font-medium text-surface-500 dark:text-surface-400 uppercase tracking-wide">
+          <p className="text-xs font-medium text-[hsl(var(--text-tertiary))] uppercase tracking-wide">
             {title}
           </p>
-          <p className="text-2xl font-bold text-surface-900 dark:text-white">
+          <p className="text-2xl font-bold text-[hsl(var(--text-primary))]">
             {formattedValue}
           </p>
           {change !== undefined && (
             <div className={cn(
               'inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full',
-              isPositive && 'text-success-600 bg-success-50 dark:bg-success-500/15 dark:text-success-400',
-              isNegative && 'text-danger-600 bg-danger-50 dark:bg-danger-500/15 dark:text-danger-400',
-              !isPositive && !isNegative && 'text-surface-500 bg-surface-100 dark:bg-surface-700'
+              isPositive && 'text-success-600 bg-success-50',
+              isNegative && 'text-danger-600 bg-danger-50',
+              !isPositive && !isNegative && 'text-[hsl(var(--text-tertiary))] bg-[var(--color-surface)]'
             )}>
               {isPositive && <TrendingUp size={12} />}
               {isNegative && <TrendingDown size={12} />}
@@ -55,13 +55,13 @@ export const KPICard: React.FC<KPICardProps> = ({
           )}
         </div>
 
-        <div className="w-11 h-11 rounded-xl bg-primary-50 dark:bg-primary-500/15 flex items-center justify-center text-primary-600 dark:text-primary-400">
+        <div className="w-11 h-11 rounded-xl bg-brand-50 flex items-center justify-center text-brand-600">
           {icon}
         </div>
       </div>
 
       {/* Decorative gradient */}
-      <div className="absolute -bottom-6 -right-6 w-24 h-24 rounded-full bg-primary-500/5 dark:bg-primary-500/10" />
+      <div className="absolute -bottom-6 -right-6 w-24 h-24 rounded-full bg-brand-500/5" />
     </Card>
   );
 };

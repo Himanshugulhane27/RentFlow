@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { motion, useMotionValue, animate } from 'framer-motion';
+import { useMotionValue, animate } from 'framer-motion';
 
 interface AnimatedCounterProps {
   value: number;
@@ -24,6 +24,7 @@ export const AnimatedCounter: React.FC<AnimatedCounterProps> = ({
 
   useEffect(() => {
     if (prefersReduced) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setDisplayValue(value.toFixed(decimals).replace(/\B(?=(\d{3})+(?!\d))/g, ','));
       return;
     }

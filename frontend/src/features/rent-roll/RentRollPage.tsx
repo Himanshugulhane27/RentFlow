@@ -118,8 +118,8 @@ const RentRollPage: React.FC = () => {
         {/* Page Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-foreground">Rent Roll</h1>
-          <p className="text-sm text-muted-foreground mt-1">Live view of all units, tenants, and payment status</p>
+          <h1 className="text-2xl font-bold tracking-tight text-[hsl(var(--text-primary))]">Rent Roll</h1>
+          <p className="text-sm text-[hsl(var(--text-secondary))] mt-1">Live view of all units, tenants, and payment status</p>
         </div>
         <div className="flex items-center gap-3">
           <Button variant="secondary" size="sm" icon={<Download size={16} />} onClick={exportToCSV}>
@@ -169,8 +169,8 @@ const RentRollPage: React.FC = () => {
               header: 'Unit',
               render: (row) => (
                 <div>
-                  <p className="text-sm font-semibold text-neutral-900">{row.unit}</p>
-                  <p className="text-xs text-neutral-400 mt-0.5">{row.propertyName}</p>
+                  <p className="text-sm font-semibold text-[hsl(var(--text-primary))]">{row.unit}</p>
+                  <p className="text-xs text-[hsl(var(--text-tertiary))] mt-0.5">{row.propertyName}</p>
                 </div>
               )
             },
@@ -179,15 +179,15 @@ const RentRollPage: React.FC = () => {
               header: 'Tenant',
               render: (row) => row.tenantName ? (
                 <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-full bg-brand-100 text-brand-700 text-xs font-bold flex items-center justify-center flex-shrink-0">
+                  <div className="w-8 h-8 rounded-full bg-[var(--color-surface)] text-[hsl(var(--text-secondary))] text-xs font-bold flex items-center justify-center flex-shrink-0">
                     {row.tenantInitial}
                   </div>
-                  <span className="text-sm text-neutral-800 font-medium">
+                  <span className="text-sm text-[hsl(var(--text-primary))] font-medium">
                     {row.tenantName}
                   </span>
                 </div>
               ) : (
-                <span className="text-sm text-neutral-400 italic">
+                <span className="text-sm text-[hsl(var(--text-tertiary))] italic">
                   Vacant
                 </span>
               )
@@ -196,10 +196,10 @@ const RentRollPage: React.FC = () => {
               key: 'rent',
               header: 'Monthly Rent',
               render: (row) => (
-                <span className="text-sm font-semibold text-neutral-900">
+                <span className="text-sm font-semibold text-[hsl(var(--text-primary))]">
                   {row.monthlyRent 
                     ? formatCurrency(row.monthlyRent) 
-                    : <span className="text-neutral-300 font-normal">—</span>
+                    : <span className="text-[hsl(var(--text-disabled))] font-normal">—</span>
                   }
                 </span>
               )
@@ -226,10 +226,10 @@ const RentRollPage: React.FC = () => {
               header: 'Due Date',
               className: 'hidden md:table-cell',
               render: (row) => (
-                <span className="text-sm text-neutral-600">
+                <span className="text-sm text-[hsl(var(--text-secondary))]">
                   {row.dueDate 
                     ? formatDate(row.dueDate) 
-                    : <span className="text-neutral-300">—</span>
+                    : <span className="text-[hsl(var(--text-disabled))]">—</span>
                   }
                 </span>
               )
@@ -240,11 +240,11 @@ const RentRollPage: React.FC = () => {
               className: 'hidden lg:table-cell',
               render: (row) => {
                 if (!row.leaseEndsAt) return (
-                  <span className="text-neutral-300">—</span>
+                  <span className="text-[hsl(var(--text-disabled))]">—</span>
                 );
                 const urgent = row.daysUntilLeaseEnd !== null && row.daysUntilLeaseEnd < 30;
                 return (
-                  <span className={`text-sm font-medium ${urgent ? 'text-danger-600' : 'text-neutral-600'}`}>
+                  <span className={`text-sm font-medium ${urgent ? 'text-danger-600' : 'text-[hsl(var(--text-secondary))]'}`}>
                     {formatDate(row.leaseEndsAt)}
                     {urgent && (
                       <span className="block text-xs font-normal text-danger-500">
@@ -261,7 +261,7 @@ const RentRollPage: React.FC = () => {
               className: 'hidden md:table-cell',
               render: (row) => {
                 if (!row.healthScore) return (
-                  <span className="text-neutral-300 text-sm">—</span>
+                  <span className="text-[hsl(var(--text-disabled))] text-sm">—</span>
                 );
                 const map = {
                   'reliable': 'success',

@@ -15,8 +15,8 @@ const ChecklistStep: React.FC<StepProps> = ({ icon: Icon, title, description, is
   return (
     <div 
       className={cn(
-        "flex flex-col relative p-4 rounded-xl transition-all",
-        isCurrent ? "bg-white shadow-sm border border-brand-100" : "hover:bg-neutral-50 cursor-pointer border border-transparent",
+        "flex flex-col relative p-4 rounded-xl transition-all duration-200 ease-in-out",
+        isCurrent ? "bg-[var(--color-surface-raised)] shadow-sm border border-brand-100" : "hover:bg-[var(--color-surface)] cursor-pointer border border-transparent",
         isCompleted && "opacity-75"
       )}
       onClick={onClick}
@@ -24,15 +24,15 @@ const ChecklistStep: React.FC<StepProps> = ({ icon: Icon, title, description, is
       <div className="flex items-center mb-2 gap-3">
         <div className={cn(
           "w-8 h-8 rounded-full flex items-center justify-center shrink-0",
-          isCompleted ? "bg-success-100 text-success-600" : isCurrent ? "bg-brand-100 text-brand-600" : "bg-neutral-100 text-neutral-400"
+          isCompleted ? "bg-success-100 text-success-600" : isCurrent ? "bg-brand-100 text-brand-600" : "bg-[var(--color-surface)] text-[hsl(var(--text-disabled))]"
         )}>
           {isCompleted ? <Check size={16} strokeWidth={3} /> : <Icon size={16} />}
         </div>
-        <h4 className={cn("text-sm font-semibold", isCompleted ? "text-neutral-500 line-through" : "text-neutral-900")}>
+        <h4 className={cn("text-sm font-semibold", isCompleted ? "text-[hsl(var(--text-tertiary))] line-through" : "text-[hsl(var(--text-primary))]")}>
           {title}
         </h4>
       </div>
-      <p className="text-xs text-neutral-500 pl-11">{description}</p>
+      <p className="text-xs text-[hsl(var(--text-tertiary))] pl-11">{description}</p>
     </div>
   );
 };

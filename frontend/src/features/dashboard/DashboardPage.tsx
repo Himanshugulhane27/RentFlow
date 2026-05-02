@@ -1,15 +1,14 @@
 import React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import {
   DollarSign,
   AlertCircle,
   Building2,
-  Calendar,
-  CheckCircle2,
-  Grid3x3,
   UserPlus,
-  Plus
+  Plus,
+  Calendar,
+  Grid3x3
 } from 'lucide-react';
 
 
@@ -31,7 +30,6 @@ import { staggerContainer, staggerItem } from '../../lib/animations';
 
 import {
   useDashboardStats,
-  useActionItems,
   useRentRollPreview,
 } from './hooks/useDashboardStats';
 
@@ -41,14 +39,14 @@ const DashboardPage: React.FC = () => {
   const navigate = useNavigate();
 
   const { data: stats, isLoading: statsLoading } = useDashboardStats();
-  const { data: actionItems, isLoading: actionsLoading } = useActionItems();
+
   const { data: rentRollPreview, isLoading: rentRollLoading } = useRentRollPreview();
   const { streakCount } = useStreakCounter();
 
   return (
     <PageTransition className="space-y-6 max-w-[1280px] mx-auto pb-12">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-        <h1 className="text-2xl font-bold tracking-tight text-hsl(var(--text-primary))">Dashboard</h1>
+        <h1 className="text-2xl font-bold tracking-tight text-[hsl(var(--text-primary))]">Dashboard</h1>
         <DateRangePicker />
       </div>
       
@@ -87,7 +85,7 @@ const DashboardPage: React.FC = () => {
                 color="blue"
                 onClick={() => navigate('/payments?status=paid')}
               />
-              <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-neutral-100">
+              <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-[var(--color-surface)]">
                 <div 
                   className="h-1.5 bg-brand-500 transition-all duration-700"
                   style={{ width: `${stats.collectionPercent}%` }}
@@ -175,18 +173,18 @@ const DashboardPage: React.FC = () => {
         <Card className="lg:col-span-1 flex flex-col p-6 min-h-[360px]">
           <div className="mb-4 flex justify-between items-start">
             <div>
-              <h3 className="text-sm font-medium text-hsl(var(--text-secondary)) uppercase tracking-wider">Occupancy Trend</h3>
-              <p className="text-xs text-hsl(var(--text-tertiary)) mt-1">Last 6 months</p>
+              <h3 className="text-sm font-medium text-[hsl(var(--text-secondary))] uppercase tracking-wider">Occupancy Trend</h3>
+              <p className="text-xs text-[hsl(var(--text-tertiary))] mt-1">Last 6 months</p>
             </div>
             {streakCount >= 3 && (
-              <span className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-orange-50 text-orange-700 border border-orange-200 text-xs font-semibold">
+              <span className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-[hsl(var(--warning-light))] text-[hsl(var(--warning-dark))] border border-[hsl(var(--warning)/0.3)] text-xs font-semibold">
                 🔥 {streakCount} payments on time in a row
               </span>
             )}
           </div>
           
           {statsLoading ? (
-            <div className="h-40 w-full animate-pulse bg-hsl(var(--surface-2)) rounded-[var(--radius-lg)]" />
+            <div className="h-40 w-full animate-pulse bg-[var(--color-surface)] rounded-[var(--radius-lg)]" />
           ) : (
             <div className="flex-1 flex flex-col">
               <OccupancyChart data={[
@@ -198,10 +196,10 @@ const DashboardPage: React.FC = () => {
                 { month: 'Mar', occupancy: stats?.occupancyRate || 95 },
               ]} />
               
-              <div className="mt-4 pt-4 border-t border-hsl(var(--surface-border)) flex justify-between items-end">
+              <div className="mt-4 pt-4 border-t border-[var(--color-border)] flex justify-between items-end">
                 <div>
-                  <p className="text-sm text-hsl(var(--text-secondary)) mb-1">Current</p>
-                  <p className="text-2xl font-bold tabular-nums text-hsl(var(--text-primary))">
+                  <p className="text-sm text-[hsl(var(--text-secondary))] mb-1">Current</p>
+                  <p className="text-2xl font-bold tabular-nums text-[hsl(var(--text-primary))]">
                     {stats?.occupancyRate || 0}%
                   </p>
                 </div>
@@ -216,8 +214,8 @@ const DashboardPage: React.FC = () => {
 
       {/* ZONE 4: Rent Roll Preview */}
       <Card className="p-0 overflow-hidden">
-        <div className="flex items-center justify-between p-6 border-b border-border">
-          <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Rent Roll</h3>
+        <div className="flex items-center justify-between p-6 border-b border-[var(--color-border)]">
+          <h3 className="text-sm font-medium text-[hsl(var(--text-secondary))] uppercase tracking-wider">Rent Roll</h3>
           <Button variant="ghost" size="sm" onClick={() => navigate('/rent-roll')}>
             View Full Rent Roll →
           </Button>
@@ -240,8 +238,8 @@ const DashboardPage: React.FC = () => {
               header: 'Unit',
               render: (row) => (
                 <div>
-                  <p className="text-sm font-medium text-neutral-900">{row.unit}</p>
-                  <p className="text-xs text-neutral-400">{row.propertyName}</p>
+                  <p className="text-sm font-medium text-[hsl(var(--text-primary))]">{row.unit}</p>
+                  <p className="text-xs text-[hsl(var(--text-tertiary))]">{row.propertyName}</p>
                 </div>
               )
             },
@@ -250,20 +248,20 @@ const DashboardPage: React.FC = () => {
               header: 'Tenant',
               render: (row) => row.tenantName ? (
                 <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-full bg-brand-100 text-brand-700 text-xs font-semibold flex items-center justify-center flex-shrink-0">
+                  <div className="w-7 h-7 rounded-full bg-[var(--color-surface)] text-[hsl(var(--text-secondary))] text-xs font-semibold flex items-center justify-center flex-shrink-0">
                     {row.tenantName.charAt(0).toUpperCase()}
                   </div>
-                  <span className="text-sm text-neutral-700">{row.tenantName}</span>
+                  <span className="text-sm text-[hsl(var(--text-primary))]">{row.tenantName}</span>
                 </div>
               ) : (
-                <span className="text-sm text-neutral-400 italic">Vacant</span>
+                <span className="text-sm text-[hsl(var(--text-tertiary))] italic">Vacant</span>
               )
             },
             {
               key: 'rent',
               header: 'Monthly Rent',
               render: (row) => (
-                <span className="text-sm font-medium text-neutral-900">
+                <span className="text-sm font-medium text-[hsl(var(--text-primary))]">
                   {row.monthlyRent ? formatCurrency(row.monthlyRent) : '—'}
                 </span>
               )
@@ -291,10 +289,10 @@ const DashboardPage: React.FC = () => {
               header: 'Lease Ends',
               className: 'hidden lg:table-cell',
               render: (row) => {
-                if (!row.leaseEndsAt) return <span className="text-neutral-300">—</span>;
+                if (!row.leaseEndsAt) return <span className="text-[hsl(var(--text-disabled))]">—</span>;
                 const daysLeft = differenceInDays(new Date(row.leaseEndsAt), new Date());
                 return (
-                  <span className={`text-sm ${daysLeft < 30 ? 'text-danger-600 font-medium' : 'text-neutral-600'}`}>
+                  <span className={`text-sm ${daysLeft < 30 ? 'text-danger-600 font-medium' : 'text-[hsl(var(--text-secondary))]'}`}>
                     {formatDate(row.leaseEndsAt)}
                   </span>
                 );

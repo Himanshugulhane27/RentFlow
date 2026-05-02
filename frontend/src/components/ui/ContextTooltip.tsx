@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/refs */
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -43,15 +44,15 @@ export const ContextTooltip: React.FC<{
           exit={{ opacity: 0, scale: 0.95, x: '-50%' }}
           transition={{ duration: prefersReduced ? 0 : 0.18 }}
           style={{ position: 'fixed', top: coords.top, left: coords.left, zIndex: 60 }}
-          className="bg-white text-neutral-800 border border-neutral-200 rounded-lg shadow-sm p-3 w-full max-w-[240px] text-[13px]"
+          className="bg-[var(--color-surface-raised)] text-[hsl(var(--text-primary))] border border-[var(--color-border)] rounded-lg shadow-sm p-3 w-full max-w-[240px] text-[13px]"
         >
           {/* subtle triangle pointer */}
-          <div className="absolute -top-[5px] left-1/2 -translate-x-1/2 w-2.5 h-2.5 bg-white border-t border-l border-neutral-200 rotate-45 rounded-sm" />
+          <div className="absolute -top-[5px] left-1/2 -translate-x-1/2 w-2.5 h-2.5 bg-[var(--color-surface-raised)] border-t border-l border-[var(--color-border)] rotate-45 rounded-sm" />
           <div className="relative z-10 flex flex-col gap-2">
             <p className="leading-snug">{text}</p>
             <button 
               onClick={onDismiss}
-              className="self-end font-semibold text-brand-600 hover:text-brand-800 transition-colors"
+              className="self-end font-semibold text-brand-600 hover:text-brand-800 transition-colors duration-150 ease-out"
             >
               Got it &rarr;
             </button>

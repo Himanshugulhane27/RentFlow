@@ -32,8 +32,8 @@ export function DataTable<T extends { id?: string | number }>({
 }: DataTableProps<T>) {
   if (loading) {
     return (
-      <div className={cn('w-full border border-neutral-100 rounded-card overflow-hidden bg-white', className)}>
-        <div className="h-12 bg-neutral-50 border-b border-neutral-100" />
+      <div className={cn('w-full border border-[var(--color-border)] rounded-card overflow-hidden bg-[var(--color-surface-raised)]', className)}>
+        <div className="h-12 bg-[var(--color-surface)] border-b border-[var(--color-border)]" />
         {Array.from({ length: 8 }).map((_, i) => (
           <SkeletonTableRow key={i} cols={columns.length} />
         ))}
@@ -42,17 +42,17 @@ export function DataTable<T extends { id?: string | number }>({
   }
 
   if (data.length === 0 && emptyState) {
-    return <div className="border border-neutral-100 rounded-card bg-white">{emptyState}</div>;
+    return <div className="border border-[var(--color-border)] rounded-card bg-[var(--color-surface-raised)]">{emptyState}</div>;
   }
 
   return (
-    <div className={cn('w-full elevation-2 card-border rounded-[var(--radius-lg)] bg-hsl(var(--surface-0)) overflow-hidden', className)}>
+    <div className={cn('w-full shadow-[var(--shadow-sm)] border border-[var(--color-border)] rounded-[var(--radius-lg)] bg-[var(--color-surface-raised)] overflow-hidden', className)}>
       <div className="overflow-x-auto">
         <table className="w-full text-left text-sm whitespace-nowrap border-collapse">
-          <thead className="bg-hsl(var(--surface-3)) border-b border-hsl(var(--surface-border))">
+          <thead className="bg-[var(--color-surface)] border-b border-[var(--color-border)]">
             <tr>
               {columns.map((col) => (
-                <th key={col.key} className={cn("px-4 py-3 text-xs font-semibold text-hsl(var(--text-secondary)) tracking-wider uppercase", col.className)}>
+                <th key={col.key} className={cn("px-4 py-3 text-xs font-semibold text-[hsl(var(--text-secondary))] tracking-wider uppercase leading-none", col.className)}>
                   {col.header}
                 </th>
               ))}
@@ -74,20 +74,25 @@ export function DataTable<T extends { id?: string | number }>({
                   layoutId={rowId}
                   variants={staggerItem}
                   initial="initial"
-                  animate={highlightRowId === rowId ? { backgroundColor: ['transparent', '#FAEEDA', 'transparent'] } : "animate"}
+                  animate={highlightRowId === rowId ? { backgroundColor: ['transparent', 'hsl(var(--warning-light))', 'transparent'] } : "animate"}
                   transition={highlightRowId === rowId ? { duration: 1.5, ease: 'easeInOut' } : springSnappy}
-                  whileHover={{ backgroundColor: "hsl(var(--surface-2))" }}
+                  whileHover={{ backgroundColor: "var(--color-surface)" }}
                   onClick={() => onRowClick?.(row)}
                   className={cn(
-                    'bg-hsl(var(--surface-0)) border-b border-hsl(var(--surface-border)/0.6) last:border-b-0 transition-colors duration-100',
+                    'relative bg-[var(--color-surface-raised)] border-b border-[var(--color-border-subtle)] last:border-b-0 transition-colors group',
                     onRowClick && 'cursor-pointer'
                   )}
+                  style={{ transitionDuration: 'var(--transition-fast)' }}
                 >
+                  {/* Row hover accent bar */}
+                  <td className="w-0 p-0 relative">
+                    <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-brand-500 rounded-r opacity-0 group-hover:opacity-100 transition-opacity" style={{ transitionDuration: 'var(--transition-fast)' }} />
+                  </td>
                   {columns.map((col) => (
                     <td
                       key={col.key}
                       className={cn(
-                        'px-4 py-3.5 text-sm text-hsl(var(--text-primary))',
+                        'px-4 py-3.5 text-sm text-[hsl(var(--text-primary))]',
                         col.className
                       )}
                     >

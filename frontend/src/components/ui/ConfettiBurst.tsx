@@ -39,7 +39,7 @@ export const ConfettiBurst: React.FC<ConfettiBurstProps> = ({ anchorRef, onCompl
   if (particles.length === 0) return null;
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-[100] overflow-hidden">
+    <div className="fixed inset-0 pointer-events-none z-[var(--z-toast)] overflow-hidden">
       {particles.map((p) => (
         <motion.div
           key={p.id}

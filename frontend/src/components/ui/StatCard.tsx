@@ -17,16 +17,16 @@ interface StatCardProps {
 }
 
 const colorStyles = {
-  blue: 'text-hsl(var(--brand-500)) bg-hsl(var(--brand-500)/0.1)',
-  green: 'text-hsl(var(--success)) bg-hsl(var(--success)/0.1)',
-  amber: 'text-hsl(var(--warning)) bg-hsl(var(--warning)/0.1)',
-  red: 'text-hsl(var(--danger)) bg-hsl(var(--danger)/0.1)',
+  blue: { icon: 'text-brand-600 bg-brand-50', accent: 'border-t-2 border-t-brand-500' },
+  green: { icon: 'text-[hsl(var(--success-dark))] bg-[hsl(var(--success-light))]', accent: 'border-t-2 border-t-[hsl(var(--success))]' },
+  amber: { icon: 'text-[hsl(var(--warning-dark))] bg-[hsl(var(--warning-light))]', accent: 'border-t-2 border-t-[hsl(var(--warning))]' },
+  red: { icon: 'text-[hsl(var(--danger-dark))] bg-[hsl(var(--danger-light))]', accent: 'border-t-2 border-t-[hsl(var(--danger))]' },
 };
 
 const trendColors = {
-  up: 'text-hsl(var(--success))',
-  down: 'text-hsl(var(--danger))',
-  neutral: 'text-hsl(var(--text-tertiary))',
+  up: 'text-[hsl(var(--success))]',
+  down: 'text-[hsl(var(--danger))]',
+  neutral: 'text-[hsl(var(--text-tertiary))]',
 };
 
 const TrendIcon = {
@@ -50,24 +50,21 @@ export const StatCard: React.FC<StatCardProps> = ({
     <Card 
       hoverable={!!onClick} 
       onClick={onClick}
-      className={cn('relative overflow-hidden', className)}
+      className={cn('relative overflow-hidden', colorStyles[color].accent, className)}
     >
-      {/* Top accent line for primary card - can be passed via className but defaults to transparent */}
-      <div className="absolute top-0 inset-x-0 h-[3px] bg-transparent" />
-      
       <div className="flex justify-between items-start mb-4">
-        <p className="text-xs font-semibold tracking-wider uppercase text-hsl(var(--text-tertiary))">
+        <p className="text-xs font-semibold tracking-wider uppercase text-[hsl(var(--text-tertiary))]">
           {label}
         </p>
         {icon && (
-          <div className={cn('w-10 h-10 flex items-center justify-center rounded-[var(--radius-md)] flex-shrink-0', colorStyles[color])}>
+          <div className={cn('w-10 h-10 flex items-center justify-center rounded-[var(--radius-md)] flex-shrink-0', colorStyles[color].icon)}>
             {icon}
           </div>
         )}
       </div>
       
       <div className="flex items-baseline gap-2">
-        <h3 className="text-3xl font-bold tabular-nums tracking-tight text-hsl(var(--text-primary))">
+        <h3 className="text-3xl font-bold tabular-nums tracking-tight text-[hsl(var(--text-primary))]">
           {(() => {
             const parseFormattedNumber = (val: string | number) => {
               if (typeof val === 'number') return { isNum: true, num: val, prefix: '', suffix: '', decimals: 0 };
@@ -109,7 +106,7 @@ export const StatCard: React.FC<StatCardProps> = ({
               </span>
             );
           })()}
-          {subtext && <span className="text-hsl(var(--text-tertiary))">{subtext}</span>}
+          {subtext && <span className="text-[hsl(var(--text-tertiary))]">{subtext}</span>}
         </div>
       )}
     </Card>

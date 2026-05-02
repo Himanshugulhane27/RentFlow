@@ -16,7 +16,7 @@ const variantStyles: Record<BadgeVariant, string> = {
   warning: 'bg-warning-50 text-warning-700',
   danger: 'bg-danger-50 text-danger-700',
   info: 'bg-brand-50 text-brand-700',
-  neutral: 'bg-neutral-100 text-neutral-600',
+  neutral: 'bg-[var(--color-surface)] text-[hsl(var(--text-secondary))] border border-[var(--color-border)]',
 };
 
 const sizeStyles: Record<BadgeSize, string> = {
@@ -47,7 +47,7 @@ export const Badge: React.FC<BadgeProps> = ({
           variant === 'warning' && 'bg-warning-500',
           variant === 'danger' && 'bg-danger-500',
           variant === 'info' && 'bg-brand-500',
-          variant === 'neutral' && 'bg-neutral-400'
+          variant === 'neutral' && 'bg-[hsl(var(--text-disabled))]'
         )} />
       )}
       {children}

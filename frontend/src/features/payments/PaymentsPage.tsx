@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { CreditCard, CheckCircle } from 'lucide-react';
-import { toast } from '../../hooks/useToast';
+
 import { paymentApi } from '../../api/payments.api';
 import { useMarkPaymentPaid } from './hooks/useMarkPaymentPaid';
 import { Card } from '../../components/ui/Card';
@@ -55,8 +55,8 @@ const PaymentsPage: React.FC = () => {
     <PageTransition className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-foreground">Payments</h1>
-          <p className="text-sm text-muted-foreground mt-1">{payments.length} payments</p>
+          <h1 className="text-2xl font-bold tracking-tight text-[hsl(var(--text-primary))]">Payments</h1>
+          <p className="text-sm text-[hsl(var(--text-secondary))] mt-1">{payments.length} payments</p>
         </div>
       </div>
 
@@ -65,8 +65,8 @@ const PaymentsPage: React.FC = () => {
           <button key={s} onClick={() => setFilter(s)}
             className={`px-3 py-1.5 text-xs font-medium rounded-lg capitalize transition-colors ${
               filter === s
-                ? 'bg-primary-100 text-primary-700 dark:bg-primary-500/20 dark:text-primary-400'
-                : 'text-surface-500 hover:bg-surface-100 dark:hover:bg-surface-800'
+                ? 'bg-brand-50 text-brand-700'
+                : 'text-[hsl(var(--text-tertiary))] hover:bg-[var(--color-surface)]'
             }`}>
             {s}
           </button>
@@ -95,17 +95,17 @@ const PaymentsPage: React.FC = () => {
               <Card hoverable>
               <div className="flex items-start justify-between mb-3">
                 <StatusBadge status={p.status} />
-                <span className="text-lg font-bold text-surface-900 dark:text-white">
+                <span className="text-lg font-bold text-[hsl(var(--text-primary))]">
                   {formatCurrency(p.totalAmount)}
                 </span>
               </div>
 
-              <p className="text-sm font-medium text-surface-900 dark:text-white">
+              <p className="text-sm font-medium text-[hsl(var(--text-primary))]">
                 {typeof p.tenantId === 'object'
                   ? `${p.tenantId.firstName} ${p.tenantId.lastName}`
                   : 'Tenant'}
               </p>
-              <p className="text-xs text-surface-500 mt-1">
+              <p className="text-xs text-[hsl(var(--text-tertiary))] mt-1">
                 Due: {formatDate(p.dueDate)}
                 {p.paidDate && ` · Paid: ${formatDate(p.paidDate)}`}
               </p>
@@ -117,7 +117,7 @@ const PaymentsPage: React.FC = () => {
               )}
 
               {(p.status === 'pending' || p.status === 'overdue') && (
-                <div className="pt-3 mt-3 border-t border-surface-100 dark:border-surface-700">
+                <div className="pt-3 mt-3 border-t border-[var(--color-border-subtle)]">
                   <Button
                     variant="primary"
                     size="sm"

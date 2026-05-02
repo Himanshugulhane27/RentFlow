@@ -39,7 +39,7 @@ export const Avatar: React.FC<AvatarProps> = ({
         src={src}
         alt={name}
         className={cn(
-          'rounded-full object-cover ring-2 ring-white dark:ring-surface-800',
+          'rounded-full object-cover ring-2 ring-[var(--color-surface-raised)]',
           sizeStyles[size],
           className
         )}
@@ -50,7 +50,7 @@ export const Avatar: React.FC<AvatarProps> = ({
   return (
     <div
       className={cn(
-        'rounded-full flex items-center justify-center font-semibold text-white ring-2 ring-white dark:ring-surface-800',
+        'rounded-full flex items-center justify-center font-semibold text-white ring-2 ring-[var(--color-surface-raised)]',
         sizeStyles[size],
         getColor(name),
         className

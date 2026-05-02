@@ -70,10 +70,9 @@ class LeaseService {
     const lease = await leaseRepository.update(id, organizationId, data);
 
     const rentChanged = data.monthlyRent !== undefined && data.monthlyRent !== oldLease.monthlyRent;
-    const startChanged = data.startDate !== undefined && new Date(data.startDate).getTime() !== new Date(oldLease.startDate).getTime();
     const endChanged = data.endDate !== undefined && new Date(data.endDate).getTime() !== new Date(oldLease.endDate).getTime();
 
-    if (rentChanged || startChanged || endChanged) {
+    if (rentChanged || endChanged) {
       await paymentService.generateLeasePayments(lease);
     }
 

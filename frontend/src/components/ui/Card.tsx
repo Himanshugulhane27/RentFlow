@@ -23,10 +23,10 @@ export const Card: React.FC<CardProps> = ({
   return (
     <motion.div
       onClick={onClick}
-      whileHover={isHoverable ? { y: -3, boxShadow: "var(--shadow-lg)" } : undefined}
+      whileHover={isHoverable ? { y: -1, boxShadow: "var(--shadow-md)" } : undefined}
       transition={springStandard}
       className={cn(
-        'bg-white rounded-[var(--radius-xl)] elevation-2 card-border p-6',
+        'bg-[var(--color-surface-raised)] rounded-[var(--radius-xl)] border border-[var(--color-border)] shadow-[var(--shadow-sm)] p-6',
         isHoverable && 'cursor-pointer',
         className
       )}
@@ -42,7 +42,7 @@ export const CardHeader: React.FC<{ children: React.ReactNode; className?: strin
 );
 
 export const CardTitle: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className }) => (
-  <h3 className={cn('text-lg font-semibold text-neutral-900', className)}>{children}</h3>
+  <h3 className={cn('text-sm font-semibold text-[hsl(var(--text-primary))]', className)}>{children}</h3>
 );
 
 export const CardContent: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className }) => (

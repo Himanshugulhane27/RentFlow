@@ -34,7 +34,6 @@ const organizationSchema = new Schema<OrganizationDocument>(
   }
 );
 
-organizationSchema.index({ slug: 1 });
 organizationSchema.index({ ownerId: 1 });
 
 export const Organization = mongoose.model<OrganizationDocument>('Organization', organizationSchema);

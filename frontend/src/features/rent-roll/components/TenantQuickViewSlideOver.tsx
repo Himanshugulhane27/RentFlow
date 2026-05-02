@@ -30,15 +30,15 @@ export const TenantQuickViewSlideOver: React.FC<TenantQuickViewSlideOverProps> =
   return (
     <SlideOver open={open} onClose={onClose} title="Tenant Quick View" width="md">
       {/* Header section */}
-      <div className="bg-neutral-50 p-6 -mx-6 -mt-6 mb-6 border-b border-neutral-100 flex items-center gap-4">
+      <div className="bg-[var(--color-surface)] p-6 -mx-6 -mt-6 mb-6 border-b border-[var(--color-border-subtle)] flex items-center gap-4">
         {row.tenantName ? (
           <>
             <div className="w-14 h-14 rounded-full bg-brand-100 text-brand-700 text-xl font-bold flex items-center justify-center flex-shrink-0">
               {row.tenantInitial}
             </div>
             <div>
-              <h2 className="text-lg font-semibold text-neutral-900">{row.tenantName}</h2>
-              <p className="text-sm text-neutral-500">{row.unit} · {row.propertyName}</p>
+              <h2 className="text-lg font-semibold text-[hsl(var(--text-primary))]">{row.tenantName}</h2>
+              <p className="text-sm text-[hsl(var(--text-tertiary))]">{row.unit} · {row.propertyName}</p>
               {row.healthScore && (
                 <div className="mt-2">
                   <Badge 
@@ -52,8 +52,8 @@ export const TenantQuickViewSlideOver: React.FC<TenantQuickViewSlideOverProps> =
           </>
         ) : (
           <div>
-            <h2 className="text-lg font-semibold text-neutral-900">Vacant Unit</h2>
-            <p className="text-sm text-neutral-500">{row.unit} · {row.propertyName}</p>
+            <h2 className="text-lg font-semibold text-[hsl(var(--text-primary))]">Vacant Unit</h2>
+            <p className="text-sm text-[hsl(var(--text-tertiary))]">{row.unit} · {row.propertyName}</p>
             <div className="mt-2">
               <Badge variant="neutral">Vacant</Badge>
             </div>
@@ -64,21 +64,21 @@ export const TenantQuickViewSlideOver: React.FC<TenantQuickViewSlideOverProps> =
       {/* Stats row */}
       {row.status !== 'vacant' && (
         <div className="grid grid-cols-3 gap-4 mb-6">
-          <div className="bg-white border border-neutral-100 rounded-lg p-3">
-            <p className="text-xs text-neutral-400 mb-1">Monthly Rent</p>
-            <p className="text-sm font-semibold text-neutral-800">
+          <div className="bg-[var(--color-surface-raised)] border border-[var(--color-border-subtle)] rounded-lg p-3">
+            <p className="text-xs text-[hsl(var(--text-tertiary))] mb-1">Monthly Rent</p>
+            <p className="text-sm font-semibold text-[hsl(var(--text-primary))]">
               {row.monthlyRent ? formatCurrency(row.monthlyRent) : '—'}
             </p>
           </div>
-          <div className="bg-white border border-neutral-100 rounded-lg p-3">
-            <p className="text-xs text-neutral-400 mb-1">Lease Ends</p>
-            <p className="text-sm font-semibold text-neutral-800">
+          <div className="bg-[var(--color-surface-raised)] border border-[var(--color-border-subtle)] rounded-lg p-3">
+            <p className="text-xs text-[hsl(var(--text-tertiary))] mb-1">Lease Ends</p>
+            <p className="text-sm font-semibold text-[hsl(var(--text-primary))]">
               {row.leaseEndsAt ? formatDate(row.leaseEndsAt) : '—'}
             </p>
           </div>
-          <div className="bg-white border border-neutral-100 rounded-lg p-3">
-            <p className="text-xs text-neutral-400 mb-1">Last Payment</p>
-            <p className="text-sm font-semibold text-neutral-800">
+          <div className="bg-[var(--color-surface-raised)] border border-[var(--color-border-subtle)] rounded-lg p-3">
+            <p className="text-xs text-[hsl(var(--text-tertiary))] mb-1">Last Payment</p>
+            <p className="text-sm font-semibold text-[hsl(var(--text-primary))]">
               {row.lastPaymentDate ? formatDate(row.lastPaymentDate) : 'Never'}
             </p>
           </div>
@@ -127,7 +127,7 @@ export const TenantQuickViewSlideOver: React.FC<TenantQuickViewSlideOverProps> =
           </div>
 
           {row.status !== 'paid' ? (
-            <div className="mt-4 pt-4 border-t border-neutral-100">
+            <div className="mt-4 pt-4 border-t border-[var(--color-border-subtle)]">
               {!recording ? (
                 <Button
                   variant="primary"
@@ -142,18 +142,18 @@ export const TenantQuickViewSlideOver: React.FC<TenantQuickViewSlideOverProps> =
               ) : (
                 <div className="space-y-3">
                   <div>
-                    <label className="block text-xs font-medium text-neutral-600 mb-1">
+                    <label className="block text-xs font-medium text-[hsl(var(--text-secondary))] mb-1">
                       Amount Received
                     </label>
                     <input
                       type="number"
                       value={amount}
                       onChange={e => setAmount(Number(e.target.value))}
-                      className="w-full px-3 py-2 text-sm border border-neutral-200 rounded-input focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent"
+                      className="w-full px-3 py-2 text-sm border border-[var(--color-border)] rounded-input focus-ring"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-neutral-600 mb-1">
+                    <label className="block text-xs font-medium text-[hsl(var(--text-secondary))] mb-1">
                       Notes (optional)
                     </label>
                     <input
@@ -161,7 +161,7 @@ export const TenantQuickViewSlideOver: React.FC<TenantQuickViewSlideOverProps> =
                       value={notes}
                       onChange={e => setNotes(e.target.value)}
                       placeholder="e.g. Paid via bank transfer"
-                      className="w-full px-3 py-2 text-sm border border-neutral-200 rounded-input focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent"
+                      className="w-full px-3 py-2 text-sm border border-[var(--color-border)] rounded-input focus-ring"
                     />
                   </div>
                   <div className="flex gap-2">
@@ -195,7 +195,7 @@ export const TenantQuickViewSlideOver: React.FC<TenantQuickViewSlideOverProps> =
               )}
             </div>
           ) : (
-            <div className="mt-4 pt-4 border-t border-neutral-100">
+            <div className="mt-4 pt-4 border-t border-[var(--color-border-subtle)]">
               <div className="flex items-center gap-2">
                 <CheckCircle2 size={16} className="text-success-500" />
                 <span className="text-sm text-success-600 font-medium">
@@ -209,8 +209,8 @@ export const TenantQuickViewSlideOver: React.FC<TenantQuickViewSlideOverProps> =
 
       {row.status === 'vacant' && (
         <div>
-          <div className="bg-neutral-50 border border-neutral-100 rounded-lg p-4 text-center">
-            <p className="text-sm text-neutral-600 mb-3">This unit is currently vacant.</p>
+          <div className="bg-[var(--color-surface)] border border-[var(--color-border-subtle)] rounded-lg p-4 text-center">
+            <p className="text-sm text-[hsl(var(--text-secondary))] mb-3">This unit is currently vacant.</p>
             <Button 
               variant="primary" 
               size="sm"

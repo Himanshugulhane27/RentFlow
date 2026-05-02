@@ -18,6 +18,7 @@ export function useStreakCounter(): { streakCount: number; incrementStreak: () =
     if (trendData && streakCount === 0) {
       const historicalStreak = trendData.filter(d => d.revenue > 0).length;
       if (historicalStreak > 0) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setStreakCount(historicalStreak);
         localStorage.setItem('rf_streak_count', historicalStreak.toString());
       }

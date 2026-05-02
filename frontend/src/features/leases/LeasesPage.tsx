@@ -23,6 +23,12 @@ import { formatCurrency, formatDate } from '../../utils/formatters';
 import type { Lease } from '../../types/models';
 import type { CreateLeaseRequest } from '../../types/api';
 
+const TimelineWrapper = ({ leaseId }: { leaseId: string }) => {
+  const { events, isLoading: timelineLoading } = useActivityTimeline('lease', leaseId);
+  return <ActivityTimeline events={events} isLoading={timelineLoading} />;
+};
+
+
 const LeasesPage: React.FC = () => {
   const qc = useQueryClient();
   const [showForm, setShowForm] = useState(false);
@@ -53,24 +59,21 @@ const LeasesPage: React.FC = () => {
   const propOpts = (props?.data || []).map(p => ({ value: p._id, label: `${p.address}, ${p.city}` }));
   const tenantOpts = (tenants?.data || []).map(t => ({ value: t._id, label: `${t.firstName} ${t.lastName}` }));
 
-  const TimelineWrapper = ({ leaseId }: { leaseId: string }) => {
-    const { events, isLoading: timelineLoading } = useActivityTimeline('lease', leaseId);
-    return <ActivityTimeline events={events} isLoading={timelineLoading} />;
-  };
+
 
   return (
     <PageTransition className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-foreground">Leases</h1>
-          <p className="text-sm text-muted-foreground mt-1">{leases.length} leases</p>
+          <h1 className="text-2xl font-bold tracking-tight text-[hsl(var(--text-primary))]">Leases</h1>
+          <p className="text-sm text-[hsl(var(--text-secondary))] mt-1">{leases.length} leases</p>
         </div>
         <Button icon={<Plus size={16} />} onClick={() => setShowForm(true)}>New Lease</Button>
       </div>
 
       <div className="flex gap-2">
         {['all', 'active', 'expired', 'terminated'].map(s => (
-          <button key={s} onClick={() => setFilter(s)} className={`px-3 py-1.5 text-xs font-medium rounded-lg capitalize transition-colors ${filter === s ? 'bg-primary-100 text-primary-700 dark:bg-primary-500/20 dark:text-primary-400' : 'text-surface-500 hover:bg-surface-100 dark:hover:bg-surface-800'}`}>
+          <button key={s} onClick={() => setFilter(s)} className={`px-3 py-1.5 text-xs font-medium rounded-lg capitalize transition-colors duration-150 ease-out focus-ring ${filter === s ? 'bg-brand-50 text-brand-700' : 'text-[hsl(var(--text-tertiary))] hover:bg-[var(--color-surface)]'}`}>
             {s}
           </button>
         ))}
@@ -99,13 +102,13 @@ const LeasesPage: React.FC = () => {
               <Card hoverable>
               <div className="flex items-start justify-between mb-3">
                 <StatusBadge status={l.status} />
-                <span className="text-lg font-bold text-surface-900 dark:text-white">{formatCurrency(l.monthlyRent)}<span className="text-xs font-normal text-surface-400">/mo</span></span>
+                <span className="text-lg font-bold text-[hsl(var(--text-primary))]">{formatCurrency(l.monthlyRent)}<span className="text-xs font-normal text-[hsl(var(--text-tertiary))]">/mo</span></span>
               </div>
-              <p className="font-medium text-sm text-surface-900 dark:text-white">{typeof l.propertyId === 'object' ? l.propertyId.address : 'Property'}</p>
-              <p className="text-sm text-surface-500">{typeof l.tenantId === 'object' ? `${l.tenantId.firstName} ${l.tenantId.lastName}` : 'Tenant'}</p>
-              <div className="flex items-center gap-1.5 text-xs text-surface-500 mt-2"><Calendar size={12} />{formatDate(l.startDate)} → {formatDate(l.endDate)}</div>
+              <p className="font-medium text-sm text-[hsl(var(--text-primary))]">{typeof l.propertyId === 'object' ? l.propertyId.address : 'Property'}</p>
+              <p className="text-sm text-[hsl(var(--text-tertiary))]">{typeof l.tenantId === 'object' ? `${l.tenantId.firstName} ${l.tenantId.lastName}` : 'Tenant'}</p>
+              <div className="flex items-center gap-1.5 text-xs text-[hsl(var(--text-tertiary))] mt-2"><Calendar size={12} />{formatDate(l.startDate)} → {formatDate(l.endDate)}</div>
               
-              <div className="pt-3 mt-3 border-t border-surface-100 dark:border-surface-700 flex gap-2">
+              <div className="pt-3 mt-3 border-t border-[var(--color-border-subtle)] flex gap-2">
                 <Button variant="secondary" size="sm" onClick={() => { setSelectedLease(l); setShowDetails(true); }}>View Details</Button>
                 {l.status === 'active' && (
                   <Button variant="danger" size="sm" onClick={() => terminateM.mutate(l._id)}>Terminate</Button>
@@ -138,10 +141,10 @@ const LeasesPage: React.FC = () => {
           <div className="space-y-8">
             <div className="flex items-start justify-between">
               <div>
-                <h2 className="text-xl font-bold text-neutral-900">
+                <h2 className="text-xl font-bold text-[hsl(var(--text-primary))]">
                   {typeof selectedLease.propertyId === 'object' ? selectedLease.propertyId.address : 'Property'}
                 </h2>
-                <p className="text-sm text-neutral-500 mt-1">
+                <p className="text-sm text-[hsl(var(--text-tertiary))] mt-1">
                   Tenant: {typeof selectedLease.tenantId === 'object' ? `${selectedLease.tenantId.firstName} ${selectedLease.tenantId.lastName}` : 'Tenant'}
                 </p>
               </div>
@@ -149,18 +152,18 @@ const LeasesPage: React.FC = () => {
             </div>
 
             <div className="grid grid-cols-2 gap-4">
-              <Card className="bg-neutral-50 border-neutral-100 shadow-none">
-                <p className="text-xs text-neutral-500 mb-1">Monthly Rent</p>
-                <p className="text-lg font-bold text-neutral-900">{formatCurrency(selectedLease.monthlyRent)}</p>
+              <Card className="bg-[var(--color-surface)] border-[var(--color-border-subtle)] shadow-none">
+                <p className="text-xs text-[hsl(var(--text-tertiary))] mb-1">Monthly Rent</p>
+                <p className="text-lg font-bold text-[hsl(var(--text-primary))]">{formatCurrency(selectedLease.monthlyRent)}</p>
               </Card>
-              <Card className="bg-neutral-50 border-neutral-100 shadow-none">
-                <p className="text-xs text-neutral-500 mb-1">Lease Period</p>
-                <p className="text-sm font-semibold text-neutral-900">{formatDate(selectedLease.startDate)} → {formatDate(selectedLease.endDate)}</p>
+              <Card className="bg-[var(--color-surface)] border-[var(--color-border-subtle)] shadow-none">
+                <p className="text-xs text-[hsl(var(--text-tertiary))] mb-1">Lease Period</p>
+                <p className="text-sm font-semibold text-[hsl(var(--text-primary))]">{formatDate(selectedLease.startDate)} → {formatDate(selectedLease.endDate)}</p>
               </Card>
             </div>
 
             <div>
-              <h3 className="text-sm font-semibold text-neutral-900 mb-4">Activity Timeline</h3>
+              <h3 className="text-sm font-semibold text-[hsl(var(--text-primary))] mb-4">Activity Timeline</h3>
               <TimelineWrapper leaseId={selectedLease._id} />
             </div>
           </div>

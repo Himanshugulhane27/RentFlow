@@ -10,7 +10,7 @@ export const MainLayout: React.FC = () => {
   const location = useLocation();
 
   return (
-    <div className="min-h-screen bg-surface-50 dark:bg-surface-950">
+    <div className="min-h-screen bg-[var(--color-page-bg)]">
       <Sidebar />
 
       <motion.div

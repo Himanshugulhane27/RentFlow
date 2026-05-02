@@ -13,7 +13,7 @@ interface OccupancyChartProps {
 export const OccupancyChart: React.FC<OccupancyChartProps> = ({ data }) => {
   if (!data || data.length === 0) {
     return (
-      <div className="h-full w-full flex items-center justify-center text-sm text-hsl(var(--text-tertiary))">
+      <div className="h-full w-full flex items-center justify-center text-sm text-[hsl(var(--text-tertiary))]">
         No occupancy data available
       </div>
     );
@@ -36,7 +36,7 @@ export const OccupancyChart: React.FC<OccupancyChartProps> = ({ data }) => {
               <stop offset="95%" stopColor={brandColor} stopOpacity={0} />
             </linearGradient>
           </defs>
-          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--surface-border))" />
+          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--color-border)" />
           <XAxis 
             dataKey="month" 
             axisLine={false} 
@@ -52,8 +52,8 @@ export const OccupancyChart: React.FC<OccupancyChartProps> = ({ data }) => {
           />
           <Tooltip 
             contentStyle={{ 
-              backgroundColor: 'hsl(var(--surface-0))', 
-              borderColor: 'hsl(var(--surface-border))',
+              backgroundColor: 'var(--color-surface-raised)', 
+              borderColor: 'var(--color-border)',
               borderRadius: 'var(--radius-md)',
               boxShadow: 'var(--elevation-2)'
             }}

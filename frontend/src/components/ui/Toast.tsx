@@ -5,18 +5,18 @@ import type { ToastProps } from '../../hooks/useToast';
 import { slideInRight, springSnappy } from '../../lib/animations';
 
 const iconMap = {
-  success: <CheckCircle2 size={20} className="text-hsl(var(--success))" />,
-  error: <XCircle size={20} className="text-hsl(var(--danger))" />,
-  warning: <AlertTriangle size={20} className="text-hsl(var(--warning))" />,
-  info: <Info size={20} className="text-hsl(var(--info))" />,
+  success: <CheckCircle2 size={20} className="text-[hsl(var(--success))]" />,
+  error: <XCircle size={20} className="text-[hsl(var(--danger))]" />,
+  warning: <AlertTriangle size={20} className="text-[hsl(var(--warning))]" />,
+  info: <Info size={20} className="text-[hsl(var(--info))]" />,
   celebration: <Sparkles size={20} className="text-brand-500" />,
 };
 
 const bgMap = {
-  success: 'bg-hsl(var(--success))',
-  error: 'bg-hsl(var(--danger))',
-  warning: 'bg-hsl(var(--warning))',
-  info: 'bg-hsl(var(--info))',
+  success: 'bg-[hsl(var(--success))]',
+  error: 'bg-[hsl(var(--danger))]',
+  warning: 'bg-[hsl(var(--warning))]',
+  info: 'bg-[hsl(var(--info))]',
   celebration: 'bg-brand-500',
 };
 
@@ -45,18 +45,18 @@ export const Toast: React.FC<ToastProps & { onDismiss: (id: string) => void }> =
       </div>
       
       <div className="flex-1 min-w-0 pr-4">
-        <h4 className="text-sm font-semibold text-hsl(var(--text-primary)) leading-tight">
+        <h4 className="text-sm font-semibold text-[hsl(var(--text-primary))] leading-tight">
           {title}
         </h4>
         {description && (
-          <p className="text-xs text-hsl(var(--text-secondary)) mt-0.5 leading-snug">
+          <p className="text-xs text-[hsl(var(--text-secondary))] mt-0.5 leading-snug">
             {description}
           </p>
         )}
         {action && (
           <button
             onClick={action.onClick}
-            className="text-xs font-medium text-hsl(var(--brand-500)) hover:underline mt-2 focus-ring rounded-sm"
+            className="text-xs font-medium text-[hsl(var(--brand-500))] hover:underline mt-2 focus-ring rounded-sm"
           >
             {action.label}
           </button>
@@ -65,7 +65,7 @@ export const Toast: React.FC<ToastProps & { onDismiss: (id: string) => void }> =
 
       <button
         onClick={() => onDismiss(id)}
-        className="absolute top-3 right-3 text-hsl(var(--text-tertiary)) hover:text-hsl(var(--text-primary)) focus-ring rounded-sm"
+        className="absolute top-3 right-3 text-[hsl(var(--text-tertiary))] hover:text-[hsl(var(--text-primary))] focus-ring rounded-sm"
         aria-label="Dismiss"
       >
         <X size={16} />

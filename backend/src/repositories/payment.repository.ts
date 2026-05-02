@@ -21,7 +21,18 @@ export class PaymentRepository extends BaseRepository<PaymentDocument> {
         .exec(),
       this.model.countDocuments(query),
     ]);
-    return { data, total, page: options.page, limit: options.limit };
+    const totalPages = Math.ceil(total / options.limit);
+    return { 
+      data, 
+      pagination: {
+        page: options.page, 
+        limit: options.limit,
+        total,
+        totalPages,
+        hasNext: options.page < totalPages,
+        hasPrev: options.page > 1
+      }
+    };
   }
 
   async findAll(organizationId: string, filter: FilterQuery<PaymentDocument> = {}): Promise<PaymentDocument[]> {

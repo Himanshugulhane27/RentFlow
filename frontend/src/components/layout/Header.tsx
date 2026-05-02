@@ -11,17 +11,17 @@ export const Header: React.FC = () => {
   const isDark = useAppSelector((s) => s.ui.isDarkMode);
 
   return (
-    <header className="h-16 bg-white dark:bg-surface-900 border-b border-surface-200 dark:border-surface-800 flex items-center justify-between px-6 sticky top-0 z-30">
+    <header className="h-16 bg-[var(--color-surface-raised)] border-b border-[var(--color-border)] flex items-center justify-between px-6 sticky top-0 z-30">
       {/* Search */}
       <div className="relative w-80 hidden md:block">
         <Search
           size={16}
-          className="absolute left-3 top-1/2 -translate-y-1/2 text-surface-400"
+          className="absolute left-3 top-1/2 -translate-y-1/2 text-[hsl(var(--text-tertiary))]"
         />
         <input
           type="text"
           placeholder="Search properties, tenants..."
-          className="w-full pl-9 pr-4 py-2 rounded-lg bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 text-sm text-surface-900 dark:text-surface-100 placeholder:text-surface-400 focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-500 transition-colors"
+          className="w-full pl-9 pr-4 py-2 rounded-lg bg-[var(--color-surface)] border border-[var(--color-border)] text-sm text-[hsl(var(--text-primary))] placeholder:text-[hsl(var(--text-tertiary))] focus-ring transition-colors"
         />
       </div>
 
@@ -30,27 +30,27 @@ export const Header: React.FC = () => {
         {/* Dark mode toggle */}
         <button
           onClick={() => dispatch(toggleDarkMode())}
-          className="p-2 rounded-lg text-surface-500 hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors"
+          className="p-2 rounded-lg text-[hsl(var(--text-tertiary))] hover:bg-[var(--color-surface)] transition-colors focus-ring"
           title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
         >
           {isDark ? <Sun size={18} /> : <Moon size={18} />}
         </button>
 
         {/* Notifications */}
-        <button className="relative p-2 rounded-lg text-surface-500 hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors">
+        <button className="relative p-2 rounded-lg text-[hsl(var(--text-tertiary))] hover:bg-[var(--color-surface)] transition-colors focus-ring">
           <Bell size={18} />
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-danger-500 rounded-full" />
+          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[hsl(var(--danger))] rounded-full" />
         </button>
 
         {/* User */}
         {user && (
-          <div className="flex items-center gap-3 pl-3 border-l border-surface-200 dark:border-surface-700">
+          <div className="flex items-center gap-3 pl-3 border-l border-[var(--color-border)]">
             <Avatar name={`${user.firstName} ${user.lastName}`} size="sm" />
             <div className="hidden lg:block">
-              <p className="text-sm font-medium text-surface-900 dark:text-surface-100 leading-tight">
+              <p className="text-sm font-medium text-[hsl(var(--text-primary))] leading-tight">
                 {user.firstName} {user.lastName}
               </p>
-              <p className="text-xs text-surface-500 capitalize">{user.role}</p>
+              <p className="text-xs text-[hsl(var(--text-tertiary))] capitalize">{user.role}</p>
             </div>
           </div>
         )}

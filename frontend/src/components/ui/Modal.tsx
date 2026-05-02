@@ -61,7 +61,7 @@ export const Modal: React.FC<ModalProps> = ({
             initial="initial"
             animate="animate"
             exit="exit"
-            className="fixed inset-0 bg-hsl(220 20% 10% / 0.5) backdrop-blur-sm z-40"
+            className="fixed inset-0 bg-[hsl(220 20% 10% / 0.5)] backdrop-blur-sm z-40"
             onClick={onClose}
             aria-hidden="true"
           />
@@ -81,11 +81,11 @@ export const Modal: React.FC<ModalProps> = ({
           >
             <div className="flex items-start justify-between mb-4 flex-shrink-0">
               <div>
-                <h2 id={titleId} className="text-lg font-semibold text-hsl(var(--text-primary))">
+                <h2 id={titleId} className="text-lg font-semibold text-[hsl(var(--text-primary))]">
                   {title}
                 </h2>
                 {description && (
-                  <p className="text-sm text-hsl(var(--text-secondary)) mt-1">
+                  <p className="text-sm text-[hsl(var(--text-secondary))] mt-1">
                     {description}
                   </p>
                 )}
@@ -94,7 +94,7 @@ export const Modal: React.FC<ModalProps> = ({
                 whileHover={{ rotate: 90 }}
                 transition={{ type: 'spring', stiffness: 400, damping: 25 }}
                 onClick={onClose}
-                className="p-1.5 rounded-[var(--radius-md)] text-hsl(var(--text-tertiary)) hover:bg-hsl(var(--surface-3)) hover:text-hsl(var(--text-primary)) transition-colors focus-ring"
+                className="p-1.5 rounded-[var(--radius-md)] text-[hsl(var(--text-tertiary))] hover:bg-[var(--color-surface-subtle)] hover:text-[hsl(var(--text-primary))] transition-colors focus-ring"
                 aria-label="Close modal"
               >
                 <X size={18} />
@@ -106,7 +106,7 @@ export const Modal: React.FC<ModalProps> = ({
             </div>
 
             {footer && (
-              <div className="border-t border-hsl(var(--surface-border)) pt-4 mt-6 flex justify-end gap-3 flex-shrink-0">
+              <div className="border-t border-[var(--color-border)] pt-4 mt-6 flex justify-end gap-3 flex-shrink-0">
                 {footer}
               </div>
             )}

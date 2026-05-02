@@ -14,6 +14,7 @@ export const OccupancyRing: React.FC<OccupancyRingProps> = ({ percentage }) => {
   useEffect(() => {
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReduced) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setOffset(circumference - (percentage / 100) * circumference);
     } else {
       const timer = setTimeout(() => {

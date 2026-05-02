@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 export function useFirstVisit(key: string) {
   const storageKey = `rf_fv_${key}`;

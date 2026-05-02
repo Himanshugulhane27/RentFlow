@@ -23,7 +23,18 @@ export class LeaseRepository extends BaseRepository<LeaseDocument> {
         .exec(),
       this.model.countDocuments(query),
     ]);
-    return { data, pagination: { page: options.page, limit: options.limit, total, totalPages: Math.ceil(total / options.limit) } };
+    const totalPages = Math.ceil(total / options.limit);
+    return { 
+      data, 
+      pagination: { 
+        page: options.page, 
+        limit: options.limit, 
+        total, 
+        totalPages,
+        hasNext: options.page < totalPages,
+        hasPrev: options.page > 1
+      } 
+    };
   }
 
   async findActive(organizationId: string): Promise<LeaseDocument[]> {

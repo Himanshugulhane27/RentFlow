@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { paymentService } from '../services/payment.service';
-import { sendSuccess, sendCreated, sendPaginated, sendNoContent } from '../utils/response';
+import { sendSuccess, sendCreated, sendNoContent } from '../utils/response';
 
 export class PaymentController {
   async getAll(req: Request, res: Response, next: NextFunction) {

@@ -18,7 +18,7 @@ export const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({
         <div
           key={i}
           className={cn(
-            'animate-pulse bg-neutral-100 rounded h-4',
+            'skeleton-shimmer rounded h-4',
             i === lines - 1 && lines > 1 ? 'w-2/3' : 'w-full'
           )}
         />

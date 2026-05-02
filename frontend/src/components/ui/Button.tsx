@@ -15,9 +15,9 @@ interface ButtonProps extends Omit<HTMLMotionProps<"button">, "size"> {
 }
 
 const variantStyles: Record<ButtonVariant, string> = {
-  primary: 'bg-brand-600 text-white hover:bg-brand-700 border border-transparent',
-  secondary: 'bg-white border border-neutral-200 text-neutral-700 hover:bg-neutral-50',
-  ghost: 'bg-transparent text-neutral-600 hover:bg-neutral-100 border border-transparent',
+  primary: 'bg-brand-600 text-white hover:bg-brand-700 border border-transparent shadow-sm',
+  secondary: 'bg-[var(--color-surface-raised)] border border-[var(--color-border)] text-[hsl(var(--text-primary))] hover:bg-[var(--color-surface)] hover:border-brand-300',
+  ghost: 'bg-transparent text-[hsl(var(--text-secondary))] hover:bg-[var(--color-surface)] hover:text-[hsl(var(--text-primary))] border border-transparent',
   danger: 'bg-danger-600 text-white hover:bg-danger-700 border border-transparent',
 };
 
@@ -44,7 +44,7 @@ export const Button: React.FC<ButtonProps> = ({
       transition={springSnappy}
       className={cn(
         'inline-flex items-center justify-center font-medium rounded-input transition-all duration-150',
-        'focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-1',
+        'focus-ring',
         'disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer',
         variantStyles[variant],
         sizeStyles[size],

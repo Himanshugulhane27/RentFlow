@@ -21,8 +21,12 @@ export const getRedisConnection = (): IORedis => {
       logger.info('[Redis] Connected successfully');
     });
 
+    let errorLogged = false;
     redisConnection.on('error', (err) => {
-      logger.error(`[Redis] Connection error: ${err.message}`);
+      if (!errorLogged) {
+        logger.error(`[Redis] Connection error: ${err.message}`);
+        errorLogged = true;
+      }
     });
   }
   return redisConnection;

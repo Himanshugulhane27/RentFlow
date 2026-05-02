@@ -7,9 +7,9 @@ import { usePriorityActions } from '../../hooks/usePriorityActions';
 import { EmptyState } from '../ui/EmptyState';
 
 const urgencyColor = {
-  high: 'bg-danger-500',
-  medium: 'bg-warning-500',
-  low: 'bg-neutral-300'
+  high: 'bg-[hsl(var(--danger))]',
+  medium: 'bg-[hsl(var(--warning))]',
+  low: 'bg-brand-500'
 };
 
 export const TodaysFocus: React.FC = () => {
@@ -32,16 +32,16 @@ export const TodaysFocus: React.FC = () => {
 
   return (
     <Card className="flex flex-col p-0 overflow-hidden">
-      <div className="flex items-center gap-2 p-5 border-b border-neutral-100 bg-neutral-50/50">
-        <Clock size={18} className="text-neutral-500" />
-        <h3 className="text-sm font-semibold text-neutral-900">Today's Focus</h3>
+      <div className="flex items-center gap-2 p-5 border-b border-[var(--color-border)] bg-[var(--color-surface)]">
+        <Clock size={18} className="text-[hsl(var(--text-tertiary))]" />
+        <h3 className="text-sm font-semibold text-[hsl(var(--text-primary))]">Today's Focus</h3>
       </div>
       
       <div className="flex-1 p-2">
         {isLoading ? (
           <div className="p-4 space-y-4">
-            <div className="h-12 bg-neutral-100 animate-pulse rounded" />
-            <div className="h-12 bg-neutral-100 animate-pulse rounded" />
+            <div className="h-12 bg-[var(--color-surface)] animate-pulse rounded" />
+            <div className="h-12 bg-[var(--color-surface)] animate-pulse rounded" />
           </div>
         ) : actions.length === 0 ? (
           <div className="py-6">
@@ -63,14 +63,14 @@ export const TodaysFocus: React.FC = () => {
                 key={action.id}
                 variants={itemVariants}
                 onClick={() => navigate(action.href)}
-                className="group flex items-center gap-3 p-3 rounded-lg hover:bg-neutral-50 cursor-pointer transition-colors"
+                className="group flex items-center gap-3 p-3 rounded-lg hover:bg-[var(--color-surface)] cursor-pointer transition-colors duration-150 ease-out"
               >
                 <div className={`w-2 h-2 rounded-full flex-shrink-0 ${urgencyColor[action.urgency]}`} />
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-neutral-900 truncate">{action.label}</p>
-                  <p className="text-xs text-neutral-500 truncate mt-0.5">{action.description}</p>
+                  <p className="text-sm font-medium text-[hsl(var(--text-primary))] truncate">{action.label}</p>
+                  <p className="text-xs text-[hsl(var(--text-secondary))] truncate mt-0.5">{action.description}</p>
                 </div>
-                <ChevronRight size={16} className="text-neutral-300 group-hover:text-neutral-600 group-hover:translate-x-0.5 transition-all" />
+                <ChevronRight size={16} className="text-[hsl(var(--text-disabled))] group-hover:text-[hsl(var(--text-secondary))] group-hover:translate-x-0.5 transition-[color,transform] duration-150 ease-out" />
               </motion.div>
             ))}
           </motion.div>

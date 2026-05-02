@@ -50,6 +50,7 @@ export const TenantFormModal: React.FC<TenantFormModalProps> = ({ mode, tenantId
 
   useEffect(() => {
     if (tenantData && mode === 'edit') {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFormData(prev => ({
         ...prev,
         firstName: tenantData.firstName || '',
@@ -208,18 +209,18 @@ export const TenantFormModal: React.FC<TenantFormModalProps> = ({ mode, tenantId
       <div className="mb-8">
         {/* Stepper */}
         <div className="flex items-center justify-between relative">
-          <div className="absolute left-0 right-0 top-1/2 h-0.5 bg-hsl(var(--surface-3)) -z-10 -translate-y-1/2"></div>
+          <div className="absolute left-0 right-0 top-1/2 h-0.5 bg-[var(--color-surface-subtle)] -z-10 -translate-y-1/2"></div>
           {[1, 2, 3].map(i => (
-            <div key={i} className="flex flex-col items-center gap-2 bg-hsl(var(--surface-0)) px-2">
+            <div key={i} className="flex flex-col items-center gap-2 bg-[var(--color-surface-raised)] px-2">
               <div className={cn(
-                "w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-colors duration-300",
-                step === i ? "bg-hsl(var(--brand-500)) text-white" :
-                step > i ? "bg-hsl(var(--success)) text-white" :
-                "bg-hsl(var(--surface-3)) text-hsl(var(--text-tertiary))"
+                "w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-colors duration-150 ease-out",
+                step === i ? "bg-[hsl(var(--brand-500))] text-white" :
+                step > i ? "bg-[hsl(var(--success))] text-white" :
+                "bg-[var(--color-surface-subtle)] text-[hsl(var(--text-tertiary))]"
               )}>
                 {step > i ? '✓' : i}
               </div>
-              <span className="text-xs font-medium text-hsl(var(--text-secondary))">
+              <span className="text-xs font-medium text-[hsl(var(--text-secondary))]">
                 {i === 1 ? 'Personal Info' : i === 2 ? 'Lease Details' : 'Review'}
               </span>
             </div>
@@ -261,10 +262,10 @@ export const TenantFormModal: React.FC<TenantFormModalProps> = ({ mode, tenantId
                 <Input id="endDate" type="date" label="Lease End Date" value={formData.endDate} onChange={handleChange('endDate')} error={errors.endDate} />
               </motion.div>
               <motion.div variants={errors.monthlyRent ? shakeX : undefined} animate={errors.monthlyRent ? 'animate' : 'initial'}>
-                <Input id="monthlyRent" type="number" label="Monthly Rent" value={formData.monthlyRent} onChange={handleChange('monthlyRent')} error={errors.monthlyRent} icon={<span className="text-hsl(var(--text-tertiary))">$</span>} />
+                <Input id="monthlyRent" type="number" label="Monthly Rent" value={formData.monthlyRent} onChange={handleChange('monthlyRent')} error={errors.monthlyRent} icon={<span className="text-[hsl(var(--text-tertiary))]">$</span>} />
               </motion.div>
               <motion.div variants={errors.securityDeposit ? shakeX : undefined} animate={errors.securityDeposit ? 'animate' : 'initial'}>
-                <Input id="securityDeposit" type="number" label="Security Deposit" value={formData.securityDeposit} onChange={handleChange('securityDeposit')} error={errors.securityDeposit} icon={<span className="text-hsl(var(--text-tertiary))">$</span>} />
+                <Input id="securityDeposit" type="number" label="Security Deposit" value={formData.securityDeposit} onChange={handleChange('securityDeposit')} error={errors.securityDeposit} icon={<span className="text-[hsl(var(--text-tertiary))]">$</span>} />
               </motion.div>
               <div className="col-span-2">
                 <Select id="dueDay" label="Payment Due Day" value={formData.dueDay} onChange={handleChange('dueDay')} options={Array.from({length: 28}, (_, i) => ({ value: String(i+1), label: `Day ${i+1}` }))} />
@@ -274,30 +275,30 @@ export const TenantFormModal: React.FC<TenantFormModalProps> = ({ mode, tenantId
 
           {step === 3 && (
             <motion.div key="step3" custom={direction} variants={stepVariants} initial="initial" animate="animate" exit="exit" className="space-y-6">
-              <div className="grid grid-cols-2 gap-6 bg-hsl(var(--surface-1)) p-4 rounded-[var(--radius-lg)]">
+              <div className="grid grid-cols-2 gap-6 bg-[var(--color-page-bg)] p-4 rounded-[var(--radius-lg)]">
                 <div>
-                  <h4 className="text-sm font-semibold text-hsl(var(--text-primary)) mb-3 border-b border-hsl(var(--surface-border)) pb-2">Personal Info</h4>
+                  <h4 className="text-sm font-semibold text-[hsl(var(--text-primary))] mb-3 border-b border-[var(--color-border)] pb-2">Personal Info</h4>
                   <div className="space-y-2">
-                    <div><p className="text-xs text-hsl(var(--text-tertiary)) uppercase tracking-wide">Name</p><p className="text-sm font-medium text-hsl(var(--text-primary))">{formData.firstName} {formData.lastName}</p></div>
-                    <div><p className="text-xs text-hsl(var(--text-tertiary)) uppercase tracking-wide">Email</p><p className="text-sm font-medium text-hsl(var(--text-primary))">{formData.email}</p></div>
-                    <div><p className="text-xs text-hsl(var(--text-tertiary)) uppercase tracking-wide">Phone</p><p className="text-sm font-medium text-hsl(var(--text-primary))">{formData.phone}</p></div>
-                    <div><p className="text-xs text-hsl(var(--text-tertiary)) uppercase tracking-wide">DOB</p><p className="text-sm font-medium text-hsl(var(--text-primary))">{formData.dateOfBirth}</p></div>
+                    <div><p className="text-xs text-[hsl(var(--text-tertiary))] uppercase tracking-wide">Name</p><p className="text-sm font-medium text-[hsl(var(--text-primary))]">{formData.firstName} {formData.lastName}</p></div>
+                    <div><p className="text-xs text-[hsl(var(--text-tertiary))] uppercase tracking-wide">Email</p><p className="text-sm font-medium text-[hsl(var(--text-primary))]">{formData.email}</p></div>
+                    <div><p className="text-xs text-[hsl(var(--text-tertiary))] uppercase tracking-wide">Phone</p><p className="text-sm font-medium text-[hsl(var(--text-primary))]">{formData.phone}</p></div>
+                    <div><p className="text-xs text-[hsl(var(--text-tertiary))] uppercase tracking-wide">DOB</p><p className="text-sm font-medium text-[hsl(var(--text-primary))]">{formData.dateOfBirth}</p></div>
                   </div>
                 </div>
                 <div>
-                  <h4 className="text-sm font-semibold text-hsl(var(--text-primary)) mb-3 border-b border-hsl(var(--surface-border)) pb-2">Lease Details</h4>
+                  <h4 className="text-sm font-semibold text-[hsl(var(--text-primary))] mb-3 border-b border-[var(--color-border)] pb-2">Lease Details</h4>
                   <div className="space-y-2">
-                    <div><p className="text-xs text-hsl(var(--text-tertiary)) uppercase tracking-wide">Unit</p><p className="text-sm font-medium text-hsl(var(--text-primary))">{formData.unit}</p></div>
-                    <div><p className="text-xs text-hsl(var(--text-tertiary)) uppercase tracking-wide">Lease Period</p><p className="text-sm font-medium text-hsl(var(--text-primary))">{formData.startDate} to {formData.endDate}</p></div>
-                    <div><p className="text-xs text-hsl(var(--text-tertiary)) uppercase tracking-wide">Monthly Rent</p><p className="text-sm font-medium text-hsl(var(--text-primary))">${formData.monthlyRent}</p></div>
-                    <div><p className="text-xs text-hsl(var(--text-tertiary)) uppercase tracking-wide">Due Day</p><p className="text-sm font-medium text-hsl(var(--text-primary))">Day {formData.dueDay}</p></div>
+                    <div><p className="text-xs text-[hsl(var(--text-tertiary))] uppercase tracking-wide">Unit</p><p className="text-sm font-medium text-[hsl(var(--text-primary))]">{formData.unit}</p></div>
+                    <div><p className="text-xs text-[hsl(var(--text-tertiary))] uppercase tracking-wide">Lease Period</p><p className="text-sm font-medium text-[hsl(var(--text-primary))]">{formData.startDate} to {formData.endDate}</p></div>
+                    <div><p className="text-xs text-[hsl(var(--text-tertiary))] uppercase tracking-wide">Monthly Rent</p><p className="text-sm font-medium text-[hsl(var(--text-primary))]">${formData.monthlyRent}</p></div>
+                    <div><p className="text-xs text-[hsl(var(--text-tertiary))] uppercase tracking-wide">Due Day</p><p className="text-sm font-medium text-[hsl(var(--text-primary))]">Day {formData.dueDay}</p></div>
                   </div>
                 </div>
               </div>
               
-              <label className="flex items-start gap-3 cursor-pointer mt-4 bg-hsl(var(--surface-0)) p-3 rounded-[var(--radius-md)] border border-hsl(var(--surface-border)) hover:border-hsl(var(--brand-300)) transition-colors">
-                <input type="checkbox" checked={formData.confirmed} onChange={handleChange('confirmed')} className="mt-1 w-4 h-4 rounded border-hsl(var(--surface-3)) text-hsl(var(--brand-500)) focus:ring-hsl(var(--brand-500))" />
-                <span className="text-sm text-hsl(var(--text-primary))">I confirm this information is accurate and the lease details have been verified.</span>
+              <label className="flex items-start gap-3 cursor-pointer mt-4 bg-[var(--color-surface-raised)] p-3 rounded-[var(--radius-md)] border border-[var(--color-border)] hover:border-[hsl(var(--brand-300))] transition-colors duration-150 ease-out">
+                <input type="checkbox" checked={formData.confirmed} onChange={handleChange('confirmed')} className="mt-1 w-4 h-4 rounded border-[var(--color-surface-subtle)] text-[hsl(var(--brand-500))] focus-ring" />
+                <span className="text-sm text-[hsl(var(--text-primary))]">I confirm this information is accurate and the lease details have been verified.</span>
               </label>
             </motion.div>
           )}

@@ -37,17 +37,17 @@ export class ErrorBoundary extends Component<Props, State> {
       }
 
       return (
-        <div className="flex flex-col items-center justify-center p-8 bg-hsl(var(--surface-0)) border border-hsl(var(--danger-200)) rounded-[var(--radius-lg)] shadow-sm max-w-lg mx-auto mt-8">
-          <div className="w-12 h-12 rounded-full bg-hsl(var(--danger-50)) flex items-center justify-center mb-4 text-hsl(var(--danger-500))">
+        <div className="flex flex-col items-center justify-center p-8 bg-[var(--color-surface-raised)] border border-[hsl(var(--danger-200))] rounded-[var(--radius-lg)] shadow-sm max-w-lg mx-auto mt-8">
+          <div className="w-12 h-12 rounded-full bg-[hsl(var(--danger-50))] flex items-center justify-center mb-4 text-[hsl(var(--danger-500))]">
             <AlertCircle size={24} />
           </div>
-          <h2 className="text-lg font-semibold text-hsl(var(--text-primary)) mb-2">
+          <h2 className="text-lg font-semibold text-[hsl(var(--text-primary))] mb-2">
             Something went wrong
           </h2>
-          <p className="text-sm text-hsl(var(--text-secondary)) text-center mb-6 max-w-md">
+          <p className="text-sm text-[hsl(var(--text-secondary))] text-center mb-6 max-w-md">
             An unexpected error occurred. Our team has been notified. Please try reloading the page.
           </p>
-          <div className="bg-hsl(var(--surface-2)) p-3 rounded text-xs font-mono text-hsl(var(--text-tertiary)) w-full overflow-x-auto mb-6">
+          <div className="bg-[var(--color-surface)] p-3 rounded text-xs font-mono text-[hsl(var(--text-tertiary))] w-full overflow-x-auto mb-6">
             {this.state.error?.message || 'Unknown error'}
           </div>
           <Button 

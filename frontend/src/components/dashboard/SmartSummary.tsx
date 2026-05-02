@@ -25,7 +25,7 @@ export const SmartSummary: React.FC = () => {
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   return (
-    <Card className={`overflow-hidden border-l-4 ${styles.border} transition-colors duration-300`}>
+    <Card className={`overflow-hidden border-l-4 ${styles.border} transition-colors duration-200 ease-in-out`}>
       <div className="p-4 flex items-start gap-4">
         <div className={`p-2 rounded-full ${styles.bg}`}>
           <Icon className={styles.icon} size={20} />
@@ -38,7 +38,7 @@ export const SmartSummary: React.FC = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: prefersReduced ? 0 : 0.3 }}
-              className={`text-sm md:text-base leading-relaxed ${isLoading ? 'text-neutral-400' : 'text-neutral-700'}`}
+              className={`text-sm md:text-base leading-relaxed ${isLoading ? 'text-[hsl(var(--text-disabled))]' : 'text-[hsl(var(--text-primary))]'}`}
             >
               {message}
             </motion.p>

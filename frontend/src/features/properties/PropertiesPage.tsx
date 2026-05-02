@@ -99,8 +99,8 @@ const PropertiesPage: React.FC = () => {
     <PageTransition className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-foreground">Properties</h1>
-          <p className="text-sm text-muted-foreground mt-1">{properties.length} properties</p>
+          <h1 className="text-2xl font-bold tracking-tight text-[hsl(var(--text-primary))]">Properties</h1>
+          <p className="text-sm text-[hsl(var(--text-secondary))] mt-1">{properties.length} properties</p>
         </div>
         <div className="flex items-center gap-2">
           <div ref={tooltipAnchorRef}>
@@ -149,13 +149,13 @@ const PropertiesPage: React.FC = () => {
                 <Badge variant={p.available ? 'success' : 'warning'} dot>
                   {p.available ? 'Available' : 'Occupied'}
                 </Badge>
-                <span className="text-lg font-bold text-primary-600">{formatCurrency(p.rent)}<span className="text-xs font-normal text-surface-400">/mo</span></span>
+                <span className="text-lg font-bold text-brand-600">{formatCurrency(p.rent)}<span className="text-xs font-normal text-[hsl(var(--text-tertiary))]">/mo</span></span>
               </div>
-              <h3 className="font-semibold text-surface-900 dark:text-white mb-1 text-sm">{p.address}</h3>
-              <div className="flex items-center gap-1 text-xs text-surface-500 mb-3">
+              <h3 className="font-semibold text-[hsl(var(--text-primary))] mb-1 text-sm">{p.address}</h3>
+              <div className="flex items-center gap-1 text-xs text-[hsl(var(--text-tertiary))] mb-3">
                 <MapPin size={12} /> {p.city}, {p.state}
               </div>
-              <div className="flex items-center gap-4 text-xs text-surface-500 pt-3 border-t border-surface-100 dark:border-surface-700">
+              <div className="flex items-center gap-4 text-xs text-[hsl(var(--text-tertiary))] pt-3 border-t border-[var(--color-border-subtle)]">
                 <span className="flex items-center gap-1"><Bed size={14} /> {p.bedrooms} bed</span>
                 <span className="flex items-center gap-1"><Bath size={14} /> {p.bathrooms} bath</span>
                 <span>{PROPERTY_TYPES[p.propertyType]}</span>

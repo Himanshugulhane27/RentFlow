@@ -115,8 +115,8 @@ const TenantsPage: React.FC = () => {
     <PageTransition className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-foreground">Tenants</h1>
-          <p className="text-sm text-muted-foreground mt-1">{tenants.length} tenants</p>
+          <h1 className="text-2xl font-bold tracking-tight text-[hsl(var(--text-primary))]">Tenants</h1>
+          <p className="text-sm text-[hsl(var(--text-secondary))] mt-1">{tenants.length} tenants</p>
         </div>
         <div className="flex items-center gap-2">
           <div ref={tooltipAnchorRef}>
@@ -162,7 +162,7 @@ const TenantsPage: React.FC = () => {
                 <motion.div
                   className="absolute inset-0 z-10 pointer-events-none mix-blend-overlay"
                   initial={{ opacity: 0 }}
-                  animate={highlightRowId === t._id ? { opacity: [0, 1, 0], backgroundColor: '#FAEEDA' } : {}}
+                  animate={highlightRowId === t._id ? { opacity: [0, 1, 0], backgroundColor: 'hsl(var(--warning-light))' } : {}}
                   transition={{ duration: 1.5, ease: 'easeInOut' }}
                 />
                 <Card hoverable interactive onClick={() => openDetails(t)}>
@@ -170,14 +170,14 @@ const TenantsPage: React.FC = () => {
                   <Avatar name={`${t.firstName} ${t.lastName}`} size="md" />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
-                      <h3 className="font-semibold text-neutral-900 dark:text-white text-sm truncate">{t.firstName} {t.lastName}</h3>
+                      <h3 className="font-semibold text-[hsl(var(--text-primary))] text-sm truncate">{t.firstName} {t.lastName}</h3>
                       <Badge variant={getHealthBadgeVariant(health.score)} dot>
                         {health.label}
                       </Badge>
                     </div>
                     <div className="mt-2 space-y-1">
-                      <p className="text-xs text-neutral-500 flex items-center gap-1.5"><Mail size={12} /> {t.email}</p>
-                      <p className="text-xs text-neutral-500 flex items-center gap-1.5"><Phone size={12} /> {t.phone}</p>
+                      <p className="text-xs text-[hsl(var(--text-tertiary))] flex items-center gap-1.5"><Mail size={12} /> {t.email}</p>
+                      <p className="text-xs text-[hsl(var(--text-tertiary))] flex items-center gap-1.5"><Phone size={12} /> {t.phone}</p>
                     </div>
                   </div>
                 </div>
@@ -191,8 +191,8 @@ const TenantsPage: React.FC = () => {
       {/* Edit Form Modal */}
       {showForm && (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl shadow-dropdown w-full max-w-lg p-6">
-            <h2 className="text-lg font-bold text-neutral-900 mb-4">{editingId ? 'Edit Tenant' : 'Add Tenant'}</h2>
+          <div className="bg-[var(--color-surface-raised)] rounded-xl shadow-dropdown w-full max-w-lg p-6">
+            <h2 className="text-lg font-bold text-[hsl(var(--text-primary))] mb-4">{editingId ? 'Edit Tenant' : 'Add Tenant'}</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <Input label="First Name" value={form.firstName} onChange={e => update('firstName', e.target.value)} required />
@@ -224,25 +224,25 @@ const TenantsPage: React.FC = () => {
                 <div className="flex items-center gap-4">
                   <Avatar name={`${selectedTenant.firstName} ${selectedTenant.lastName}`} size="lg" />
                   <div>
-                    <h2 className="text-xl font-bold text-neutral-900">{selectedTenant.firstName} {selectedTenant.lastName}</h2>
-                    <p className="text-sm text-neutral-500">{selectedTenant.email} · {selectedTenant.phone}</p>
+                    <h2 className="text-xl font-bold text-[hsl(var(--text-primary))]">{selectedTenant.firstName} {selectedTenant.lastName}</h2>
+                    <p className="text-sm text-[hsl(var(--text-tertiary))]">{selectedTenant.email} · {selectedTenant.phone}</p>
                   </div>
                 </div>
                 <Button variant="secondary" size="sm" onClick={openEdit}>Edit</Button>
               </div>
 
-              <Card className="bg-neutral-50 border-neutral-100 shadow-none">
+              <Card className="bg-[var(--color-surface)] border-[var(--color-border-subtle)] shadow-none">
                 <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-sm font-semibold text-neutral-900">Health Score</h3>
+                  <h3 className="text-sm font-semibold text-[hsl(var(--text-primary))]">Health Score</h3>
                   <Badge variant={getHealthBadgeVariant(health.score)}>{health.label}</Badge>
                 </div>
-                <p className="text-xs text-neutral-500">
+                <p className="text-xs text-[hsl(var(--text-tertiary))]">
                   {tPayments.length} payments analyzed · {health.breakdown.onTime} on time · {health.breakdown.slightlyLate} slightly late · {health.breakdown.veryLate} very late
                 </p>
               </Card>
 
               <div>
-                <h3 className="text-sm font-semibold text-neutral-900 mb-4">Activity Timeline</h3>
+                <h3 className="text-sm font-semibold text-[hsl(var(--text-primary))] mb-4">Activity Timeline</h3>
                 <TimelineWrapper tenantId={selectedTenant._id} />
               </div>
             </div>
