@@ -1,8 +1,8 @@
 /**
- * Format a number as currency (INR by default).
+ * Format a number as currency (USD by default).
  */
-export const formatCurrency = (amount: number, currency = 'INR'): string => {
-  return new Intl.NumberFormat('en-IN', {
+export const formatCurrency = (amount: number, currency = 'USD'): string => {
+  return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency,
     minimumFractionDigits: 0,

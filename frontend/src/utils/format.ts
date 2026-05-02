@@ -5,7 +5,7 @@ export function formatCurrency(
   const cur =
     currency ??
     localStorage.getItem('rentflow_currency') ??
-    'INR';
+    'USD';
 
   const localeMap: Record<string, string> = {
     INR: 'en-IN',
@@ -15,7 +15,7 @@ export function formatCurrency(
   };
 
   return new Intl.NumberFormat(
-    localeMap[cur] ?? 'en-IN',
+    localeMap[cur] ?? 'en-US',
     {
       style: 'currency',
       currency: cur,

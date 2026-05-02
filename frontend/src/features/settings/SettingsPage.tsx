@@ -14,7 +14,7 @@ const CURRENCIES = [
 
 export default function SettingsPage() {
   const [currency, setCurrency] = useState(
-    () => localStorage.getItem('rentflow_currency') ?? 'INR'
+    () => localStorage.getItem('rentflow_currency') ?? 'USD'
   );
 
   useEffect(() => {
