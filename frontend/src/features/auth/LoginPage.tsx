@@ -84,81 +84,26 @@ const LoginPage: React.FC = () => {
       </div>
 
       {/* Right — Form */}
-      <div className="flex-1 flex items-center justify-center px-6 py-12 relative overflow-hidden auth-right-panel" style={{ backgroundColor: '#0d1117', minHeight: '100vh' }}>
+      <div className="flex-1 flex items-center justify-center px-6 py-12 auth-right-panel" style={{ position: 'relative', overflow: 'hidden', background: '#0d1117', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
         <style>{`
-          .auth-right-panel label { color: rgba(255, 255, 255, 0.5) !important; font-size: 12px !important; letter-spacing: 0.02em !important; }
+          .auth-right-panel label { color: rgba(255,255,255,0.50) !important; font-size: 12px !important; margin-bottom: 7px !important; }
         `}</style>
 
         {/* Glow Effects */}
-        <div 
-          className="absolute pointer-events-none"
-          style={{
-            zIndex: 0,
-            width: '380px', height: '380px',
-            borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(59,91,219,0.35) 0%, rgba(59,91,219,0) 70%)',
-            top: '-80px', right: '-80px'
-          }}
-        />
-        <div 
-          className="absolute pointer-events-none"
-          style={{
-            zIndex: 0,
-            width: '300px', height: '300px',
-            borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(120,60,200,0.20) 0%, rgba(120,60,200,0) 70%)',
-            bottom: '-100px', left: '-60px'
-          }}
-        />
-        <div 
-          className="absolute pointer-events-none"
-          style={{
-            zIndex: 0,
-            width: '500px', height: '300px',
-            borderRadius: '50%',
-            background: 'radial-gradient(ellipse, rgba(40,70,180,0.12) 0%, transparent 70%)',
-            top: '50%', left: '50%',
-            transform: 'translate(-50%, -50%)'
-          }}
-        />
+        <div style={{ position: 'absolute', top: '-80px', right: '-80px', width: '380px', height: '380px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(59,91,219,0.40) 0%, transparent 70%)', pointerEvents: 'none', zIndex: 0 }} />
+        <div style={{ position: 'absolute', bottom: '-100px', left: '-60px', width: '320px', height: '320px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(120,60,200,0.25) 0%, transparent 70%)', pointerEvents: 'none', zIndex: 0 }} />
+        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: '500px', height: '280px', borderRadius: '50%', background: 'radial-gradient(ellipse, rgba(40,70,180,0.15) 0%, transparent 70%)', pointerEvents: 'none', zIndex: 0 }} />
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
-          className="relative"
-          style={{
-            zIndex: 2,
-            width: '340px',
-            background: 'rgba(255,255,255,0.04)',
-            border: '1px solid rgba(255,255,255,0.10)',
-            borderRadius: '20px',
-            padding: '36px 32px',
-            backdropFilter: 'blur(20px)',
-            WebkitBackdropFilter: 'blur(20px)'
-          }}
+          style={{ position: 'relative', zIndex: 2, width: '360px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.11)', borderRadius: '20px', padding: '40px 36px', backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)' }}
         >
-          {/* Logo mark */}
-          <div style={{
-            width: '34px', height: '34px',
-            borderRadius: '9px',
-            background: 'rgba(59,91,219,0.25)',
-            border: '1px solid rgba(59,91,219,0.4)',
-            color: '#7da4f5',
-            fontSize: '14px',
-            fontWeight: 600,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            marginBottom: '22px'
-          }}>
-            R
-          </div>
-
-          <h2 className="text-white" style={{ fontSize: '22px', fontWeight: 600, marginBottom: '6px' }}>
+          <h2 style={{ fontSize: '24px', fontWeight: 600, color: '#ffffff', marginBottom: '6px' }}>
             Welcome back
           </h2>
-          <p style={{ color: 'rgba(255,255,255,0.38)', fontSize: '13px', marginBottom: '32px' }}>
+          <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.38)', marginBottom: '28px' }}>
             Sign in to your account to continue
           </p>
 
@@ -171,7 +116,7 @@ const LoginPage: React.FC = () => {
               onChange={(e) => setEmail(e.target.value)}
               error={errors.email}
               icon={<Mail size={16} color="rgba(255,255,255,0.38)" />}
-              className="!bg-[rgba(255,255,255,0.05)] !border-[rgba(255,255,255,0.09)] !rounded-[10px] !px-[14px] !py-[10px] focus:!ring-0 focus:!outline-none focus:!shadow-[0_0_0_3px_rgba(59,91,219,0.3)] focus:!border-[rgba(59,91,219,0.6)] !text-white placeholder:!text-[rgba(255,255,255,0.3)] transition-all"
+              className="!bg-[rgba(255,255,255,0.05)] !border-[rgba(255,255,255,0.09)] !rounded-[10px] !px-[14px] !py-[10px] !text-white !w-full focus:!outline-none focus:!border-[rgba(59,91,219,0.7)] focus:!shadow-[0_0_0_3px_rgba(59,91,219,0.25)] placeholder:!text-[rgba(255,255,255,0.3)] transition-all"
             />
 
             <div className="relative">
@@ -183,7 +128,7 @@ const LoginPage: React.FC = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 error={errors.password}
                 icon={<Lock size={16} color="rgba(255,255,255,0.38)" />}
-                className="!bg-[rgba(255,255,255,0.05)] !border-[rgba(255,255,255,0.09)] !rounded-[10px] !px-[14px] !py-[10px] focus:!ring-0 focus:!outline-none focus:!shadow-[0_0_0_3px_rgba(59,91,219,0.3)] focus:!border-[rgba(59,91,219,0.6)] !text-white placeholder:!text-[rgba(255,255,255,0.3)] transition-all"
+                className="!bg-[rgba(255,255,255,0.05)] !border-[rgba(255,255,255,0.09)] !rounded-[10px] !px-[14px] !py-[10px] !text-white !w-full focus:!outline-none focus:!border-[rgba(59,91,219,0.7)] focus:!shadow-[0_0_0_3px_rgba(59,91,219,0.25)] placeholder:!text-[rgba(255,255,255,0.3)] transition-all"
               />
               <button
                 type="button"
@@ -197,16 +142,7 @@ const LoginPage: React.FC = () => {
             <Button 
               type="submit" 
               loading={loading} 
-              className="w-full mt-2" 
-              style={{
-                background: 'linear-gradient(135deg, #3563e9 0%, #2347c5 100%)',
-                borderRadius: '10px',
-                padding: '12px',
-                fontWeight: 500,
-                boxShadow: '0 4px 20px rgba(53,99,233,0.4), inset 0 1px 0 rgba(255,255,255,0.15)',
-                border: 'none',
-                color: 'white'
-              }}
+              style={{ width: '100%', background: 'linear-gradient(135deg,#3563e9,#2347c5)', border: 'none', borderRadius: '10px', padding: '12px', fontSize: '14px', fontWeight: 500, color: '#fff', boxShadow: '0 4px 24px rgba(53,99,233,0.45), inset 0 1px 0 rgba(255,255,255,0.15)', cursor: 'pointer', marginTop: '12px' }}
             >
               Sign In
             </Button>
