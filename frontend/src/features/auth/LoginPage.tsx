@@ -53,13 +53,6 @@ const LoginPage: React.FC = () => {
     <div className="min-h-screen flex">
       {/* Left — Branding panel */}
       <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-brand-600 via-brand-700 to-white relative overflow-hidden">
-        {/* Top-left Anchor Logo */}
-        <div style={{ position: 'absolute', top: '40px', left: '40px', display: 'inline-flex', alignItems: 'center', gap: '8px', zIndex: 20 }}>
-          <div style={{ width: '28px', height: '28px', borderRadius: '8px', background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '13px', fontWeight: 600 }}>
-            R
-          </div>
-          <span style={{ fontSize: '15px', fontWeight: 600, color: '#ffffff' }}>RentFlow</span>
-        </div>
 
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-20 left-20 w-72 h-72 rounded-full bg-white/20 blur-3xl" />
