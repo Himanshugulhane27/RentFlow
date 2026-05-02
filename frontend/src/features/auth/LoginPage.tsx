@@ -69,17 +69,36 @@ const LoginPage: React.FC = () => {
       </div>
 
       {/* Right — Form */}
-      <div className="flex-1 flex items-center justify-center px-6 py-12 relative overflow-hidden auth-right-panel" style={{ backgroundColor: '#0f1623' }}>
+      <div className="flex-1 flex items-center justify-center px-6 py-12 relative overflow-hidden auth-right-panel" style={{ backgroundColor: '#0f1623', minHeight: '100vh' }}>
         <style>{`
-          .auth-right-panel label { color: rgba(255, 255, 255, 0.9) !important; }
+          .auth-right-panel label { color: rgba(255, 255, 255, 0.55) !important; font-size: 13px !important; }
         `}</style>
+
+        {/* Top-right 'R' logo mark */}
+        <div style={{
+          position: 'absolute',
+          top: '32px',
+          right: '36px',
+          width: '36px',
+          height: '36px',
+          borderRadius: '50%',
+          background: 'rgba(255, 255, 255, 0.08)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: 'white',
+          fontWeight: 'bold',
+          fontSize: '16px'
+        }}>
+          R
+        </div>
 
         {/* Glow Effects */}
         <div 
           className="absolute top-0 right-0 pointer-events-none"
           style={{
-            width: '500px', height: '500px',
-            background: 'radial-gradient(circle at center, rgba(59, 91, 219, 0.18) 0%, transparent 70%)',
+            width: '650px', height: '650px',
+            background: 'radial-gradient(circle at center, rgba(59, 91, 219, 0.28) 0%, transparent 70%)',
             transform: 'translate(20%, -20%)'
           }}
         />
@@ -99,7 +118,7 @@ const LoginPage: React.FC = () => {
           className="w-full max-w-md relative z-10"
           style={{
             background: 'rgba(255, 255, 255, 0.04)',
-            border: '1px solid rgba(255, 255, 255, 0.08)',
+            border: '1px solid rgba(255, 255, 255, 0.12)',
             borderRadius: '20px',
             backdropFilter: 'blur(12px)',
             WebkitBackdropFilter: 'blur(12px)',
