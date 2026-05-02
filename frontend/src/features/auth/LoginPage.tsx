@@ -103,21 +103,20 @@ const LoginPage: React.FC = () => {
       </div>
 
       {/* Right — Form */}
-      <div className="flex-1 flex items-center justify-center px-6 py-12 auth-right-panel" style={{ position: 'relative', overflow: 'hidden', background: '#0d1117', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
+      <div className="flex-1 flex items-center justify-center px-6 py-12 auth-right-panel" style={{ position: 'relative', overflow: 'hidden', background: '#0d1117', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', width: '50%' }}>
         <style>{`
           .auth-right-panel label { color: rgba(255,255,255,0.50) !important; font-size: 12px !important; margin-bottom: 7px !important; }
         `}</style>
 
         {/* Glow Effects */}
-        <div style={{ position: 'absolute', top: '-80px', right: '-80px', width: '400px', height: '400px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(59,91,219,0.45) 0%, transparent 65%)', pointerEvents: 'none', zIndex: 0 }} />
-        <div style={{ position: 'absolute', bottom: '-80px', left: '-60px', width: '320px', height: '320px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(120,60,200,0.28) 0%, transparent 65%)', pointerEvents: 'none', zIndex: 0 }} />
-        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: '500px', height: '280px', borderRadius: '50%', background: 'radial-gradient(ellipse, rgba(40,70,180,0.18) 0%, transparent 70%)', pointerEvents: 'none', zIndex: 0 }} />
+        <div style={{ position: 'absolute', top: '-80px', right: '-80px', width: '400px', height: '400px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(59,91,219,0.5) 0%, transparent 65%)', pointerEvents: 'none', zIndex: 0 }} />
+        <div style={{ position: 'absolute', bottom: '-80px', left: '-60px', width: '320px', height: '320px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(120,60,200,0.3) 0%, transparent 65%)', pointerEvents: 'none', zIndex: 0 }} />
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
-          style={{ position: 'relative', zIndex: 2, width: '360px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '20px', padding: '40px 36px', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)' }}
+          style={{ position: 'relative', zIndex: 2, width: '380px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '20px', padding: '40px 36px', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)' }}
         >
           <h2 style={{ fontSize: '24px', fontWeight: 600, color: '#ffffff', marginBottom: '6px' }}>
             Welcome back
