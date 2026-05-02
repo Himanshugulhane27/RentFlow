@@ -58,6 +58,24 @@ const LoginPage: React.FC = () => {
           <div className="absolute bottom-20 right-20 w-96 h-96 rounded-full bg-white/10 blur-3xl" />
         </div>
         <div className="relative z-10 flex flex-col justify-center px-16 text-white">
+          <div style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '8px',
+            padding: '6px 14px',
+            borderRadius: '999px',
+            border: '1px solid rgba(255,255,255,0.18)',
+            background: 'rgba(255,255,255,0.08)',
+            backdropFilter: 'blur(8px)',
+            WebkitBackdropFilter: 'blur(8px)',
+            marginBottom: '20px',
+            width: 'max-content'
+          }}>
+            <div style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#7da4f5' }} />
+            <span style={{ fontSize: '11px', fontWeight: 500, letterSpacing: '0.09em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.65)' }}>
+              RentFlow
+            </span>
+          </div>
 
           <h1 className="text-4xl font-bold mb-4 font-[var(--font-heading)]">
             Manage your properties<br />with confidence.
