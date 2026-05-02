@@ -65,7 +65,7 @@ const LoginPage: React.FC = () => {
             Manage your properties<br />with confidence.
           </h1>
           <p className="text-lg text-white/70 max-w-md">
-            tenants happy - all in one place.
+            Track leases, collect payments, and keep your tenants happy - all in one place.
           </p>
         </div>
       </div>
@@ -87,7 +87,7 @@ const LoginPage: React.FC = () => {
           </div>
 
           <h2 className="text-2xl font-bold text-surface-900 dark:text-white mb-1">
-            Welcome
+            Welcome back
           </h2>
           <p className="text-surface-500 text-sm mb-8">
             Sign in to your account to continue
