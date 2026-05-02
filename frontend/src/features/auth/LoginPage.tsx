@@ -134,7 +134,7 @@ const LoginPage: React.FC = () => {
               onChange={(e) => setEmail(e.target.value)}
               error={errors.email}
               icon={<Mail size={16} color="rgba(255,255,255,0.38)" />}
-              className="!bg-[rgba(255,255,255,0.05)] !border-[rgba(255,255,255,0.09)] !rounded-[10px] !px-[14px] !py-[10px] !text-white !w-full focus:!outline-none focus:!border-[rgba(59,91,219,0.7)] focus:!shadow-[0_0_0_3px_rgba(59,91,219,0.25)] placeholder:!text-[rgba(255,255,255,0.3)] transition-all"
+              className="!bg-[rgba(255,255,255,0.05)] !border-[rgba(255,255,255,0.09)] !rounded-[10px] !pr-[14px] !pl-[40px] !py-[10px] !text-white !w-full focus:!outline-none focus:!border-[rgba(59,91,219,0.7)] focus:!shadow-[0_0_0_3px_rgba(59,91,219,0.25)] placeholder:!text-[rgba(255,255,255,0.3)] transition-all"
             />
 
             <div className="relative">
@@ -146,7 +146,7 @@ const LoginPage: React.FC = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 error={errors.password}
                 icon={<Lock size={16} color="rgba(255,255,255,0.38)" />}
-                className="!bg-[rgba(255,255,255,0.05)] !border-[rgba(255,255,255,0.09)] !rounded-[10px] !px-[14px] !py-[10px] !text-white !w-full focus:!outline-none focus:!border-[rgba(59,91,219,0.7)] focus:!shadow-[0_0_0_3px_rgba(59,91,219,0.25)] placeholder:!text-[rgba(255,255,255,0.3)] transition-all"
+                className="!bg-[rgba(255,255,255,0.05)] !border-[rgba(255,255,255,0.09)] !rounded-[10px] !pr-[14px] !pl-[40px] !py-[10px] !text-white !w-full focus:!outline-none focus:!border-[rgba(59,91,219,0.7)] focus:!shadow-[0_0_0_3px_rgba(59,91,219,0.25)] placeholder:!text-[rgba(255,255,255,0.3)] transition-all"
               />
               <button
                 type="button"
