@@ -26,7 +26,7 @@ export function useActivityTimeline(
 
   const events: TimelineEvent[] = raw.map((e: any) => ({
     ...e,
-    id: e._id,
+    id: e.id,
   }));
 
   return { events, isLoading };

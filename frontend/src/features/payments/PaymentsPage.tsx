@@ -35,7 +35,7 @@ const PaymentsPage: React.FC = () => {
   const handleMarkPaid = (e: React.FormEvent) => {
     e.preventDefault();
     if (payModal) {
-      const payment = payments.find(p => p._id === payModal);
+      const payment = payments.find(p => p.id === payModal);
       markPaidM(
         { paymentId: payModal, paidAmount: payment?.totalAmount ?? 0, notes: payForm.notes },
         {
@@ -91,7 +91,7 @@ const PaymentsPage: React.FC = () => {
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
         >
           {payments.map((p: Payment) => (
-            <motion.div key={p._id} variants={staggerItem} layout layoutId={p._id}>
+            <motion.div key={p.id} variants={staggerItem} layout layoutId={p.id}>
               <Card hoverable>
               <div className="flex items-start justify-between mb-3">
                 <StatusBadge status={p.status} />
@@ -122,7 +122,7 @@ const PaymentsPage: React.FC = () => {
                     variant="primary"
                     size="sm"
                     icon={<CheckCircle size={14} />}
-                    onClick={() => setPayModal(p._id)}
+                    onClick={() => setPayModal(p.id)}
                   >
                     Mark Paid
                   </Button>

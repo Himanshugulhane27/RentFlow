@@ -80,11 +80,11 @@ export function useRentRoll(): UseRentRollReturn {
         : null;
 
       return {
-        id:               p._id,
+        id:               p.id,
         unit:             lease?.unitNumber ?? prop?.unit ?? prop?.address?.split(',')[0] ?? 'Unit',
-        propertyId:       prop?._id ?? null,
+        propertyId:       prop?.id ?? null,
         propertyName:     prop?.name ?? prop?.address ?? 'Unknown Property',
-        tenantId:         tenant?._id ?? (typeof tenant === 'string' ? tenant : null),
+        tenantId:         tenant?.id ?? (typeof tenant === 'string' ? tenant : null),
         tenantName:       fullName || null,
         tenantInitial:    tenant?.firstName?.[0]?.toUpperCase() ?? null,
         monthlyRent:      p.amount ?? p.totalAmount ?? null,
@@ -95,8 +95,8 @@ export function useRentRoll(): UseRentRollReturn {
         lastPaymentDate:  p.paidDate ?? null,
         lastPaymentAmount: p.totalAmount ?? null,
         healthScore:      null,
-        paymentId:        p._id,
-        leaseId:          lease?._id ?? (typeof lease === 'string' ? lease : null),
+        paymentId:        p.id,
+        leaseId:          lease?.id ?? (typeof lease === 'string' ? lease : null),
       };
     });
   }, [raw]);
@@ -135,8 +135,8 @@ export function useRentRoll(): UseRentRollReturn {
     const uniqueProps = new Map<string, string>();
     raw.forEach((p: any) => {
       const prop = p.propertyId ?? p.property;
-      if (prop?._id) {
-        uniqueProps.set(prop._id, prop.address ?? prop.name ?? 'Unknown Property');
+      if (prop?.id) {
+        uniqueProps.set(prop.id, prop.address ?? prop.name ?? 'Unknown Property');
       }
     });
     return Array.from(uniqueProps.entries()).map(([id, name]) => ({ id, name }));

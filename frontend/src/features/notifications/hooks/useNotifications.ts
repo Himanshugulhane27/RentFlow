@@ -38,14 +38,14 @@ export function useNotifications() {
           ? (payment.tenantId as any).firstName + ' ' + (payment.tenantId as any).lastName
           : 'Tenant';
         list.push({
-          id: `notif-pay-${payment._id}`,
+          id: `notif-pay-${payment.id}`,
           type: 'overdue',
           title: 'Payment Overdue',
           description: `${tenantName} has an overdue payment of ${formatCurrency(payment.totalAmount)}.`,
-          entityId: payment._id,
+          entityId: payment.id,
           entityType: 'payment',
           route: `/payments?status=overdue`,
-          read: readIds.has(`notif-pay-${payment._id}`),
+          read: readIds.has(`notif-pay-${payment.id}`),
           createdAt: new Date().toISOString(), // In reality, from backend
         });
       });
@@ -55,14 +55,14 @@ export function useNotifications() {
           ? (lease.propertyId as any).address 
           : 'A unit';
         list.push({
-          id: `notif-lease-${lease._id}`,
+          id: `notif-lease-${lease.id}`,
           type: 'lease_expiring',
           title: 'Lease Expiring Soon',
           description: `The lease for ${unitName} is expiring on ${new Date(lease.endDate).toLocaleDateString()}.`,
-          entityId: lease._id,
+          entityId: lease.id,
           entityType: 'lease',
-          route: `/leases/${lease._id}`,
-          read: readIds.has(`notif-lease-${lease._id}`),
+          route: `/leases/${lease.id}`,
+          read: readIds.has(`notif-lease-${lease.id}`),
           createdAt: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(), // 2 hours ago
         });
       });

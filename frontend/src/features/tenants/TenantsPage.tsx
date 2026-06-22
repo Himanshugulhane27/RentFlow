@@ -88,7 +88,7 @@ const TenantsPage: React.FC = () => {
   const openEdit = () => {
     if (selectedTenant) {
       setForm({ firstName: selectedTenant.firstName, lastName: selectedTenant.lastName, email: selectedTenant.email, phone: selectedTenant.phone, notes: selectedTenant.notes });
-      setEditingId(selectedTenant._id);
+      setEditingId(selectedTenant.id);
       setShowDetails(false);
       setShowForm(true);
     }
@@ -154,15 +154,15 @@ const TenantsPage: React.FC = () => {
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
         >
           {tenants.map((t: Tenant) => {
-            const tPayments = paymentsData?.data?.filter(p => (typeof p.tenantId === 'string' ? p.tenantId : (p.tenantId as any)?._id) === t._id) || [];
+            const tPayments = paymentsData?.data?.filter(p => (typeof p.tenantId === 'string' ? p.tenantId : (p.tenantId as any)?.id) === t.id) || [];
             const health = computeHealthScore(tPayments);
 
             return (
-              <motion.div key={t._id} id={`tenant-${t._id}`} variants={staggerItem} layout layoutId={t._id} className="relative rounded-[var(--radius-lg)] overflow-hidden">
+              <motion.div key={t.id} id={`tenant-${t.id}`} variants={staggerItem} layout layoutId={t.id} className="relative rounded-[var(--radius-lg)] overflow-hidden">
                 <motion.div
                   className="absolute inset-0 z-10 pointer-events-none mix-blend-overlay"
                   initial={{ opacity: 0 }}
-                  animate={highlightRowId === t._id ? { opacity: [0, 1, 0], backgroundColor: 'hsl(var(--warning-light))' } : {}}
+                  animate={highlightRowId === t.id ? { opacity: [0, 1, 0], backgroundColor: 'hsl(var(--warning-light))' } : {}}
                   transition={{ duration: 1.5, ease: 'easeInOut' }}
                 />
                 <Card hoverable interactive onClick={() => openDetails(t)}>
@@ -215,7 +215,7 @@ const TenantsPage: React.FC = () => {
       {/* Tenant Details SlideOver */}
       <SlideOver open={showDetails} onClose={closeForm} title="Tenant Details" width="lg">
         {selectedTenant && (() => {
-          const tPayments = paymentsData?.data?.filter(p => (typeof p.tenantId === 'string' ? p.tenantId : (p.tenantId as any)?._id) === selectedTenant._id) || [];
+          const tPayments = paymentsData?.data?.filter(p => (typeof p.tenantId === 'string' ? p.tenantId : (p.tenantId as any)?.id) === selectedTenant.id) || [];
           const health = computeHealthScore(tPayments);
 
           return (
@@ -243,7 +243,7 @@ const TenantsPage: React.FC = () => {
 
               <div>
                 <h3 className="text-sm font-semibold text-[hsl(var(--text-primary))] mb-4">Activity Timeline</h3>
-                <TimelineWrapper tenantId={selectedTenant._id} />
+                <TimelineWrapper tenantId={selectedTenant.id} />
               </div>
             </div>
           );

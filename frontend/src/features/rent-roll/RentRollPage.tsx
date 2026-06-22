@@ -70,7 +70,7 @@ const RentRollPage: React.FC = () => {
           propertyId: row.propertyId,
           amount: row.monthlyRent!,
           dueDate: new Date().toISOString(),
-        }).then(p => paymentApi.markPaid(p._id, { paymentMethod: 'bank_transfer', notes: 'Collected via Rent Roll' }));
+        }).then(p => paymentApi.markPaid(p.id, { paymentMethod: 'bank_transfer', notes: 'Collected via Rent Roll' }));
       }
     },
     onSuccess: () => {

@@ -56,8 +56,8 @@ const LeasesPage: React.FC = () => {
 
   const up = (f: string, v: string | number) => setForm(p => ({ ...p, [f]: v }));
   const leases = (data?.data || []).filter((l: Lease) => filter === 'all' || l.status === filter);
-  const propOpts = (props?.data || []).map(p => ({ value: p._id, label: `${p.address}, ${p.city}` }));
-  const tenantOpts = (tenants?.data || []).map(t => ({ value: t._id, label: `${t.firstName} ${t.lastName}` }));
+  const propOpts = (props?.data || []).map(p => ({ value: p.id, label: `${p.address}, ${p.city}` }));
+  const tenantOpts = (tenants?.data || []).map(t => ({ value: t.id, label: `${t.firstName} ${t.lastName}` }));
 
 
 
@@ -98,7 +98,7 @@ const LeasesPage: React.FC = () => {
           className="grid grid-cols-1 md:grid-cols-2 gap-6"
         >
           {leases.map((l: Lease) => (
-            <motion.div key={l._id} variants={staggerItem} layout layoutId={l._id}>
+            <motion.div key={l.id} variants={staggerItem} layout layoutId={l.id}>
               <Card hoverable>
               <div className="flex items-start justify-between mb-3">
                 <StatusBadge status={l.status} />
@@ -111,7 +111,7 @@ const LeasesPage: React.FC = () => {
               <div className="pt-3 mt-3 border-t border-[var(--color-border-subtle)] flex gap-2">
                 <Button variant="secondary" size="sm" onClick={() => { setSelectedLease(l); setShowDetails(true); }}>View Details</Button>
                 {l.status === 'active' && (
-                  <Button variant="danger" size="sm" onClick={() => terminateM.mutate(l._id)}>Terminate</Button>
+                  <Button variant="danger" size="sm" onClick={() => terminateM.mutate(l.id)}>Terminate</Button>
                 )}
               </div>
               </Card>
@@ -164,7 +164,7 @@ const LeasesPage: React.FC = () => {
 
             <div>
               <h3 className="text-sm font-semibold text-[hsl(var(--text-primary))] mb-4">Activity Timeline</h3>
-              <TimelineWrapper leaseId={selectedLease._id} />
+              <TimelineWrapper leaseId={selectedLease.id} />
             </div>
           </div>
         )}

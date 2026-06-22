@@ -80,7 +80,7 @@ const PropertiesPage: React.FC = () => {
       propertyType: p.propertyType, bedrooms: p.bedrooms, bathrooms: p.bathrooms,
       rent: p.rent, description: p.description || '',
     });
-    setEditingId(p._id);
+    setEditingId(p.id);
     setShowForm(true);
   };
 
@@ -143,7 +143,7 @@ const PropertiesPage: React.FC = () => {
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
         >
           {properties.map((p: Property) => (
-            <motion.div key={p._id} variants={staggerItem} layout layoutId={p._id}>
+            <motion.div key={p.id} variants={staggerItem} layout layoutId={p.id}>
               <Card hoverable interactive onClick={() => openEdit(p)}>
                 <div className="flex items-start justify-between mb-3">
                 <Badge variant={p.available ? 'success' : 'warning'} dot>

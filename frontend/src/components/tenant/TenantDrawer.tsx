@@ -74,15 +74,15 @@ export const TenantDrawer: React.FC<TenantDrawerProps> = ({ tenantId, onClose, o
   if (typeof document === 'undefined') return null;
 
   const activeLease = leasesData?.data?.find((l: any) => 
-    (typeof l.tenantId === 'string' ? l.tenantId : l.tenantId?._id) === tenantId && l.status === 'active'
+    (typeof l.tenantId === 'string' ? l.tenantId : l.tenantId?.id) === tenantId && l.status === 'active'
   );
   
   const property = propertiesData?.data?.find((p: any) => 
-    activeLease && (typeof activeLease.propertyId === 'string' ? activeLease.propertyId : activeLease.propertyId?._id) === p._id
+    activeLease && (typeof activeLease.propertyId === 'string' ? activeLease.propertyId : activeLease.propertyId?.id) === p.id
   );
 
   const tenantPayments = paymentsData?.data?.filter((p: any) => 
-    (typeof p.tenantId === 'string' ? p.tenantId : p.tenantId?._id) === tenantId
+    (typeof p.tenantId === 'string' ? p.tenantId : p.tenantId?.id) === tenantId
   ).sort((a: any, b: any) => new Date(b.dueDate).getTime() - new Date(a.dueDate).getTime()) || [];
 
   return createPortal(
@@ -228,7 +228,7 @@ export const TenantDrawer: React.FC<TenantDrawerProps> = ({ tenantId, onClose, o
                     <div className="space-y-4">
                       {tenantPayments.length > 0 ? (
                         tenantPayments.slice(0, 10).map((payment: any) => (
-                          <div key={payment._id} className="flex justify-between items-center py-2 border-b border-[var(--color-border)] last:border-0">
+                          <div key={payment.id} className="flex justify-between items-center py-2 border-b border-[var(--color-border)] last:border-0">
                             <div>
                               <p className="text-sm font-medium text-[hsl(var(--text-primary))]">{formatDate(payment.dueDate)}</p>
                               <p className="text-xs text-[hsl(var(--text-secondary))] capitalize">{payment.paymentMethod || 'Unpaid'}</p>
@@ -274,7 +274,7 @@ export const TenantDrawer: React.FC<TenantDrawerProps> = ({ tenantId, onClose, o
                 {/* Footer Actions */}
                 <div className="border-t border-[var(--color-border)] p-4 flex gap-3 bg-[var(--color-page-bg)] flex-shrink-0">
                   <Button variant="secondary" className="flex-1" onClick={() => alert('Send Reminder')}>Send Reminder</Button>
-                  <Button variant="primary" className="flex-1" onClick={() => onEdit(tenant._id)}>Edit Tenant</Button>
+                  <Button variant="primary" className="flex-1" onClick={() => onEdit(tenant.id)}>Edit Tenant</Button>
                 </div>
               </>
             ) : null}

@@ -57,15 +57,15 @@ export function useActionItems() {
       : 'Unknown Tenant';
       
     items.push({
-      id: `payment-${payment._id}`,
+      id: `payment-${payment.id}`,
       type: 'overdue',
       priority: 'high',
       title: `${tenantName} is overdue`,
       description: `Payment of ${formatCurrency(payment.totalAmount)} was due ${differenceInDays(new Date(), new Date(payment.dueDate))} days ago`,
-      entityId: typeof payment.tenantId === 'object' ? (payment.tenantId as any)._id : payment.tenantId,
+      entityId: typeof payment.tenantId === 'object' ? (payment.tenantId as any).id : payment.tenantId,
       entityType: 'tenant',
       actionLabel: 'Send Reminder',
-      actionRoute: `/payments?status=overdue&tenant=${typeof payment.tenantId === 'object' ? (payment.tenantId as any)._id : payment.tenantId}`
+      actionRoute: `/payments?status=overdue&tenant=${typeof payment.tenantId === 'object' ? (payment.tenantId as any).id : payment.tenantId}`
     });
   });
 
@@ -76,15 +76,15 @@ export function useActionItems() {
       : 'Unknown Unit';
       
     items.push({
-      id: `lease-${lease._id}`,
+      id: `lease-${lease.id}`,
       type: 'expiring',
       priority: 'medium',
       title: `Lease for ${unitName} expires soon`,
       description: `Expires in ${differenceInDays(new Date(lease.endDate), new Date())} days`,
-      entityId: lease._id,
+      entityId: lease.id,
       entityType: 'lease',
       actionLabel: 'Review Lease',
-      actionRoute: `/leases/${lease._id}`
+      actionRoute: `/leases/${lease.id}`
     });
   });
 
@@ -143,7 +143,7 @@ export function useRentRollPreview() {
       const property = typeof payment.propertyId === 'object' ? payment.propertyId as any : null;
       
       rows.push({
-        id: `rr-pay-${payment._id}`,
+        id: `rr-pay-${payment.id}`,
         unit: property?.unit || property?.address?.split(',')[0] || 'Unit',
         propertyName: property?.address || 'Unknown Property',
         tenantName: tenant ? `${tenant.firstName} ${tenant.lastName}` : 'Unknown Tenant',
@@ -162,7 +162,7 @@ export function useRentRollPreview() {
       const property = typeof lease.propertyId === 'object' ? lease.propertyId as any : null;
 
       rows.push({
-        id: `rr-lease-${lease._id}`,
+        id: `rr-lease-${lease.id}`,
         unit: property?.unit || property?.address?.split(',')[0] || 'Unit',
         propertyName: property?.address || 'Unknown Property',
         tenantName: tenant ? `${tenant.firstName} ${tenant.lastName}` : 'Unknown Tenant',
