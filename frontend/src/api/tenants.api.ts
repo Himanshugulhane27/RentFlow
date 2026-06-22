@@ -7,7 +7,7 @@ export const tenantApi = {
    * Get paginated tenants list.
    */
   getAll: async (params?: PaginationParams): Promise<ApiResponse<Tenant[]>> => {
-    const res = await apiClient.get<ApiResponse<Tenant[]>>('/tenants', { params });
+    const res = await apiClient.get<ApiResponse<Tenant[]>>('tenants', { params });
     return res.data;
   },
 
@@ -15,7 +15,7 @@ export const tenantApi = {
    * Get a single tenant by ID.
    */
   getById: async (id: string): Promise<Tenant> => {
-    const res = await apiClient.get<ApiResponse<Tenant>>(`/tenants/${id}`);
+    const res = await apiClient.get<ApiResponse<Tenant>>(`tenants/${id}`);
     return res.data.data!;
   },
 
@@ -23,7 +23,7 @@ export const tenantApi = {
    * Create a new tenant.
    */
   create: async (data: CreateTenantRequest): Promise<Tenant> => {
-    const res = await apiClient.post<ApiResponse<Tenant>>('/tenants', data);
+    const res = await apiClient.post<ApiResponse<Tenant>>('tenants', data);
     return res.data.data!;
   },
 
@@ -31,7 +31,7 @@ export const tenantApi = {
    * Update an existing tenant.
    */
   update: async (id: string, data: Partial<CreateTenantRequest>): Promise<Tenant> => {
-    const res = await apiClient.put<ApiResponse<Tenant>>(`/tenants/${id}`, data);
+    const res = await apiClient.put<ApiResponse<Tenant>>(`tenants/${id}`, data);
     return res.data.data!;
   },
 
@@ -39,14 +39,14 @@ export const tenantApi = {
    * Delete a tenant.
    */
   delete: async (id: string): Promise<void> => {
-    await apiClient.delete(`/tenants/${id}`);
+    await apiClient.delete(`tenants/${id}`);
   },
 
   /**
    * Get risk score for a specific tenant.
    */
   getRiskScore: async (id: string): Promise<TenantRiskScore> => {
-    const res = await apiClient.get<ApiResponse<TenantRiskScore>>(`/tenants/${id}/risk-score`);
+    const res = await apiClient.get<ApiResponse<TenantRiskScore>>(`tenants/${id}/risk-score`);
     return res.data.data!;
   },
 
@@ -54,7 +54,7 @@ export const tenantApi = {
    * Get all high-risk tenants.
    */
   getHighRisk: async (): Promise<Tenant[]> => {
-    const res = await apiClient.get<ApiResponse<Tenant[]>>('/tenants/high-risk');
+    const res = await apiClient.get<ApiResponse<Tenant[]>>('tenants/high-risk');
     return res.data.data!;
   },
 };

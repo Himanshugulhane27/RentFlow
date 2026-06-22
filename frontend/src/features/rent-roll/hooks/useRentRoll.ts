@@ -61,7 +61,7 @@ export function useRentRoll(): UseRentRollReturn {
 
   const { data: raw = [], isLoading } = useQuery({
     queryKey: ['payments', 'all'],
-    queryFn: () => apiClient.get('/payments?status=all').then(r => r.data.data),
+    queryFn: () => apiClient.get('payments?status=all').then(r => r.data.data),
     staleTime: 30_000,
   });
 

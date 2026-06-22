@@ -7,7 +7,7 @@ export const propertyApi = {
    * Get paginated properties list.
    */
   getAll: async (params?: PaginationParams): Promise<ApiResponse<Property[]>> => {
-    const res = await apiClient.get<ApiResponse<Property[]>>('/properties', { params });
+    const res = await apiClient.get<ApiResponse<Property[]>>('properties', { params });
     return res.data;
   },
 
@@ -15,7 +15,7 @@ export const propertyApi = {
    * Get a single property by ID.
    */
   getById: async (id: string): Promise<Property> => {
-    const res = await apiClient.get<ApiResponse<Property>>(`/properties/${id}`);
+    const res = await apiClient.get<ApiResponse<Property>>(`properties/${id}`);
     return res.data.data!;
   },
 
@@ -23,7 +23,7 @@ export const propertyApi = {
    * Search properties by query string.
    */
   search: async (q: string): Promise<Property[]> => {
-    const res = await apiClient.get<ApiResponse<Property[]>>('/properties/search', { params: { q } });
+    const res = await apiClient.get<ApiResponse<Property[]>>('properties/search', { params: { q } });
     return res.data.data!;
   },
 
@@ -31,7 +31,7 @@ export const propertyApi = {
    * Create a new property.
    */
   create: async (data: CreatePropertyRequest): Promise<Property> => {
-    const res = await apiClient.post<ApiResponse<Property>>('/properties', data);
+    const res = await apiClient.post<ApiResponse<Property>>('properties', data);
     return res.data.data!;
   },
 
@@ -39,7 +39,7 @@ export const propertyApi = {
    * Update an existing property.
    */
   update: async (id: string, data: Partial<CreatePropertyRequest>): Promise<Property> => {
-    const res = await apiClient.put<ApiResponse<Property>>(`/properties/${id}`, data);
+    const res = await apiClient.put<ApiResponse<Property>>(`properties/${id}`, data);
     return res.data.data!;
   },
 
@@ -47,7 +47,7 @@ export const propertyApi = {
    * Toggle property availability.
    */
   toggleAvailability: async (id: string): Promise<Property> => {
-    const res = await apiClient.patch<ApiResponse<Property>>(`/properties/${id}/toggle`);
+    const res = await apiClient.patch<ApiResponse<Property>>(`properties/${id}/toggle`);
     return res.data.data!;
   },
 
@@ -55,6 +55,6 @@ export const propertyApi = {
    * Delete a property.
    */
   delete: async (id: string): Promise<void> => {
-    await apiClient.delete(`/properties/${id}`);
+    await apiClient.delete(`properties/${id}`);
   },
 };

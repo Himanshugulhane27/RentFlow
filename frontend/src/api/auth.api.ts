@@ -7,7 +7,7 @@ export const authApi = {
    * Register a new user + organization.
    */
   register: async (data: RegisterRequest): Promise<AuthResponse> => {
-    const res = await apiClient.post<ApiResponse<AuthResponse>>('/auth/register', data);
+    const res = await apiClient.post<ApiResponse<AuthResponse>>('auth/register', data);
     return res.data.data!;
   },
 
@@ -15,7 +15,7 @@ export const authApi = {
    * Login with email and password.
    */
   login: async (data: LoginRequest): Promise<AuthResponse> => {
-    const res = await apiClient.post<ApiResponse<AuthResponse>>('/auth/login', data);
+    const res = await apiClient.post<ApiResponse<AuthResponse>>('auth/login', data);
     return res.data.data!;
   },
 
@@ -34,7 +34,7 @@ export const authApi = {
    * Get current user profile.
    */
   getProfile: async (): Promise<{ user: User }> => {
-    const res = await apiClient.get<ApiResponse<{ user: User }>>('/auth/profile');
+    const res = await apiClient.get<ApiResponse<{ user: User }>>('auth/profile');
     return res.data.data!;
   },
 
@@ -47,7 +47,7 @@ export const authApi = {
     lastName: string;
     role: 'manager' | 'tenant';
   }): Promise<{ user: User }> => {
-    const res = await apiClient.post<ApiResponse<{ user: User }>>('/auth/invite', data);
+    const res = await apiClient.post<ApiResponse<{ user: User }>>('auth/invite', data);
     return res.data.data!;
   },
 };

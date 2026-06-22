@@ -7,7 +7,7 @@ export const leaseApi = {
    * Get paginated leases list.
    */
   getAll: async (params?: PaginationParams): Promise<ApiResponse<Lease[]>> => {
-    const res = await apiClient.get<ApiResponse<Lease[]>>('/leases', { params });
+    const res = await apiClient.get<ApiResponse<Lease[]>>('leases', { params });
     return res.data;
   },
 
@@ -15,7 +15,7 @@ export const leaseApi = {
    * Get a single lease by ID.
    */
   getById: async (id: string): Promise<Lease> => {
-    const res = await apiClient.get<ApiResponse<Lease>>(`/leases/${id}`);
+    const res = await apiClient.get<ApiResponse<Lease>>(`leases/${id}`);
     return res.data.data!;
   },
 
@@ -23,7 +23,7 @@ export const leaseApi = {
    * Create a new lease.
    */
   create: async (data: CreateLeaseRequest): Promise<Lease> => {
-    const res = await apiClient.post<ApiResponse<Lease>>('/leases', data);
+    const res = await apiClient.post<ApiResponse<Lease>>('leases', data);
     return res.data.data!;
   },
 
@@ -31,7 +31,7 @@ export const leaseApi = {
    * Update an existing lease.
    */
   update: async (id: string, data: Partial<CreateLeaseRequest>): Promise<Lease> => {
-    const res = await apiClient.put<ApiResponse<Lease>>(`/leases/${id}`, data);
+    const res = await apiClient.put<ApiResponse<Lease>>(`leases/${id}`, data);
     return res.data.data!;
   },
 
@@ -39,7 +39,7 @@ export const leaseApi = {
    * Terminate an active lease.
    */
   terminate: async (id: string): Promise<Lease> => {
-    const res = await apiClient.patch<ApiResponse<Lease>>(`/leases/${id}/terminate`);
+    const res = await apiClient.patch<ApiResponse<Lease>>(`leases/${id}/terminate`);
     return res.data.data!;
   },
 
@@ -47,7 +47,7 @@ export const leaseApi = {
    * Renew a lease with a new end date.
    */
   renew: async (id: string, newEndDate: string): Promise<Lease> => {
-    const res = await apiClient.patch<ApiResponse<Lease>>(`/leases/${id}/renew`, { newEndDate });
+    const res = await apiClient.patch<ApiResponse<Lease>>(`leases/${id}/renew`, { newEndDate });
     return res.data.data!;
   },
 
@@ -55,7 +55,7 @@ export const leaseApi = {
    * Get leases expiring soon.
    */
   getExpiring: async (days?: number): Promise<Lease[]> => {
-    const res = await apiClient.get<ApiResponse<Lease[]>>('/leases/expiring', {
+    const res = await apiClient.get<ApiResponse<Lease[]>>('leases/expiring', {
       params: days ? { days } : undefined,
     });
     return res.data.data!;
